@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <style android:name="FacebookLoginButton">
+        <item android:name="android:textSize">@dimen/smallTxtSize</item>
+        <item android:name="android:background">@drawable/facebook_signin_btn</item>
+        <item android:name="android:layout_marginTop">10dp</item>
+        <item android:name="android:layout_marginBottom">10dp</item>
+        <item android:name="android:layout_gravity">center_horizontal</item>
+    </style>
+</selector>
