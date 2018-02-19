@@ -13,6 +13,7 @@ object User{
     val imgUrl:String="";
     val employmentStatus:String="";
     val employmentDate: CustomDateModel = CustomDateModel();
+    val companyId:String="";
 }
 
 

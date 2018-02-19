@@ -5,9 +5,7 @@ import android.graphics.Color
 import android.graphics.Typeface
 import android.graphics.Typeface.BOLD
 import android.os.Bundle
-import android.provider.CalendarContract
 import android.support.v4.app.Fragment
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,6 +14,8 @@ import android.widget.TableRow
 import android.widget.TextView
 import io.reactivex.android.schedulers.AndroidSchedulers
 import java.text.DecimalFormat
+import java.text.SimpleDateFormat
+import java.time.ZoneId
 import java.util.*
 
 
@@ -25,10 +25,12 @@ class ShiftsFragment : Fragment() {
     var monthTv: TextView? = null;
     var selectedMonth: Int = 0;
     var selectedYear: Int = 0;
-    var date: Calendar = Calendar.getInstance();
+    var calendar: Calendar = Calendar.getInstance();
     var table: TableLayout? = null;
     var shifts: MutableList<Shift>? = null;
     var df: DecimalFormat = DecimalFormat("00");
+    var simpleDateFormat=SimpleDateFormat("MMMM yyyy",Locale("swe"));
+    var selectedDate = Date();
 
 
     companion object {
@@ -46,11 +48,15 @@ class ShiftsFragment : Fragment() {
         monthTv = view.findViewById<TextView>(R.id.month_TV);
         table = view.findViewById<TableLayout>(R.id.tableLayout)
 
+        this.selectedDate =Date();
+        monthTv?.text =this.simpleDateFormat.format(this.selectedDate)
+
+
         FirebaseController.getInstance().getShifts().observeOn(AndroidSchedulers.mainThread()).subscribe() {
             this.shifts = it;
             setUpTable()
         }
-        setUpMonthPicker()
+//        setUpMonthPicker()
 
         prevBtn?.setOnClickListener { view -> handleDateChange(view) }
         nextBtn?.setOnClickListener { view -> handleDateChange(view) }
@@ -63,9 +69,6 @@ class ShiftsFragment : Fragment() {
         var totalMonthSalary = 0;
         var totalDuration = 0;
 
-        var parts = this.monthTv?.text.toString().split("-");
-        var month = parts[0].toInt();
-        var year = parts[1].toInt();
 
         val row = TableRow(context)
         row.setBackgroundColor(Color.LTGRAY);
@@ -100,11 +103,13 @@ class ShiftsFragment : Fragment() {
             row.addView(it)
         }
 
+        var calendar =Calendar.getInstance()
+        calendar.time=selectedDate;
 
         this.table?.addView(row);
 
         shifts?.forEach {
-            if (it.startTime.month == month && it.startTime.year == year) {
+            if (it.startTime.month == calendar.get(Calendar.MONTH)+1 && it.startTime.year == calendar.get(Calendar.YEAR)) {
                 totalMonthSalary += it.ObnattMoney + it.Obmoney + it.duration*it.employeeSalary;
                 totalDuration += it.duration;
 
@@ -175,28 +180,26 @@ class ShiftsFragment : Fragment() {
         if (view == nextBtn) {
             fix = 1;
         }
-        date.add(Calendar.MONTH, fix);
+        calendar.add(Calendar.MONTH, fix);
 
-        selectedMonth = date.get(Calendar.MONTH);
-        selectedYear = date.get(Calendar.YEAR);
-        var df: DecimalFormat = DecimalFormat("00");
-        monthTv?.text = df.format(selectedMonth + 1) + "-" + selectedYear.toString();
+//        selectedMonth = calendar.get(Calendar.MONTH);
+//        selectedYear = calendar.get(Calendar.YEAR);
+        this.selectedDate = calendar.time;
+
+        monthTv?.text = simpleDateFormat.format(this.selectedDate);
         setUpTable();
     }
 
     private fun setUpMonthPicker() {
-        selectedMonth = date.get(Calendar.MONTH)
-        selectedYear = date.get(Calendar.YEAR)
-        var df: DecimalFormat = DecimalFormat("00");
+        selectedMonth = calendar.get(Calendar.MONTH)
+        selectedYear = calendar.get(Calendar.YEAR)
+        var df = DecimalFormat("00");
 
         monthTv?.text = df.format(selectedMonth + 1) + "-" + selectedYear.toString();
     }
 
     fun getShifts(V: View) {
-        Log.d("pawell", "clickecd")
         FirebaseController.getInstance().getShifts().subscribe() {
-            Log.d("pawell", "inside")
-            Log.d("pawell", it.size.toString())
             it.forEach({
 
 

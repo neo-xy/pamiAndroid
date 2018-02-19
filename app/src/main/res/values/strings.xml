@@ -22,4 +22,5 @@
     <string name="e_mail">E-mail</string>
     <string name="navigation_drawer_open">open drawer</string>
     <string name="navigation_drawer_close">closed drawer</string>
+    <string name="info_message_title">extra inforamtion:</string>
 </resources>

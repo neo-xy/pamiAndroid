@@ -24,10 +24,17 @@ class LoginActivity : AppCompatActivity() {
         FirebaseAuth.getInstance().signInWithEmailAndPassword(email_et.text.toString(),password_et.text.toString()).addOnCompleteListener(){
             task ->
             if(task.isSuccessful){
-                val intent =Intent(this,MainActivity::class.java);
-                intent.putExtra(INTENT_USER_ID,FirebaseAuth.getInstance().uid);
-                startActivity(intent);
-                finish();
+
+                FirebaseController.getInstance().getUser().subscribe(){
+                    if(it==true){
+                        val intent =Intent(this,MainActivity::class.java);
+                        intent.putExtra(INTENT_USER_ID,FirebaseAuth.getInstance().uid);
+                        startActivity(intent);
+                        finish();
+
+                    }
+                }
+
             }else{
                 Toast.makeText(this,"Fel e-mail eller lösenord",Toast.LENGTH_SHORT).show()
             }

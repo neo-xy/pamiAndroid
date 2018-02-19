@@ -17,6 +17,7 @@ class Shift {
     var employmentType: String = "";
     var message: String = "";
     var duration: Int = 0;
+    var badge: String=""
 
 
 }
