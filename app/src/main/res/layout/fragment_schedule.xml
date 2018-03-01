@@ -17,8 +17,8 @@
         android:layout_marginBottom="22dp"
         android:layout_marginTop="12dp"
         android:gravity="center"
-        android:textSize="22sp"
-        android:text="january 2018" />
+        android:text="january 2018"
+        android:textSize="22sp" />
 
     <LinearLayout
         android:id="@+id/calendar_week_days"
@@ -37,24 +37,20 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
         android:layout_below="@id/calendar_week_days"
-        android:layout_marginBottom="25dp">
-    </android.support.v4.view.ViewPager>
+        android:layout_marginBottom="25dp" />
 
-    <pami.com.pami.WeekView
-        android:id="@+id/week_View"
-        android:visibility="gone"
+    <HorizontalScrollView
+        android:id="@+id/week_view_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentBottom="true"
-        >
+        android:fillViewport="true"
+        android:visibility="gone">
 
-
-
-    </pami.com.pami.WeekView>
-
+      <pami.com.pami.WeekView
+          android:id="@+id/week_view"
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"></pami.com.pami.WeekView>
+    </HorizontalScrollView>
 
 
 </RelativeLayout>

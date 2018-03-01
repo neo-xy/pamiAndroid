@@ -11,10 +11,7 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
-import android.widget.TableLayout
-import android.widget.TableRow
-import android.widget.TextView
+import android.widget.*
 import com.shiftize.calendarview.CalendarView
 import java.text.SimpleDateFormat
 import java.util.*
@@ -33,6 +30,7 @@ class ScheduleFragment() : Fragment() {
     lateinit var weekdays:LinearLayout;
     lateinit var pager:ViewPager;
     lateinit var header:TextView;
+    lateinit var weekViewContainer:HorizontalScrollView;
     lateinit var weekView:WeekView;
     var myAdapter:MyPAgerAdapter?=null;
 
@@ -44,7 +42,8 @@ class ScheduleFragment() : Fragment() {
         weekdays = view.findViewById(R.id.calendar_week_days);
         pager = view.findViewById(R.id.my_pager)
         header =view.findViewById(R.id.month_display)
-        weekView =view.findViewById(R.id.week_View);
+        weekView =view.findViewById(R.id.week_view);
+        weekViewContainer = view.findViewById(R.id.week_view_container)
 
 
         setUpWeekdaysRow();
@@ -58,12 +57,14 @@ class ScheduleFragment() : Fragment() {
         cal.time = date;
 
         var on=object :OnCalendarClickedListener{
-            override fun onCalendarClicked(year: Int, month: Int, day: Int) {
+            override fun onCalendarClicked(year: Int, month: Int, day: Int,weekDay: Int) {
+
+                weekView.setUp(year,month,day,weekDay)
 
                 weekdays.visibility=View.GONE
                 pager.visibility=View.GONE
                 header.visibility=View.GONE
-                weekView.visibility =View.VISIBLE
+                weekViewContainer.visibility =View.VISIBLE
 
                 Log.d("pawell",year.toString()+"/"+month+"/"+ day)
             }
@@ -84,12 +85,17 @@ class ScheduleFragment() : Fragment() {
             override fun onPageSelected(position: Int) {
                 Log.d("pawell","position "+position)
 
+
+
                 var calendar: Calendar = Calendar.getInstance();
                 calendar.add(Calendar.MONTH, position-25)
                 var date:Date = calendar.time;
                 val nextYear = calendar.get(Calendar.YEAR)
                 val nextMonth = calendar.get(Calendar.MONTH) + 1
                 header.text = simpleDateFormat.format(date)
+
+
+
             }
             override fun onPageScrollStateChanged(state: Int) {
             }
@@ -126,7 +132,7 @@ class ScheduleFragment() : Fragment() {
     }
 
     interface OnCalendarClickedListener {
-        fun onCalendarClicked(year: Int, month: Int, day: Int)
+        fun onCalendarClicked(year: Int, month: Int, day: Int,weekDay:Int)
     }
 
 

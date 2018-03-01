@@ -15,11 +15,11 @@ import io.reactivex.Observable.create
  * Created by Pawel on 13/02/2018.
  */
 
-object FirebaseController  {
+object FirebaseController {
 
     var firestore: FirebaseFirestore = FirebaseFirestore.getInstance();
     var shifts = mutableListOf<Shift>()
-    var departments:MutableList<Department>? = null;
+    var departments: MutableList<Department>? = null;
 
     fun getUser(): Observable<Boolean> {
 
@@ -49,8 +49,6 @@ object FirebaseController  {
     }
 
     fun getShifts(): Observable<MutableList<Shift>> {
-
-
         return create() {
             firestore!!.collection("users").document(FirebaseAuth.getInstance().currentUser?.uid.toString()).collection("shifts")?.addSnapshotListener(object : EventListener<QuerySnapshot> {
                 override fun onEvent(p0: QuerySnapshot?, p1: FirebaseFirestoreException?) {
@@ -58,11 +56,19 @@ object FirebaseController  {
                     shifts = results;
                     it.onNext(results);
                 }
+            })
+        }
+    }
+    fun getShiftsOfaMonth(dateKey:String):Observable<MutableList<Shift>>{
+        return create{
+            firestore.collection("companies").document(User.companyId).collection("months").document(dateKey).collection("shifts").addSnapshotListener(object:EventListener<QuerySnapshot>{
+                override fun onEvent(p0: QuerySnapshot?, p1: FirebaseFirestoreException?) {
+                    it.onNext(p0!!.toObjects(Shift::class.java))
+                }
 
             })
         }
     }
-
 
 
     fun getCompany(): Observable<Company> {
@@ -78,16 +84,16 @@ object FirebaseController  {
         }
     }
 
-    fun setUpDepartments():Observable<MutableList<Department>>{
-        return create<MutableList<Department>>{
-            firestore.collection("companies").document(User.companyId).collection("departments").addSnapshotListener(object:EventListener<QuerySnapshot>{
-                override fun onEvent(p0: QuerySnapshot?, p1: FirebaseFirestoreException?) {
-                    departments = p0?.toObjects(Department::class.java);
-                }
+    fun setUpDepartments() {
 
-            })
-        }
+        firestore.collection("companies").document(User.companyId).collection("departments").addSnapshotListener(object : EventListener<QuerySnapshot> {
+            override fun onEvent(p0: QuerySnapshot?, p1: FirebaseFirestoreException?) {
+                departments = p0?.toObjects(Department::class.java);
+            }
+
+        })
     }
+
 
 }
 
