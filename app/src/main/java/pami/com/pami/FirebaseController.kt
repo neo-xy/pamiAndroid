@@ -20,6 +20,7 @@ object FirebaseController {
     var firestore: FirebaseFirestore = FirebaseFirestore.getInstance();
     var shifts = mutableListOf<Shift>()
     var departments: MutableList<Department>? = null;
+    var employees:MutableList<Employees>?=null;
 
     fun getUser(): Observable<Boolean> {
 
@@ -91,6 +92,14 @@ object FirebaseController {
                 departments = p0?.toObjects(Department::class.java);
             }
 
+        })
+    }
+
+    fun setUpEmployees(){
+        firestore.collection("companies").document(User.companyId).collection("employees").addSnapshotListener(object :EventListener<QuerySnapshot>{
+            override fun onEvent(p0: QuerySnapshot?, p1: FirebaseFirestoreException?) {
+                employees = p0?.toObjects(Employees::class.java);
+            }
         })
     }
 

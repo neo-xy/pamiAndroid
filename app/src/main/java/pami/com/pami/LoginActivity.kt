@@ -30,6 +30,7 @@ class LoginActivity : AppCompatActivity() {
                     if(it==true){
 
                         FirebaseController.setUpDepartments();
+                        FirebaseController.setUpEmployees();
                         val intent =Intent(this,MainActivity::class.java);
                         intent.putExtra(INTENT_USER_ID,FirebaseAuth.getInstance().uid);
                         startActivity(intent);

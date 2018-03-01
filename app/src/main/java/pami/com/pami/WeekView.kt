@@ -15,21 +15,10 @@ class WeekView : LinearLayout {
     var weekDays = listOf<String>("Måndag", "Tisdag", "Onsdag", "Torsdag", "Fredag", "Lördag", "Söndag")
 
 
-    constructor(context: Context?) : super(context) {
-//        setUp()
-    }
-
-    constructor(context: Context?, attrs: AttributeSet?) : super(context, attrs) {
-//        setUp()
-    }
-
     fun setUp(year: Int, month: Int, day: Int, weekDay: Int) {
         this.orientation = HORIZONTAL
 
-        Log.d("pawell","mm"+String.format("%02d", month) +" "+ day)
-
         FirebaseController.getShiftsOfaMonth(year.toString() + "" +String.format("%02d", month)).subscribe() {
-            Log.d("pawell", "11111111111")
             val shift = it;
             for (i in weekDays.indices){
 
@@ -40,7 +29,6 @@ class WeekView : LinearLayout {
                 if(weekDay==0){
                    dayDate =  day-(7-2)+i
                 }
-                Log.d("pawell", "s2222 "+shift.size )
                 val header = TextView(context);
                 header.text = weekDays[i]+" "+dayDate+"/"+month;
                 header.setBackgroundColor(resources.getColor(R.color.colorPrimaryDark))
@@ -48,32 +36,35 @@ class WeekView : LinearLayout {
                 dayColumn.addView(header);
                 FirebaseController.departments?.forEach {
                     val department = it;
-                    Log.d("pawell", "sdnflsdjflknsdf")
                     val departmentHeader = TextView(context);
                     departmentHeader.text = it.id;
                     departmentHeader.setBackgroundColor(resources.getColor(R.color.main_gray))
                     dayColumn.addView(departmentHeader)
 
                     shift.forEach {
-                        Log.d("pawell","shiffft" + it.startTime.day.toString()+" "+it.startTime.day+" j "+month)
+                        val shift=it;
                         if(it.department.id==department.id&&it.startTime.month==month&&it.startTime.day==dayDate){
                                 var t = TextView(context)
-                            t.text = it.employeeId
+                            FirebaseController.employees!!.forEach{
+                                if(it.employeeId==shift.employeeId){
+                                    t.text=it.firstName+" "+it.lastName
+                                    return@forEach
+                                }
+                            }
+                            if(t.text==null){
+                                t.text="undefined"
+                            }
                             dayColumn.addView(t)
-
                         }
                     }
-
                 }
                 this.addView(dayColumn)
             }
         }
-
-
     }
 
+
+    constructor(context: Context?) : super(context) {}
+    constructor(context: Context?, attrs: AttributeSet?) : super(context, attrs) {}
     constructor(context: Context?, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
-    constructor(context: Context?, attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int) : super(context, attrs, defStyleAttr, defStyleRes)
-
-
 }
