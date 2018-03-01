@@ -46,16 +46,14 @@ class HomeFragment : Fragment() {
         var calendar = Calendar.getInstance();
         calendar.time = currantDate;
 
-        FirebaseController.getInstance().getShifts2().subscribe() {
+        FirebaseController.getShifts().subscribe() {
             if (it.size > 0) {
 
                 var upcomingShifts = mutableListOf<Shift>();
                 var currentDateKey = (calendar.get(Calendar.YEAR).toString() + df.format(calendar.get(Calendar.MONTH) + 1) + df.format(calendar.get(Calendar.DATE))).toInt();
 
-                Log.d("pawell", currentDateKey.toString())
                 it.forEach { shift ->
                     var shiftDateKey = (shift.startTime.year.toString() + df.format(shift.startTime.month) + df.format(shift.startTime.day)).toInt();
-                    Log.d("pawell", shiftDateKey.toString())
                     if (shiftDateKey >= currentDateKey) {
                         upcomingShifts.add(shift)
                     }
@@ -93,13 +91,12 @@ class HomeFragment : Fragment() {
                 rec.layoutManager = LinearLayoutManager(context, LinearLayout.VERTICAL, false)
                 rec.adapter = adap;
                 adap.notifyDataSetChanged()
-
             }
         }
 
-        FirebaseController.getInstance().getCompany().subscribe() {
+        FirebaseController.getCompany().subscribe() {
 
-            info_name_tv.text = it.infoMessage?.author?.capitalize();
+            info_name_tv.text = it.infoMessage?.author?.capitalize()
             info_message_tv.text = it.infoMessage?.message?.capitalize();
             info_tel_tv.text = it.infoMessage?.authorTel;
             info_date_tv.text = simpleDateFormat.format(it.infoMessage?.date);

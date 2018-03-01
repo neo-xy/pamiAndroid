@@ -3,6 +3,7 @@ package pami.com.pami
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import com.google.firebase.analytics.FirebaseAnalytics
@@ -25,13 +26,14 @@ class LoginActivity : AppCompatActivity() {
             task ->
             if(task.isSuccessful){
 
-                FirebaseController.getInstance().getUser().subscribe(){
+                FirebaseController.getUser().subscribe(){
                     if(it==true){
+
+                        FirebaseController.setUpDepartments();
                         val intent =Intent(this,MainActivity::class.java);
                         intent.putExtra(INTENT_USER_ID,FirebaseAuth.getInstance().uid);
                         startActivity(intent);
                         finish();
-
                     }
                 }
 

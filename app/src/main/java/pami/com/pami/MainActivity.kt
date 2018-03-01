@@ -13,8 +13,6 @@ import android.widget.TextView
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
-import kotlinx.android.synthetic.main.nav_header_main.*
-import kotlinx.android.synthetic.main.nav_header_main.view.*
 import pami.com.pami.R.id.*
 
 
@@ -69,6 +67,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             nav_calendar -> {
                 supportFragmentManager.beginTransaction().replace(fragment_container.id, (ScheduleFragment())).commit()
             }
+            nav_settings->{
+                supportFragmentManager.beginTransaction().replace(fragment_container.id,(SettingsFragment())).commit();
+            }
+
             nav_logout -> {
                 firebaseAuth.signOut();
                 val intent = Intent(this, LoginActivity::class.java);

@@ -67,6 +67,7 @@
                         android:id="@+id/info_name_tv"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:textAllCaps="true"
                         android:fontFamily="@font/roboto_mono_light_italic"
                         android:textColor="@android:color/white"
                         android:textSize="12sp" />
