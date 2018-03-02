@@ -12,6 +12,7 @@ import android.widget.TableLayout
 import android.widget.TableRow
 import android.widget.TextView
 import java.text.SimpleDateFormat
+import java.time.Month
 import java.util.*
 
 /**
@@ -38,10 +39,10 @@ class CustomCalendar : LinearLayout, View.OnClickListener {
     val WEEKS_IN_A_MONTH = 6
     var shifts = mutableListOf<Shift>()
 
-    var onCalendarClickedListener: ScheduleFragment.OnCalendarClickedListener? = null
-        set(value) {
-        Log.d("pawell","value "+ value)
-        }
+//    var onCalendarClickedListener: ScheduleFragment.OnCalendarClickedListener? = null
+//        set(value) {
+//        Log.d("pawell","value "+ value)
+//        }
 
 
     constructor(context: Context?) : super(context) {
@@ -54,7 +55,7 @@ class CustomCalendar : LinearLayout, View.OnClickListener {
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs) {
     }
 
-    public fun setUpCalendarGrid(year: Int, month: Int,on:ScheduleFragment.OnCalendarClickedListener) {
+    public fun setUpCalendarGrid(year: Int, month: Int,on:OnCalendarClickedListener) {
         this.calendarTable.removeAllViewsInLayout();
 
         calendar.set(Calendar.YEAR, year)

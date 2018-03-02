@@ -1,19 +1,15 @@
 package pami.com.pami
 
 import android.content.Context
-import android.graphics.Color
-import android.support.v4.app.FragmentManager
 import android.support.v4.view.PagerAdapter
-import android.util.Log
 import android.view.View
 import android.view.ViewGroup
-import com.shiftize.calendarview.CalendarView
 import java.util.*
 
 /**
- * Created by Pawel on 26/02/2018.
+ * Created by Pawel on 02/03/2018.
  */
-class MyPAgerAdapter(val context: Context?, val initYear: Int, val initMonth: Int,val on : ScheduleFragment.OnCalendarClickedListener) : PagerAdapter() {
+class CalendarAdapter (val context: Context?, val initYear: Int, val initMonth: Int, val on :OnCalendarClickedListener) : PagerAdapter() {
 
     lateinit var cust: CustomCalendar;
 
@@ -29,7 +25,7 @@ class MyPAgerAdapter(val context: Context?, val initYear: Int, val initMonth: In
         calendar.add(Calendar.MONTH, position - (count / 2))
         val year = calendar.get(Calendar.YEAR)
         val month = calendar.get(Calendar.MONTH) + 1
-       cust = CustomCalendar(context);
+        cust = CustomCalendar(context);
         cust.setUpCalendarGrid(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH),this.on)
 //        Log.d("pawell"," mmmmm"+ this.on)
 //        cust.onCalendarClickedListener = this.on;

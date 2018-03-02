@@ -1,56 +1,17 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/fl"
     android:orientation="vertical"
-    tools:context="pami.com.pami.ScheduleFragment"
+    tools:context="pami.com.pami.SettingsFragment">
 
-    >
-
-
-    <TextView
-        android:id="@+id/month_display"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_marginBottom="22dp"
-        android:layout_marginTop="12dp"
-        android:gravity="center"
-        android:text="january 2018"
-        android:textSize="22sp" />
 
     <LinearLayout
-        android:id="@+id/calendar_week_days"
+        android:id="@+id/calendar_switch_container"
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/month_display"
-        android:orientation="horizontal">
+        android:layout_height="match_parent"/>
 
-    </LinearLayout>
+</LinearLayout>
 
-    <android.support.v4.view.ViewPager
-        android:id="@+id/my_pager"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
-        android:layout_below="@id/calendar_week_days"
-        android:layout_marginBottom="25dp" />
-
-    <HorizontalScrollView
-        android:id="@+id/week_view_container"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fillViewport="true"
-        android:visibility="gone">
-
-      <pami.com.pami.WeekView
-          android:id="@+id/week_view"
-          android:layout_width="match_parent"
-          android:layout_height="match_parent"></pami.com.pami.WeekView>
-    </HorizontalScrollView>
-
-
-</RelativeLayout>

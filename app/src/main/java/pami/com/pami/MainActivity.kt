@@ -65,10 +65,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 supportFragmentManager.beginTransaction().replace(fragment_container.id, (HomeFragment())).commit()
             }
             nav_calendar -> {
-                supportFragmentManager.beginTransaction().replace(fragment_container.id, (ScheduleFragment())).commit()
+                supportFragmentManager.beginTransaction().replace(fragment_container.id, ScheduleFragment(),"schedule").commit()
             }
             nav_settings->{
-                supportFragmentManager.beginTransaction().replace(fragment_container.id,(SettingsFragment())).commit();
+                supportFragmentManager.beginTransaction().replace(fragment_container.id,SettingsFragment(),"settings").commit();
             }
 
             nav_logout -> {
