@@ -13,8 +13,10 @@
             <padding
                 android:bottom="1dp"
                 android:top="1dp"
+
                 />
         </shape>
+
     </item>
 
 </layer-list>

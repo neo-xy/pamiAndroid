@@ -4,10 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="pami.com.pami.ScheduleFragment"
-
-    >
-
+    tools:context="pami.com.pami.ScheduleFragment">
 
     <TextView
         android:id="@+id/month_display"
@@ -15,9 +12,9 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_marginBottom="22dp"
+
         android:layout_marginTop="12dp"
         android:gravity="center"
-        android:text="january 2018"
         android:textSize="22sp" />
 
     <LinearLayout
@@ -34,23 +31,21 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
         android:layout_below="@id/calendar_week_days"
         android:layout_marginBottom="25dp" />
 
-    <HorizontalScrollView
-        android:id="@+id/week_view_container"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fillViewport="true"
-        android:visibility="gone">
+    <!--<HorizontalScrollView-->
+        <!--android:id="@+id/week_view_container"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:fillViewport="true"-->
+        <!--android:visibility="gone">-->
 
-        <pami.com.pami.WeekView
-            android:id="@+id/week_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"></pami.com.pami.WeekView>
-    </HorizontalScrollView>
-
-
+        <!--<pami.com.pami.WeekView-->
+            <!--android:id="@+id/week_view"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="match_parent"/>-->
+    <!--</HorizontalScrollView>-->
 </RelativeLayout>

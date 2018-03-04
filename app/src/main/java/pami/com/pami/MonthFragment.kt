@@ -1,5 +1,6 @@
 package pami.com.pami
 
+import android.graphics.Color
 import android.graphics.Typeface
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -22,32 +23,26 @@ class MonthFragment : Fragment() {
     lateinit var weekdays: LinearLayout;
     lateinit var pager: ViewPager;
     lateinit var header: TextView;
-    lateinit var weekViewContainer: HorizontalScrollView;
-    lateinit var weekView: WeekView;
-    lateinit var oncalendarClickedListener:OnCalendarClickedListener;
+
+    lateinit var oncalendarClickedListener: OnCalendarClickedListener;
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_month, container, false)
         this.container = view.rootView as RelativeLayout
 
-       //TODO must be a better way to get instance of OnCalenderClickedLIstener than trough the budle/arguments
-//        = arguments!!.getSerializable("dd") as OnCalendarClickedListener
-        this.oncalendarClickedListener =activity!!.supportFragmentManager.findFragmentByTag("schedule") as OnCalendarClickedListener
-        if(oncalendarClickedListener!=null){
-            Log.d("pawell","not null")
-        }else{
-            Log.d("pawell","null")
-        }
+
+
+        this.oncalendarClickedListener = activity!!.supportFragmentManager.findFragmentByTag("schedule") as OnCalendarClickedListener
+
 
         weekdays = view.findViewById(R.id.calendar_week_days);
         pager = view.findViewById(R.id.my_pager)
         header = view.findViewById(R.id.month_display)
-        weekView = view.findViewById(R.id.week_view);
-        weekViewContainer = view.findViewById(R.id.week_view_container)
+
 
         setUpWeekdaysRow();
-setUpGrid()
+        setUpGrid()
 
         return view;
     }
@@ -61,8 +56,6 @@ setUpGrid()
         header.text = simpleDateFormat.format(date)
         pager.adapter = myAdapter;
         pager.setCurrentItem(25)
-
-
 
 
         pager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
@@ -96,7 +89,6 @@ setUpGrid()
             this.weekdays.addView(weekDay)
         }
     }
-
 
 
 }

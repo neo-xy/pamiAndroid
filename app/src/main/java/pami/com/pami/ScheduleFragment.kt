@@ -3,6 +3,7 @@ package pami.com.pami
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,6 +14,7 @@ class ScheduleFragment : Fragment(), OnCalendarClickedListener {
     lateinit var container: LinearLayout;
 
     override fun onCalendarClicked(year: Int, month: Int, day: Int, weekDay: Int) {
+
         val bundle = Bundle();
         bundle.putInt("year", year)
         bundle.putInt("month", month)

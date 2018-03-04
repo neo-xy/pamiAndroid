@@ -83,13 +83,14 @@ class CustomCalendar : LinearLayout, View.OnClickListener {
                 cell.gravity = Gravity.CENTER
                 cell.setTextColor(resources.getColor(R.color.colorPrimaryDark))
                 cell.textSize = 18f;
+
                 val day = calendar.get(Calendar.DAY_OF_MONTH)
                 val month = calendar.get(Calendar.MONTH) + 1
                 val year = calendar.get(Calendar.YEAR)
                 val weekDay = calendar.get(Calendar.DAY_OF_WEEK)
                 shifts.forEach() {
                     if (day == it.startTime.day && month == it.startTime.month) {
-                        cell.setBackgroundColor(resources.getColor(R.color.colorPrimaryAlmostDark))
+                        cell.setBackgroundColor(resources.getColor(R.color.ttt))
                         cell.setTextColor(Color.WHITE)
                     }
                 }
