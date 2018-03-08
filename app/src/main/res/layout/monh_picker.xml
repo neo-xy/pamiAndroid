@@ -1,22 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@color/colorPrimaryVeryDark"
     android:gravity="center"
+    android:orientation="horizontal"
     android:paddingLeft="50dp"
-    android:paddingRight="50dp"
-    android:orientation="horizontal">
+    android:paddingRight="50dp">
 
     <TextView
         android:id="@+id/prev_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="20dp"
-        android:background="@drawable/btn_month_switch"
+        android:background="@drawable/ic_arrow_left"
+        android:backgroundTint="@android:color/white"
         android:clickable="true"
         android:focusable="true"
-        android:text="&lt;"
-        android:textColor="@android:color/white"
         android:textSize="25sp" />
 
     <TextView
@@ -24,27 +25,28 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:layout_weight="1"
         android:gravity="center"
-        android:fontFamily="@font/roboto_mono_bold"
         android:inputType="date"
         android:minHeight="0dp"
         android:minWidth="0dp"
-        android:layout_weight="1"
         android:paddingBottom="0dp"
         android:paddingLeft="0dp"
         android:paddingRight="0dp"
         android:paddingTop="0dp"
-        android:textSize="20sp"
-        android:textStyle="bold" />
+        android:textColor="@android:color/white"
+        android:textSize="28sp"
+        android:textStyle="bold"
+        tools:ignore="TextViewEdits" />
 
     <TextView
         android:id="@+id/next_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
-        android:background="@drawable/btn_month_switch"
+        android:layout_marginStart="20dp"
+        android:background="@drawable/ic_arrow_right"
+        android:backgroundTint="@android:color/white"
         android:clickable="true"
-        android:text="&gt;"
-        android:textColor="@android:color/white"
+        android:focusable="true"
         android:textSize="25sp" />
 </LinearLayout>

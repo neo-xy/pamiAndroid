@@ -1,26 +1,20 @@
 package pami.com.pami
 
-import android.content.Context
 import android.graphics.Color
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
-import java.text.DateFormat
 import java.text.DecimalFormat
 import java.text.SimpleDateFormat
 import java.util.*
 
-/**
- * Created by Pawel on 16/02/2018.
- */
 
 class ShiftsAdapter() : RecyclerView.Adapter<ShiftsAdapter.MyViewHolder>(){
     var shifts:MutableList<Shift> = mutableListOf()
-    var df: DecimalFormat = DecimalFormat("00");
+    var df: DecimalFormat = DecimalFormat("00")
     constructor(shifts: MutableList<Shift>) : this() {
         this.shifts =shifts
     }
@@ -30,9 +24,9 @@ class ShiftsAdapter() : RecyclerView.Adapter<ShiftsAdapter.MyViewHolder>(){
         holder?.endTime?.text ="-"+ df.format(shifts[position].endTime.hour) + ":"+ df.format(shifts[position].endTime.minute)
         holder?.dayNr?.text = df.format(shifts[position].startTime.day)
 
-        var cal =Calendar.getInstance();
-        cal.set(shifts[position].startTime.year,shifts[position].startTime.month-1,shifts[position].startTime.day);
-        var date:Date = cal.time;
+        val cal =Calendar.getInstance()
+        cal.set(shifts[position].startTime.year,shifts[position].startTime.month-1,shifts[position].startTime.day)
+        val date:Date = cal.time
         val df = SimpleDateFormat("MMMM", Locale("swe"))
         holder?.month?.text = df.format(date).capitalize()
 
@@ -43,17 +37,14 @@ class ShiftsAdapter() : RecyclerView.Adapter<ShiftsAdapter.MyViewHolder>(){
             holder?.badge?.text =" (" +shifts[position].badge+")"
         }
         if(shifts[position].message.length<1){
-            holder?.extraContainer?.visibility = View.GONE;
+            holder?.extraContainer?.visibility = View.GONE
         }
-
-        holder?.departmentColor?.setBackgroundColor(Color.parseColor(shifts[position].department.color));
-
+        holder?.departmentColor?.setBackgroundColor(Color.parseColor(shifts[position].department.color))
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder? {
-
-        val view =LayoutInflater.from(parent.context).inflate(R.layout.card_shift,parent,false);
-        return MyViewHolder(view);
+        val view =LayoutInflater.from(parent.context).inflate(R.layout.card_shift,parent,false)
+        return MyViewHolder(view)
     }
 
     override fun getItemCount(): Int {
@@ -69,8 +60,8 @@ class ShiftsAdapter() : RecyclerView.Adapter<ShiftsAdapter.MyViewHolder>(){
         val department = item.findViewById<TextView>(R.id.department_tv)
         val badge = item.findViewById<TextView>(R.id.badge_tv)
         val departmentColor = item.findViewById<View>(R.id.department_color_v)
-        val extraTitle = item.findViewById<TextView>(R.id.extra_title_tv);
-        var extraContainer = item.findViewById<LinearLayout>(R.id.extra_info_container);
+        val extraTitle = item.findViewById<TextView>(R.id.extra_title_tv)
+        var extraContainer = item.findViewById<LinearLayout>(R.id.extra_info_container)
 
 
     }

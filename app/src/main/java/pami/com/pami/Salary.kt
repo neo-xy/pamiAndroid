@@ -1,8 +1,5 @@
 package pami.com.pami
 
-/**
- * Created by Pawel on 15/02/2018.
- */
 class Salary {
     var dataKey: String? = null
     var employeeId: String? = null
@@ -15,5 +12,4 @@ class Salary {
     var obNightHours: Int? = null
     var obNightMmoney: Int? = null
     var total: Int? = null
-
 }

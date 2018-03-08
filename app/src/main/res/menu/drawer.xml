@@ -7,33 +7,33 @@
         <item
             android:id="@+id/nav_home"
             android:icon="@drawable/ic_home"
-            android:title="Hem" />
+            android:title="@string/menu_drawer_home" />
 
         <item
             android:id="@+id/nav_calendar"
             android:icon="@drawable/ic_calendar"
-            android:title="Schema" />
+            android:title="@string/drawer_menu_schedule" />
         <item
             android:id="@+id/nav_shifts"
             android:icon="@drawable/ic_clock"
-            android:title="Tider" />
+            android:title="@string/menu_drawer_payouts" />
 
         <item
             android:id="@+id/nav_settings"
             android:icon="@drawable/ic_menu_manage"
-            android:title="Inställningar" />
+            android:title="@string/drawer_menu_settings" />
     </group>
 
-    <item android:title="Communicate">
+    <item android:title="@string/drawer_menu_submenu_title">
         <menu>
             <item
                 android:id="@+id/nav_logout"
                 android:icon="@drawable/ic_arrow_back"
-                android:title="Log Out" />
+                android:title="@string/log_out" />
             <item
-                android:id="@+id/nav_send"
-                android:icon="@drawable/ic_menu_send"
-                android:title="Send" />
+                android:id="@+id/nav_link"
+                android:icon="@drawable/ic_facebook"
+                android:title="@string/drawer_menu_link_facebook" />
         </menu>
     </item>
 

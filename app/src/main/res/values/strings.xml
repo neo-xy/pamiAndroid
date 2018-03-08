@@ -1,6 +1,9 @@
 <resources>
     <string name="app_name">Pami</string>
 
+    <string name="facebook_app_id">131116687542366</string>
+    <string name="fb_login_protocol_scheme">fb131116687542366</string>
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_login">Sign in</string>
@@ -23,4 +26,20 @@
     <string name="navigation_drawer_open">open drawer</string>
     <string name="navigation_drawer_close">closed drawer</string>
     <string name="info_message_title">extra inforamtion:</string>
+    <string name="menu_drawer_home">Hem</string>
+    <string name="drawer_menu_schedule">Schema</string>
+    <string name="menu_drawer_payouts">Tider</string>
+    <string name="drawer_menu_settings">Inställningar</string>
+    <string name="drawer_menu_submenu_title">Komunikation</string>
+    <string name="log_out">Logga ut</string>
+    <string name="drawer_menu_link_facebook">Länka med facebook</string>
+    <string name="logo_name">Pami</string>
+    <string name="login_forget_password">Glömt lösenord?</string>
+    <string name="available_dialog">Tillgänglig</string>
+    <string name="not_available_dialog">Inte tillgänglig</string>
+    <string name="save">Spara</string>
+    <string name="info_title">INFO</string>
+    <string name="from">Från:</string>
+    <string name="less_sign"><![CDATA[<]]></string>
+    <string name="greater_sign"><![CDATA[>]]></string>
 </resources>

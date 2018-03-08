@@ -12,7 +12,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="10dp">
+        android:padding="10dp"
+        tools:ignore="UselessParent">
 
         <android.support.v7.widget.CardView
             android:layout_width="match_parent"
@@ -31,7 +32,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/roboto_mono_bold"
-                    android:text="INFO"
+                    android:text="@string/info_title"
                     android:textColor="@android:color/white" />
 
                 <LinearLayout
@@ -44,7 +45,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/roboto_mono_light_italic"
-                        android:text="Från:"
+                        android:text="@string/from"
                         android:textColor="@android:color/white"
                         android:textSize="12sp" />
 
@@ -67,7 +68,6 @@
                         android:id="@+id/info_name_tv"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textAllCaps="true"
                         android:fontFamily="@font/roboto_mono_light_italic"
                         android:textColor="@android:color/white"
                         android:textSize="12sp" />
@@ -95,7 +95,7 @@
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recycler_view"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"></android.support.v7.widget.RecyclerView>
+            android:layout_height="wrap_content"/>
     </LinearLayout>
 
 </LinearLayout>

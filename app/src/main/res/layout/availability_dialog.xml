@@ -8,19 +8,21 @@
         android:id="@+id/radio_group"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="15dp">
+        android:layout_marginStart="15dp">
 
         <RadioButton
+            android:id="@+id/available_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:buttonTint="@android:color/holo_green_dark"
-            android:text="Tillgänglig" />
+            android:text="@string/available_dialog" />
 
         <RadioButton
+            android:id="@+id/not_available_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:buttonTint="@android:color/holo_red_dark"
-            android:text="Inte tillgänglig" />
+            android:text="@string/not_available_dialog" />
     </RadioGroup>
 
     <Button
@@ -30,5 +32,5 @@
         android:layout_gravity="center"
         android:layout_marginBottom="10dp"
         android:layout_marginTop="20dp"
-        android:text="Spara" />
+        android:text="@string/save" />
 </LinearLayout>

@@ -13,5 +13,11 @@
     <color name="colorAccent">#FE5F00</color>
     <color name="shift_that_day">#86fe5f00</color>
     <color name="ttt">#8c86756b</color>
+    <color name="dimRed">#98fc0a0a</color>
+    <color name="myBlack">#71080808</color>
+
+    <color name="myDimWhite">#c9ffffff</color>
+    <color name="dimGreen">#900c4300</color>
+    <color name="blackish">#262626</color>
 
 </resources>

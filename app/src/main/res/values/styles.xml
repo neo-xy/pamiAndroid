@@ -23,6 +23,15 @@
     <item name="android:textColorSecondary">@android:color/black</item>
     </style>
 
+    <style name="WhiteEditText" parent="Widget.AppCompat.EditText">
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textCursorDrawable">@android:color/white</item>
+        <item name="android:textColorHint">@color/main_gray</item>
+        <item name="android:backgroundTint">@android:color/white</item>
+    </style>
+    <style name="LoginActivityTheme"  parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimaryDark">@color/blackish</item>
+    </style>
 
 </resources>
 
