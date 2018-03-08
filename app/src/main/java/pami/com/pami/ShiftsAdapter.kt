@@ -13,12 +13,13 @@ import java.util.*
 
 
 class ShiftsAdapter() : RecyclerView.Adapter<ShiftsAdapter.MyViewHolder>(){
+
     var shifts:MutableList<Shift> = mutableListOf()
     var df: DecimalFormat = DecimalFormat("00")
     constructor(shifts: MutableList<Shift>) : this() {
         this.shifts =shifts
     }
-    override fun onBindViewHolder(holder: MyViewHolder?, position: Int) {
+    override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
 
         holder?.startTime?.text = df.format(shifts[position].startTime.hour) + ":"+ df.format(shifts[position].startTime.minute)
         holder?.endTime?.text ="-"+ df.format(shifts[position].endTime.hour) + ":"+ df.format(shifts[position].endTime.minute)
@@ -42,7 +43,7 @@ class ShiftsAdapter() : RecyclerView.Adapter<ShiftsAdapter.MyViewHolder>(){
         holder?.departmentColor?.setBackgroundColor(Color.parseColor(shifts[position].department.color))
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder? {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         val view =LayoutInflater.from(parent.context).inflate(R.layout.card_shift,parent,false)
         return MyViewHolder(view)
     }
