@@ -3,17 +3,22 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/colorPrimaryVeryDark"
+    android:background="@color/colorPrimaryDark"
     android:gravity="center"
+
     android:orientation="horizontal">
 
     <LinearLayout
         android:id="@+id/prev_btn"
+        android:layout_height="wrap_content"
         android:layout_width="80dp"
         android:clickable="true"
         android:gravity="center"
         android:focusable="true"
-        android:layout_height="wrap_content">
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+
+      >
 
         <TextView
 
@@ -24,7 +29,7 @@
 
             android:background="@drawable/ic_arrow_left"
             android:backgroundTint="@android:color/white"
-            android:textSize="25sp" />
+            android:textSize="30sp" />
     </LinearLayout>
 
     <TextView
@@ -33,20 +38,24 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_weight="1"
-        android:capitalize="words"
+       android:fontFamily="@font/roboto_mono_light"
+        android:text="mars 2018"
         android:gravity="center"
         android:inputType="date"
         android:textColor="@android:color/white"
-        android:textSize="28sp"
+        android:textSize="24sp"
         tools:ignore="TextViewEdits" />
 
     <LinearLayout
         android:id="@+id/next_btn"
+        android:layout_height="match_parent"
         android:layout_width="80dp"
         android:clickable="true"
         android:focusable="true"
         android:gravity="center"
-        android:layout_height="wrap_content">
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+       >
 
         <TextView
             android:layout_width="wrap_content"
@@ -54,6 +63,7 @@
             android:layout_weight="0"
             android:background="@drawable/ic_arrow_right"
             android:backgroundTint="@android:color/white"
-            android:textSize="25sp" />
+
+            android:textSize="30sp" />
     </LinearLayout>
 </LinearLayout>

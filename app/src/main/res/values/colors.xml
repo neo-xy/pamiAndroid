@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#FE5F00</color>
+    <color name="colorPrimary">#bc1d3f</color>
     <color name="colorPrimaryVeryDark">#461A00</color>
-    <color name="colorPrimaryDark">#461A00</color>
+    <color name="colorPrimaryDark">#9b1935</color>
     <color name="colorPrimaryAlmostDark">#742C00</color>
     <color name="colorPrimaryMiddle">#B94600</color>
     <color name="colorPrimaryLight2">#FED3B9</color>
-    <color name="colorPrimaryLight">#FEF0E7</color>
+    <color name="colorPrimaryLight">#FFF9EFF1</color>
 
     <color name="main_gray">#c6c6c6</color>
 
     <color name="colorAccent">#FE5F00</color>
     <color name="shift_that_day">#86fe5f00</color>
     <color name="ttt">#8c86756b</color>
-    <color name="dimRed">#98fc0a0a</color>
+    <color name="dimRed">#863030</color>
     <color name="myBlack">#71080808</color>
 
     <color name="myDimWhite">#c9ffffff</color>
-    <color name="dimGreen">#900c4300</color>
+    <color name="dimGreen">#671c9c00</color>
     <color name="blackish">#262626</color>
 
 </resources>

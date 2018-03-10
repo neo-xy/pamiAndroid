@@ -40,7 +40,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         supportFragmentManager.beginTransaction().add(fragment_container.id, HomeFragment.getInstance()).commit()
 
-        toolbar.setBackgroundResource(R.color.colorPrimaryLight)
+//        toolbar.setBackgroundResource(R.color.colorPrimaryLight)
         setSupportActionBar(toolbar)
         val toggle = ActionBarDrawerToggle(
                 this, drawer_layout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close)
@@ -82,7 +82,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.main, menu)
-        return true
+        return false
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
@@ -99,7 +99,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 supportFragmentManager.beginTransaction().replace(fragment_container.id, ScheduleFragment(), "schedule").commit()
             }
             nav_settings -> {
-                supportFragmentManager.beginTransaction().replace(fragment_container.id, SettingsFragment(), "settings").commit();
+                supportFragmentManager.beginTransaction().replace(fragment_container.id, SettingsFragment(), "settings").commit()
             }
 
             nav_logout -> {
@@ -108,9 +108,14 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 startActivity(intent)
                 finish()
             }
+            nav_personal_information->{
+                supportFragmentManager.beginTransaction().replace(fragment_container.id,PersonalInformationFragment(),"personalInfo").commit()
+            }
+
             nav_link -> {
                 this.loginManager.logInWithReadPermissions(this, mutableListOf("email", "public_profile"))
             }
+
         }
 
         drawer_layout.closeDrawer(Gravity.START)

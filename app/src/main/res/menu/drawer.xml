@@ -20,8 +20,12 @@
 
         <item
             android:id="@+id/nav_settings"
-            android:icon="@drawable/ic_menu_manage"
+            android:icon="@drawable/ic_settings"
             android:title="@string/drawer_menu_settings" />
+        <item
+            android:id="@+id/nav_personal_information"
+            android:icon="@drawable/ic_person"
+            android:title="@string/drawer_personal_information" />
     </group>
 
     <item android:title="@string/drawer_menu_submenu_title">

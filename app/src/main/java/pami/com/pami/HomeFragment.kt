@@ -40,7 +40,7 @@ class HomeFragment : Fragment() {
         FirebaseController.getShifts().subscribe() {
             if (it.size > 0) {
 
-                val upcomingShifts = mutableListOf<Shift>()
+                var upcomingShifts = mutableListOf<Shift>()
                 val currentDateKey = (calendar.get(Calendar.YEAR).toString() + df.format(calendar.get(Calendar.MONTH) + 1) + df.format(calendar.get(Calendar.DATE))).toInt()
 
                 it.forEach { shift ->
@@ -49,31 +49,7 @@ class HomeFragment : Fragment() {
                         upcomingShifts.add(shift)
                     }
                 }
-
-                Collections.sort(upcomingShifts, object : Comparator<Shift> {
-                    override fun compare(p0: Shift, p1: Shift): Int {
-                        if (p0.startTime.year > p1.startTime.year) {
-                            return 1
-                        } else if (p0.startTime.year < p1.startTime.year) {
-                            return -1
-                        } else {
-                            if (p0.startTime.month > p1.startTime.month) {
-                                return 1
-                            } else if (p0.startTime.month < p1.startTime.month) {
-                                return -1
-                            } else {
-
-                                if (p0.startTime.day > p1.startTime.day) {
-                                    return 1
-                                } else if (p0.startTime.day < p1.startTime.day) {
-                                    return -1
-                                } else {
-                                    return 0
-                                }
-                            }
-                        }
-                    }
-                })
+                upcomingShifts = Shared.sortShifts(upcomingShifts)
 
                 val adap = ShiftsAdapter(upcomingShifts)
                 recyclerView.layoutManager = LinearLayoutManager(context, LinearLayout.VERTICAL, false)

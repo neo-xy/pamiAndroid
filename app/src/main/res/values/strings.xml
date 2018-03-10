@@ -40,6 +40,6 @@
     <string name="save">Spara</string>
     <string name="info_title">INFO</string>
     <string name="from">Från:</string>
-    <string name="less_sign"><![CDATA[<]]></string>
-    <string name="greater_sign"><![CDATA[>]]></string>
+    <string name="drawer_personal_information">Mina Info</string>
+    <string name="total_worked_hours">Sammanlagda antal timmar:</string>
 </resources>

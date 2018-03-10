@@ -21,8 +21,8 @@
         android:layout_width="match_parent"
         android:layout_height="100dp"
         android:gravity="center"
-        android:background="@color/colorAccent"
-        android:fontFamily="@font/roboto_mono_bold"
+        android:background="@color/colorPrimary"
+        android:fontFamily="@font/roboto_mono"
         android:text="1234"
         android:textSize="32sp"
         android:textColor="@android:color/white"
@@ -37,7 +37,5 @@
      >
 
     </TableLayout>
-
-
 </LinearLayout>
 </ScrollView>

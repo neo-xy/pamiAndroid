@@ -4,11 +4,12 @@ package pami.com.pami
 import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ImageView
+import com.bumptech.glide.Glide
 import com.facebook.CallbackManager
 import com.google.firebase.auth.FacebookAuthProvider
 import com.google.firebase.auth.FirebaseAuth
@@ -20,6 +21,11 @@ class SettingsFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_settings, container, false)
+
+        var tt = view.findViewById<ImageView>(R.id.dddd)
+        Glide.with(this)
+                .load(User.imgUrl)
+                .into(tt)
         return view
     }
 

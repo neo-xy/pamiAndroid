@@ -27,6 +27,8 @@ class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
+
+        findViewById<Button>(R.id.login_btn).setOnClickListener { logIn() }
         val loginView = findViewById<ConstraintLayout>(R.id.login_layout)
         val emailView = findViewById<EditText>(R.id.email_et)
         val splashView = findViewById<RelativeLayout>(R.id.splash_view)
@@ -35,9 +37,9 @@ class LoginActivity : AppCompatActivity() {
         this.sp = this.getPreferences(android.content.Context.MODE_PRIVATE)
 
 
-Glide.with(this)
-        .load(R.drawable.clock_bg)
-        .into(bg)
+        Glide.with(this)
+                .load(R.drawable.clock_bg)
+                .into(bg)
         emailView.setText((this.sp.getString("mail", "")))
         forgetPasswordTv.setOnClickListener { openForgetPasswordDialog() }
 
@@ -55,7 +57,6 @@ Glide.with(this)
                         startActivity(intent)
                         finish()
                     }
-
                 }
             } else {
                 splashView.visibility = View.GONE
@@ -85,7 +86,6 @@ Glide.with(this)
         builder.setView(container)
         builder.setPositiveButton("skicka e-post", object : DialogInterface.OnClickListener {
             override fun onClick(p0: DialogInterface?, p1: Int) {
-                Log.d("pawell", "dd" + insertEmail.text.toString())
                 FirebaseAuth.getInstance().sendPasswordResetEmail(insertEmail.text.toString()).addOnCompleteListener {
                     if (it.isSuccessful) {
                         Toast.makeText(baseContext, "E-post blev skickad", Toast.LENGTH_SHORT).show()
@@ -96,9 +96,8 @@ Glide.with(this)
                 }
             }
         })
-      builder.create().show()
+        builder.create().show()
     }
-
 
     fun logIn() {
         if (!email_et.text.isEmpty() && !password_et.text.isEmpty()) {
