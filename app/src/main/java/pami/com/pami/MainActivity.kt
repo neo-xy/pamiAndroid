@@ -55,6 +55,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         profileImageView = nav_view.getHeaderView(0).findViewById<ImageView>(R.id.profile_image)
 
+        if(User.employmentStatus=="passed"){
+            nav_view.menu.findItem(nav_calendar).setVisible(false)
+            nav_view.menu.findItem(nav_shifts).setVisible(false)
+            nav_view.menu.findItem(nav_contacts).setVisible(false)
+        }
+
         FirebaseAuth.getInstance().currentUser!!.providerData.forEach {
             if (it.providerId == "facebook.com") {
                 nav_view.menu.findItem(nav_link).setVisible(false)
@@ -62,7 +68,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
 
 
-        var drawerNameTV: TextView
+        val drawerNameTV: TextView
         drawerNameTV = nav_view.getHeaderView(0).findViewById<TextView>(R.id.drawer_name_tv)
         drawerNameTV.text = User.firstName.capitalize() + " " + User.lastName.capitalize()
         if (User.imgUrl == null || User.imgUrl.length < 1) {
@@ -78,6 +84,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         if (drawerMailTV != null) {
             drawerMailTV.text = User.email
         }
+        FirebaseController.setUpColleagues();
+
+        FirebaseController.setupSalleries()
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -108,13 +118,18 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 startActivity(intent)
                 finish()
             }
-            nav_personal_information->{
-                supportFragmentManager.beginTransaction().replace(fragment_container.id,PersonalInformationFragment(),"personalInfo").commit()
+            nav_personal_information -> {
+                supportFragmentManager.beginTransaction().replace(fragment_container.id, PersonalInformationFragment(), "personalInfo").commit()
+            }
+
+            nav_contacts -> {
+                supportFragmentManager.beginTransaction().replace(fragment_container.id, DashboardFragment(), "contacts").commit()
             }
 
             nav_link -> {
                 this.loginManager.logInWithReadPermissions(this, mutableListOf("email", "public_profile"))
             }
+
 
         }
 
@@ -140,8 +155,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     }
                 }
             }
+
             override fun onCancel() {
             }
+
             override fun onError(error: FacebookException?) {
             }
         })

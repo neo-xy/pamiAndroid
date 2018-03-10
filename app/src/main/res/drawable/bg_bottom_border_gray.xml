@@ -12,7 +12,7 @@
             <solid android:color="#00ffffff" />
             <padding
                 android:bottom="1dp"
-                android:top="1dp"
+                android:top="0dp"
 
                 />
         </shape>

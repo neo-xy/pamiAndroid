@@ -2,6 +2,7 @@ package pami.com.pami
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v7.widget.CardView
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -35,6 +36,7 @@ class HomeFragment : Fragment() {
 
         val recyclerView = view.findViewById<RecyclerView>(R.id.recycler_view)
         val calendar = Calendar.getInstance()
+        val infoCardBoss = view.findViewById<CardView>(R.id.info_card)
         calendar.time = currantDate
 
         FirebaseController.getShifts().subscribe() {
@@ -57,9 +59,14 @@ class HomeFragment : Fragment() {
                 adap.notifyDataSetChanged()
             }
         }
+        if (User.employmentStatus == "passed") {
+            infoCardBoss.visibility = View.GONE
+        }
 
         this.companyObservable = FirebaseController.getCompany().subscribe() {
-
+            if (it.infoMessage!!.message.isEmpty()) {
+                infoCardBoss.visibility = View.GONE
+            }
             info_name_tv.text = it.infoMessage?.author?.capitalize()
             info_message_tv.text = it.infoMessage?.message?.capitalize()
             info_tel_tv.text = it.infoMessage?.authorTel

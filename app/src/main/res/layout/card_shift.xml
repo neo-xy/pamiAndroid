@@ -27,7 +27,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="0"
-                    android:fontFamily="@font/roboto_mono_regular"
                     android:textSize="30sp" />
                 <TextView
                     android:id="@+id/month_tv"
@@ -35,7 +34,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="10dp"
                     android:layout_weight="0"
-                    android:fontFamily="@font/roboto_mono_regular" />
+                    />
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -52,12 +51,12 @@
                             android:id="@+id/shift_start_tv"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:fontFamily="@font/roboto_mono_regular" />
+                        />
                         <TextView
                             android:id="@+id/shift_end_tv"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:fontFamily="@font/roboto_mono_regular" />
+                           />
                     </LinearLayout>
 
                     <LinearLayout
@@ -69,7 +68,7 @@
                             android:id="@+id/department_tv"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:fontFamily="@font/roboto_mono_regular" />
+                          />
                         <TextView
                             android:id="@+id/badge_tv"
                             android:layout_width="wrap_content"
@@ -90,14 +89,16 @@
                     android:id="@+id/extra_title_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/roboto_mono_light_italic"
+
+                    android:textStyle="italic"
                     android:text="@string/info_message_title"
                     android:textSize="12sp" />
                 <TextView
                     android:id="@+id/extra_info_tv"
+                    android:capitalize="sentences"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/roboto_mono_regular" />
+            />
             </LinearLayout>
         </LinearLayout>
 

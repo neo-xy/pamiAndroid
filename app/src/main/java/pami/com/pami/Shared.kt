@@ -9,7 +9,7 @@ import java.util.*
  */
 object Shared {
 
-
+    val df: DecimalFormat = DecimalFormat("00")
 
    fun sortShifts(shifts:MutableList<Shift>):MutableList<Shift>{
       val gg =  Collections.sort(shifts, object : Comparator<Shift> {

@@ -56,9 +56,12 @@ class CustomCalendar : LinearLayout {
                 val prick = View(context)
 
                 val rLp = RelativeLayout.LayoutParams(30, 30)
-                rLp.setMargins(20, 20, 0, 0)
+                rLp.setMargins(90, 30, 0, 0)
+
+
 
                 prick.layoutParams = rLp
+
                 val cell = TextView(context)
 
                 cell.gravity = Gravity.CENTER
@@ -67,14 +70,15 @@ class CustomCalendar : LinearLayout {
 
                 val day = calendar.get(Calendar.DAY_OF_MONTH)
                 val month2 = calendar.get(Calendar.MONTH) + 1
-                val year = calendar.get(Calendar.YEAR)
+                val year2 = calendar.get(Calendar.YEAR)
                 val weekDay = calendar.get(Calendar.DAY_OF_WEEK)
-                if (User.datesUnavailable.contains((year.toString() + String.format("%02d", month2) + String.format("%02d", day)).toInt())) {
+                if (User.datesUnavailable.contains((year2.toString() + String.format("%02d", month2) + String.format("%02d", day)).toInt())) {
                     prick.setBackgroundResource(R.drawable.bg_red_circle)
+
                 }
                 shifts.forEach() {
                     if (day == it.startTime.day && month2 == it.startTime.month) {
-                        cell.setBackgroundColor(resources.getColor(R.color.dimGreen))
+                        cell.setBackgroundColor(resources.getColor(R.color.colorAccent))
                         cell.setTextColor(Color.WHITE)
                     }
                 }

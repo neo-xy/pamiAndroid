@@ -7,12 +7,18 @@ object User{
     val employeeId:String=""
     val city:String = ""
     val email:String=""
-    val salary:Int=0
+    val salery:Int=0
     val imgUrl:String=""
     val employmentStatus:String=""
     val employmentDate: CustomDateModel = CustomDateModel()
     val companyId:String=""
     var datesUnavailable= mutableListOf<Int>()
+    var address:String=""
+    var personNummer:Long=0
+    var accountNr=""
+    var bankName=""
+    var clearNr=""
+
 }
 
 
