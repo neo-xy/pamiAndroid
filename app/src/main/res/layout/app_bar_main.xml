@@ -21,17 +21,34 @@
             android:gravity="center"
             app:popupTheme="@style/AppTheme.PopupOverlay">
 
-
-            <TextView
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:orientation="horizontal"
                 android:gravity="center"
-                android:textSize="30sp"
-                android:textStyle="normal"
-                android:paddingEnd="50dp"
-                android:textColor="@color/colorPrimaryDark"
-                android:fontFamily="@font/logo_font"
-                android:text="@string/app_name" />
+                >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/logo_font"
+                    android:gravity="center"
+                    android:layout_weight="1"
+                    android:text="@string/app_name"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="30sp"
+                    android:textStyle="normal" />
+
+                <TextView
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:gravity="end"
+                    android:layout_marginEnd="10dp"
+                    android:background="@drawable/bg_green_grey_circle"
+                     />
+
+            </LinearLayout>
+
 
         </android.support.v7.widget.Toolbar>
 
@@ -40,8 +57,8 @@
     <LinearLayout
         android:id="@+id/fragment_container"
         android:layout_width="match_parent"
-        android:layout_height="584dp"
-        android:orientation="vertical" />
+        android:layout_height="match_parent"
+        android:orientation="vertical"></LinearLayout>
 
 
 </LinearLayout>
