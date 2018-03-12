@@ -2,9 +2,9 @@ package pami.com.pami
 
 
 class CustomDateModel {
-    val day:Int=0
-    val month:Int=0
-    val year:Int=0
-    val hour:Int=0
-    val minute:Int=0
+    var day:Int=0
+    var month:Int=0
+    var year:Int=0
+    var hour:Int=0
+    var minute:Int=0
 }

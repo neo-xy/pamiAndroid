@@ -2,6 +2,7 @@ package pami.com.pami
 
 import android.content.Context
 import android.graphics.Color
+import android.support.v4.content.ContextCompat
 import android.support.v7.widget.CardView
 import android.support.v7.widget.RecyclerView
 import android.util.Log
@@ -59,7 +60,8 @@ class ColleaguesAdapter() : RecyclerView.Adapter<ColleaguesAdapter.MyViewHolder>
 
         if (role == "boss") {
             Log.d("pawell", "boss")
-            holder.card.setCardBackgroundColor(this.context.resources.getColor(R.color.colorPrimaryDark))
+
+            holder.card.setCardBackgroundColor(ContextCompat.getColor(context,R.color.colorPrimaryDark))
             holder.name.setTextColor(Color.WHITE)
             holder.tel.setTextColor(Color.WHITE)
             holder.phoneTitle.setTextColor(Color.WHITE)

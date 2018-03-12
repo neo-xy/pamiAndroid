@@ -3,12 +3,15 @@
 
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:theme="@android:style/Theme.Holo.Light">
-
-
+    <item
+        android:id="@+id/clock_out"
+        android:title="stämpla ut"
+        android:visible="false"
+        />
     <item
         android:id="@+id/clock_in"
-        android:title="stämpla ut"
-
+        android:title="stämpla in"
+        android:visible="true"
         />
 
 </menu>

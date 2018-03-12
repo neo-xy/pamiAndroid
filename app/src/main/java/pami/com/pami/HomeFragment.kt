@@ -2,7 +2,6 @@ package pami.com.pami
 
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
-import android.support.v4.app.DialogFragment
 import android.support.v4.app.Fragment
 import android.support.v7.widget.CardView
 import android.support.v7.widget.LinearLayoutManager
@@ -44,7 +43,7 @@ class HomeFragment : Fragment() {
 
         calendar.time = currantDate
 
-        FirebaseController.getShifts().subscribe() {
+        FirebaseController.getUserShifts().subscribe() {
             if (it.size > 0) {
 
                 var upcomingShifts = mutableListOf<Shift>()
