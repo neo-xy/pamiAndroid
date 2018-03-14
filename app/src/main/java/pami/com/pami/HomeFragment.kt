@@ -38,8 +38,6 @@ class HomeFragment : Fragment() {
         val recyclerView = view.findViewById<RecyclerView>(R.id.recycler_view)
         val calendar = Calendar.getInstance()
         val infoCardBoss = view.findViewById<CardView>(R.id.info_card)
-        val fab = view.findViewById<FloatingActionButton>(R.id.fab)
-        fab.setOnClickListener { openClockInDialog() }
 
         calendar.time = currantDate
 
@@ -77,12 +75,6 @@ class HomeFragment : Fragment() {
             info_date_tv.text = simpleDateFormat.format(it.infoMessage?.date)
         }
         return view
-    }
-
-    private fun openClockInDialog() {
-
-        var clockInDialogFragment = ClockInDialogFragment()
-        clockInDialogFragment.show(activity?.supportFragmentManager,"clockIn")
     }
 
     override fun onDestroy() {

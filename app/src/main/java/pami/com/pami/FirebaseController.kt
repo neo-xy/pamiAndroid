@@ -2,6 +2,7 @@ package pami.com.pami
 
 import android.net.Uri
 import android.util.Log
+import android.widget.Toast
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
@@ -9,6 +10,7 @@ import com.google.firebase.firestore.*
 import com.google.firebase.firestore.EventListener
 import io.reactivex.Observable
 import io.reactivex.Observable.create
+import java.time.Clock
 import java.util.*
 
 object FirebaseController {
@@ -142,19 +144,80 @@ object FirebaseController {
     }
 
     fun markAsToAccept(shift: Shift) {
-        Log.d("pawell","888")
+        Log.d("pawell", "888")
         FirebaseFirestore.getInstance().collection("companies").document(User.companyId).collection("shiftsToAccept").document(shift.shiftId).set(shift)
     }
 
-    fun markAsToAcceptNew(shift:Shift): Observable<String>{
-        Log.d("pawell","000")
-        return  Observable.create<String> {
+    fun markAsToAcceptNew(shift: Shift): Observable<String> {
+        Log.d("pawell", "000")
+        return Observable.create<String> {
             val observableEmitter = it
             FirebaseFirestore.getInstance().collection("companies").document(User.companyId).collection("shiftsToAccept").add(shift)
-                    .addOnCompleteListener(){
-               observableEmitter.onNext(it.getResult().id)
+                    .addOnCompleteListener() {
+                        observableEmitter.onNext(it.getResult().id)
+                    }
+        }
+    }
+
+    fun addToClockedInShifts(clockedShift: ClockedShift): Observable<String> {
+        return create {
+            val emiter = it
+            FirebaseFirestore.getInstance().collection("companies").document(User.companyId).collection("clockedInShifts").add(clockedShift).addOnCompleteListener {
+                if (it.isSuccessful) {
+
+                    emiter.onNext(it.getResult().id)
+                } else {
+                    emiter.onNext("");
+                }
             }
         }
     }
+
+    fun getClockedInShifts(): Observable<MutableList<ClockedShift>> {
+        return Observable.create {
+            val emitter = it
+            FirebaseFirestore.getInstance().collection("companies").document(User.companyId).collection("clockedInShifts").addSnapshotListener(object : EventListener<QuerySnapshot> {
+                override fun onEvent(p0: QuerySnapshot, p1: FirebaseFirestoreException?) {
+
+                    val clockedShifts= mutableListOf<ClockedShift>()
+                    p0.forEach {
+                       val cs = it.toObject(ClockedShift::class.java)
+                        cs.clockedShiftId =it.id
+                        clockedShifts.add(cs)
+                    }
+                    emitter.onNext(clockedShifts)
+                }
+
+            })
+
+        }
+    }
+
+    fun removeShiftFromClockedInShifts(clockedShift: ClockedShift): Observable<Boolean> {
+        return Observable.create {
+            val emitter = it
+            FirebaseFirestore.getInstance().collection("companies").document(User.companyId).collection("clockedInShifts").document(clockedShift.clockedShiftId).delete().addOnCompleteListener {
+                if (it.isSuccessful) {
+                    emitter.onNext(true)
+                } else {
+                    emitter.onNext(false)
+                }
+            }
+        }
+    }
+
+    fun addShiftsToAccept(clockedShift: ClockedShift): Observable<Boolean> {
+        return Observable.create {
+            val emitter = it
+            FirebaseFirestore.getInstance().collection("companies").document(User.companyId).collection("shiftsToAccept").document(clockedShift.clockedShiftId).set(clockedShift).addOnCompleteListener {
+                if (it.isSuccessful) {
+                    emitter.onNext(true)
+                } else {
+                    emitter.onNext(false)
+                }
+            }
+        }
+    }
+
 }
 

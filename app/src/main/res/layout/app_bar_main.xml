@@ -39,13 +39,14 @@
                     android:textSize="30sp"
                     android:textStyle="normal" />
 
-                <TextView
-                    android:id="@+id/clock_in_indicator"
+                <Button
+                    android:id="@+id/clock_in_btn"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:gravity="end"
                     android:layout_marginEnd="10dp"
-                    android:background="@drawable/bg_green_circle"
+                    android:background="@drawable/ic_alarm"
+                    android:backgroundTint="@color/colorPrimary"
                      />
 
             </LinearLayout>

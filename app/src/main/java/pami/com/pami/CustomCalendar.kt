@@ -3,6 +3,7 @@ package pami.com.pami
 
 import android.content.Context
 import android.graphics.Color
+import android.support.v4.content.ContextCompat
 import android.util.AttributeSet
 import android.util.Log
 import android.view.Gravity
@@ -47,7 +48,7 @@ class CustomCalendar : LinearLayout {
         (0..WEEKS_IN_A_MONTH - 1).forEach {
             val tableRow = TableRow(context)
             tableRow.layoutParams = TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.MATCH_PARENT, 1f)
-            tableRow.background = resources.getDrawable(R.drawable.bg_bottom_border_gray)
+            tableRow.background = ContextCompat.getDrawable(context,R.drawable.bg_bottom_border_gray)
             (0..DAYS_IN_A_WEEK - 1).forEach {
 
                 val llCell = RelativeLayout(context)
@@ -78,13 +79,13 @@ class CustomCalendar : LinearLayout {
                 }
                 shifts.forEach() {
                     if (day == it.startTime.day && month2 == it.startTime.month) {
-                        cell.setBackgroundColor(resources.getColor(R.color.colorAccent))
+                        cell.setBackgroundColor( ContextCompat.getColor(context,R.color.colorAccent))
                         cell.setTextColor(Color.WHITE)
                     }
                 }
 
                 if (this.currentMonth != calendar.get(Calendar.MONTH)) {
-                    cell.setTextColor(resources.getColor(R.color.main_gray))
+                    cell.setBackgroundColor( ContextCompat.getColor(context,R.color.main_gray))
                 }
 
                 cell.layoutParams = RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT)
