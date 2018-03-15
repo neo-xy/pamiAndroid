@@ -10,8 +10,8 @@
 
     <color name="main_gray">#c6c6c6</color>
 
-    <color name="colorAccent">#7c9fdc</color>
-    <color name="alternativeAccent">#4cc999</color>
+    <color name="colorAccent">#4cc999</color>
+    <color name="alternativeAccent">#7c9fdc</color>
     <color name="shift_that_day">#86fe5f00</color>
     <color name="ttt">#8c86756b</color>
     <color name="dimRed">#863030</color>

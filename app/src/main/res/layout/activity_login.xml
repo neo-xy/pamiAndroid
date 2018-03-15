@@ -25,12 +25,11 @@
         <ImageView
             android:id="@+id/imageView"
             android:layout_width="100dp"
-            android:layout_height="48dp"
+            android:layout_height="100dp"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:background="@drawable/ic_logo2"
-            android:backgroundTint="@android:color/white"
+            android:background="@drawable/clocktrans"
             app:layout_constraintBottom_toTopOf="@+id/logo_tv"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -123,21 +122,22 @@
     <RelativeLayout
         android:id="@+id/splash_view"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_centerInParent="true"
+        android:background="@color/colorPrimaryDark"
         android:visibility="visible">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
+            android:layout_centerInParent="true"
             android:orientation="vertical">
 
             <ImageView
                 android:layout_width="160dp"
-                android:layout_height="80dp"
+                android:layout_height="160dp"
                 android:layout_gravity="center"
-                android:background="@drawable/ic_logo2"
+                android:background="@drawable/clocktrans"
                 android:visibility="visible"
                 tools:ignore="ContentDescription" />
 
@@ -147,6 +147,7 @@
                 android:layout_gravity="center"
                 android:fontFamily="@font/roboto_mono_bold"
                 android:text="@string/logo_name"
+                android:textColor="@android:color/white"
                 android:textSize="60sp" />
 
         </LinearLayout>

@@ -3,25 +3,27 @@ package pami.com.pami
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.support.v4.app.DialogFragment
+import android.support.v7.app.AlertDialog
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.LinearLayout
-import android.widget.Toast
+import android.widget.*
 import java.util.*
+import java.util.concurrent.TimeUnit
 
 
 class ClockInDialogFragment : DialogFragment() {
     lateinit var clockInBtn: Button;
     lateinit var clockOutBtn: Button;
+    lateinit var clockedMessage:TextView
     lateinit var sp: SharedPreferences
     val DISTINCTION = 30
     var selectedShift = Shift()
     var clockedShift = ClockedShift()
     var clockedShifts = mutableListOf<ClockedShift>()
+
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
@@ -30,6 +32,7 @@ class ClockInDialogFragment : DialogFragment() {
 
         clockInBtn = view.findViewById(R.id.clock_in_btn1)
         clockOutBtn = view.findViewById(R.id.clock_out_btn1)
+        clockedMessage = view.findViewById(R.id.clocked_in_message)
 
         this.sp = activity!!.getPreferences(android.content.Context.MODE_PRIVATE)
 
@@ -85,41 +88,59 @@ class ClockInDialogFragment : DialogFragment() {
 
 
         clockedShift.endTime = customeDate
+        clockedShift.messageOut = clockedMessage.text.toString()
         FirebaseController.removeShiftFromClockedInShifts(clockedShift).subscribe {
             if (it == true) {
                 FirebaseController.addShiftsToAccept(clockedShift).subscribe {
                     if (it == true) {
                         clockInBtn.isEnabled = true
                         clockOutBtn.isEnabled = false
+                        clockedMessage.text=""
                     }
                 }
+            }else{
+                Toast.makeText(context, "Instämpling misslyckades", Toast.LENGTH_SHORT).show()
             }
         }
     }
 
     private fun clockIn() {
+
+
         val date = Date()
-        val clockedInTime = Calendar.getInstance();
-        clockedInTime.time = date
-        val year = clockedInTime.get(Calendar.YEAR)
-        val month = clockedInTime.get(Calendar.MONTH) + 1
-        val day = clockedInTime.get(Calendar.DAY_OF_MONTH)
-        val hour = clockedInTime.get(Calendar.HOUR_OF_DAY)
-        val minute = clockedInTime.get(Calendar.MINUTE)
-
+//        val clockedInTime = Calendar.getInstance();
+//        clockedInTime.time = date
+//        val year = clockedInTime.get(Calendar.YEAR)
+//        val month = clockedInTime.get(Calendar.MONTH) + 1
+//        val day = clockedInTime.get(Calendar.DAY_OF_MONTH)
+//        val hour = clockedInTime.get(Calendar.HOUR_OF_DAY)
+//        val minute = clockedInTime.get(Calendar.MINUTE)
+//
         val clockedShift = ClockedShift()
-        val customeDate = CustomDateModel()
+//        val customeDate = CustomDateModel()
+//
+//        customeDate.year = year
+//        customeDate.month = month
+//        customeDate.day = day
+//        customeDate.hour = hour
+//        customeDate.minute = minute
+//
+//        clockedShift.startTime = customeDate
 
-        customeDate.year = year
-        customeDate.month = month
-        customeDate.day = day
-        customeDate.hour = hour
-        customeDate.minute = minute
+        FirebaseController.shifts.forEach {
+            if(it.timeStempIn-date.time< TimeUnit.MINUTES.toMillis(60)){
+                clockedShift.correspondingShiftId = it.shiftId
+                return@forEach
+            }
 
-        clockedShift.startTime = customeDate
+        }
+
+        clockedShift.timeStempIn = date.time
         clockedShift.firstName = User.firstName
         clockedShift.lastName = User.lastName
         clockedShift.employeeId = User.employeeId
+        clockedShift.messageIn = clockedMessage.text.toString()
+        clockedShift.companyId = User.companyId
 
         FirebaseController.addToClockedInShifts(clockedShift).subscribe() {
             if (it == "") {
@@ -127,6 +148,7 @@ class ClockInDialogFragment : DialogFragment() {
             } else {
                 clockInBtn.isEnabled = false
                 clockOutBtn.isEnabled = true
+                clockedMessage.text=""
             }
         }
     }

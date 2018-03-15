@@ -15,4 +15,9 @@ class ClockedShift {
     var lastName=""
     var correspondingShiftId=""
     var clockedShiftId=""
+    var messageIn = ""
+    var messageOut = ""
+    var companyId=""
+    var timeStempIn:Long=0;
+    var timeStempOut:Long=0;
 }

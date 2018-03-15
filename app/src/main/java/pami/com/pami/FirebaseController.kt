@@ -53,14 +53,15 @@ object FirebaseController {
             FirebaseFirestore.getInstance().collection("users").document(FirebaseAuth.getInstance().currentUser?.uid.toString()).collection("shifts").addSnapshotListener(object : EventListener<QuerySnapshot> {
                 override fun onEvent(p0: QuerySnapshot?, p1: FirebaseFirestoreException?) {
 
+                    shifts.removeAll(shifts)
+                    Log.d("pawell","ii "+ p0?.size())
                     p0?.forEach {
                         var shift = it.toObject(Shift::class.java)
                         shift.shiftId = it.id
                         shifts.add(shift)
                     }
 
-//                    val results: MutableList<Shift> = p0!!.toObjects(Shift::class.java)
-//                    shifts = results
+//
                     it.onNext(shifts)
                 }
             })
@@ -164,8 +165,8 @@ object FirebaseController {
             val emiter = it
             FirebaseFirestore.getInstance().collection("companies").document(User.companyId).collection("clockedInShifts").add(clockedShift).addOnCompleteListener {
                 if (it.isSuccessful) {
-
                     emiter.onNext(it.getResult().id)
+                    FirebaseFirestore.getInstance().collection("data").document("clockedInShift").set(clockedShift)
                 } else {
                     emiter.onNext("");
                 }

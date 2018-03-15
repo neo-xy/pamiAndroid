@@ -2,7 +2,9 @@ package pami.com.pami
 
 
 import android.content.Context
+import android.content.res.ColorStateList
 import android.graphics.Color
+import android.graphics.Typeface
 import android.support.v4.content.ContextCompat
 import android.util.AttributeSet
 import android.util.Log
@@ -54,10 +56,10 @@ class CustomCalendar : LinearLayout {
                 val llCell = RelativeLayout(context)
 
                 llCell.layoutParams = TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT, 1f)
-                val prick = View(context)
+                val prick = TextView(context)
 
-                val rLp = RelativeLayout.LayoutParams(30, 30)
-                rLp.setMargins(90, 30, 0, 0)
+                val rLp = RelativeLayout.LayoutParams(40, 40)
+                rLp.setMargins(86, 30, 0, 0)
 
 
 
@@ -74,18 +76,19 @@ class CustomCalendar : LinearLayout {
                 val year2 = calendar.get(Calendar.YEAR)
                 val weekDay = calendar.get(Calendar.DAY_OF_WEEK)
                 if (User.datesUnavailable.contains((year2.toString() + String.format("%02d", month2) + String.format("%02d", day)).toInt())) {
+
                     prick.setBackgroundResource(R.drawable.bg_red_circle)
 
+
+                }
+                if (this.currentMonth != calendar.get(Calendar.MONTH)) {
+                    cell.setBackgroundColor( ContextCompat.getColor(context,R.color.main_gray))
                 }
                 shifts.forEach() {
                     if (day == it.startTime.day && month2 == it.startTime.month) {
                         cell.setBackgroundColor( ContextCompat.getColor(context,R.color.colorAccent))
                         cell.setTextColor(Color.WHITE)
                     }
-                }
-
-                if (this.currentMonth != calendar.get(Calendar.MONTH)) {
-                    cell.setBackgroundColor( ContextCompat.getColor(context,R.color.main_gray))
                 }
 
                 cell.layoutParams = RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT)
