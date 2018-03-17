@@ -1,7 +1,8 @@
 package pami.com.pami
 
-class Employees {
+class Employee {
     val firstName:String=""
     val lastName:String=""
     val employeeId:String=""
+    val clockedInStatus:ClockedInStatus=ClockedInStatus.CLOCKED_OUT
 }

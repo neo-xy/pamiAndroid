@@ -4,23 +4,12 @@
     <color name="colorPrimaryVeryDark">#461A00</color>
     <color name="colorPrimaryDark">#9b1935</color>
 
-
-
-    <color name="colorPrimaryLight">#FFF9EFF1</color>
-
-    <color name="main_gray">#c6c6c6</color>
-
     <color name="colorAccent">#4cc999</color>
     <color name="alternativeAccent">#7c9fdc</color>
-    <color name="shift_that_day">#86fe5f00</color>
-    <color name="ttt">#8c86756b</color>
-    <color name="dimRed">#863030</color>
-    <color name="myBlack">#71080808</color>
 
-    <color name="myDimWhite">#c9ffffff</color>
-    <color name="dimGreen">#671c9c00</color>
+    <color name="main_gray">#c6c6c6</color>
+    <color name="gray_light">#e7e7e7</color>
+
     <color name="blackish">#262626</color>
-
-
 
 </resources>

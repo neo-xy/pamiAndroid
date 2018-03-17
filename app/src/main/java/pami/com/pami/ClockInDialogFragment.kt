@@ -15,8 +15,8 @@ import java.util.concurrent.TimeUnit
 
 
 class ClockInDialogFragment : DialogFragment() {
-    lateinit var clockInBtn: Button;
-    lateinit var clockOutBtn: Button;
+    lateinit var clockInBtn: Button
+    lateinit var clockOutBtn: Button
     lateinit var clockedMessage:TextView
     lateinit var sp: SharedPreferences
     val DISTINCTION = 30
@@ -45,7 +45,7 @@ class ClockInDialogFragment : DialogFragment() {
                 }
             }
 
-            val clockedAdapter = ClockedShiftAdapter(clockedShifts);
+            val clockedAdapter = ClockedShiftAdapter(clockedShifts)
             rv.layoutManager = LinearLayoutManager(context, LinearLayout.VERTICAL, false)
             rv.adapter = clockedAdapter
             clockedAdapter.notifyDataSetChanged()
@@ -70,24 +70,9 @@ class ClockInDialogFragment : DialogFragment() {
 
     private fun clockOut() {
         val date = Date()
-        val calendar = Calendar.getInstance()
-        calendar.time = date
-        val year = calendar.get(Calendar.YEAR)
-        val month = calendar.get(Calendar.MONTH) + 1
-        val day = calendar.get(Calendar.DAY_OF_MONTH)
-        val hour = calendar.get(Calendar.HOUR_OF_DAY)
-        val minute = calendar.get(Calendar.MINUTE)
 
-        val customeDate = CustomDateModel()
+        clockedShift.timeStempOut = date.time
 
-        customeDate.year = year
-        customeDate.month = month
-        customeDate.day = day
-        customeDate.hour = hour
-        customeDate.minute = minute
-
-
-        clockedShift.endTime = customeDate
         clockedShift.messageOut = clockedMessage.text.toString()
         FirebaseController.removeShiftFromClockedInShifts(clockedShift).subscribe {
             if (it == true) {
@@ -108,24 +93,8 @@ class ClockInDialogFragment : DialogFragment() {
 
 
         val date = Date()
-//        val clockedInTime = Calendar.getInstance();
-//        clockedInTime.time = date
-//        val year = clockedInTime.get(Calendar.YEAR)
-//        val month = clockedInTime.get(Calendar.MONTH) + 1
-//        val day = clockedInTime.get(Calendar.DAY_OF_MONTH)
-//        val hour = clockedInTime.get(Calendar.HOUR_OF_DAY)
-//        val minute = clockedInTime.get(Calendar.MINUTE)
-//
+
         val clockedShift = ClockedShift()
-//        val customeDate = CustomDateModel()
-//
-//        customeDate.year = year
-//        customeDate.month = month
-//        customeDate.day = day
-//        customeDate.hour = hour
-//        customeDate.minute = minute
-//
-//        clockedShift.startTime = customeDate
 
         FirebaseController.shifts.forEach {
             if(it.timeStempIn-date.time< TimeUnit.MINUTES.toMillis(60)){
@@ -140,7 +109,6 @@ class ClockInDialogFragment : DialogFragment() {
         clockedShift.lastName = User.lastName
         clockedShift.employeeId = User.employeeId
         clockedShift.messageIn = clockedMessage.text.toString()
-        clockedShift.companyId = User.companyId
 
         FirebaseController.addToClockedInShifts(clockedShift).subscribe() {
             if (it == "") {

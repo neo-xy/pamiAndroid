@@ -4,6 +4,7 @@
     android:layout_height="match_parent"
     android:id="@+id/fl"
     android:orientation="vertical"
+
     tools:context="pami.com.pami.SettingsFragment">
 
 
@@ -11,6 +12,7 @@
         android:id="@+id/calendar_switch_container"
         android:orientation="vertical"
         android:layout_width="match_parent"
+
         android:layout_height="match_parent"/>
 
 </LinearLayout>

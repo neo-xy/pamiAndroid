@@ -6,9 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 
-/**
- * Created by Pawel on 13/03/2018.
- */
+
 class ClockedShiftAdapter() : RecyclerView.Adapter<ClockedShiftAdapter.CustomeHolder>() {
     lateinit var list1: MutableList<ClockedShift>
 
@@ -17,7 +15,7 @@ class ClockedShiftAdapter() : RecyclerView.Adapter<ClockedShiftAdapter.CustomeHo
     }
 
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): CustomeHolder {
-        var view = LayoutInflater.from(parent?.context).inflate(R.layout.clocked_in_entry, parent, false)
+        val view = LayoutInflater.from(parent?.context).inflate(R.layout.clocked_in_entry, parent, false)
         return CustomeHolder(view)
     }
 
@@ -29,7 +27,7 @@ class ClockedShiftAdapter() : RecyclerView.Adapter<ClockedShiftAdapter.CustomeHo
         val firstName = list1[position].firstName
         val lastName = list1[position].lastName
         holder?.name?.text = firstName +" "+ lastName
-        holder?.time?.text = Shared.df.format(list1[position].startTime.hour)+":"+Shared.df.format(list1[position].startTime.minute)
+        holder?.time?.text = Shared.df.format(Shared.getHour(list1[position].timeStempIn))+":"+Shared.df.format(Shared.getMinute(list1[position].timeStempIn))
     }
 
     class CustomeHolder(view: View) : RecyclerView.ViewHolder(view) {

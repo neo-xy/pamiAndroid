@@ -18,10 +18,10 @@
             android:icon="@drawable/ic_dolar"
             android:title="@string/menu_drawer_payouts" />
 
-        <item
-            android:id="@+id/nav_settings"
-            android:icon="@drawable/ic_settings"
-            android:title="@string/drawer_menu_settings" />
+        <!--<item-->
+            <!--android:id="@+id/nav_settings"-->
+            <!--android:icon="@drawable/ic_settings"-->
+            <!--android:title="@string/drawer_menu_settings" />-->
         <item
             android:id="@+id/nav_personal_information"
             android:icon="@drawable/ic_person"
@@ -35,6 +35,12 @@
                 android:id="@+id/nav_contacts"
                 android:icon="@drawable/ic_contacts"
                 android:title="Kontakter" />
+
+            <item
+                android:id="@+id/nav_shift_manager"
+                android:icon="@drawable/ic_people"
+                android:title="Hantera passen"
+                />
             <item
                 android:id="@+id/nav_logout"
                 android:icon="@drawable/ic_arrow_back"

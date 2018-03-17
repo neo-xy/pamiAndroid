@@ -83,6 +83,7 @@ class CustomCalendar : LinearLayout {
                 }
                 if (this.currentMonth != calendar.get(Calendar.MONTH)) {
                     cell.setBackgroundColor( ContextCompat.getColor(context,R.color.main_gray))
+                    cell.setTextColor(ContextCompat.getColor(context,R.color.gray_light))
                 }
                 shifts.forEach() {
                     if (day == it.startTime.day && month2 == it.startTime.month) {

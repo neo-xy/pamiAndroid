@@ -18,6 +18,7 @@ object User{
     var accountNr=""
     var bankName=""
     var clearNr=""
+    var role=""
 
 }
 

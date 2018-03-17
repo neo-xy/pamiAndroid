@@ -2,7 +2,6 @@ package pami.com.pami
 
 import android.net.Uri
 import android.util.Log
-import android.widget.Toast
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
@@ -10,14 +9,13 @@ import com.google.firebase.firestore.*
 import com.google.firebase.firestore.EventListener
 import io.reactivex.Observable
 import io.reactivex.Observable.create
-import java.time.Clock
 import java.util.*
 
 object FirebaseController {
 
     var shifts = mutableListOf<Shift>()
     var departments: MutableList<Department>? = null
-    var employees: MutableList<Employees>? = null
+    var employees: MutableList<Employee> = mutableListOf()
     var colleague = mutableListOf<Colleague>()
     var salaries = mutableListOf<Salary>()
     lateinit var token: String
@@ -101,8 +99,8 @@ object FirebaseController {
 
     fun setUpEmployees() {
         FirebaseFirestore.getInstance().collection("companies").document(User.companyId).collection("employees").addSnapshotListener(object : EventListener<QuerySnapshot> {
-            override fun onEvent(p0: QuerySnapshot?, p1: FirebaseFirestoreException?) {
-                employees = p0?.toObjects(Employees::class.java)
+            override fun onEvent(p0: QuerySnapshot, p1: FirebaseFirestoreException?) {
+                employees = p0.toObjects(Employee::class.java)
             }
         })
     }

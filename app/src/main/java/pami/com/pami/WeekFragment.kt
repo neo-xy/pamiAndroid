@@ -9,6 +9,7 @@ import android.os.Bundle
 import android.os.Vibrator
 import android.support.annotation.RequiresApi
 import android.support.v4.app.Fragment
+import android.support.v4.content.ContextCompat
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -46,7 +47,7 @@ class WeekFragment : Fragment(), View.OnScrollChangeListener {
         val day = arguments!!.getInt("day")
         val weekDay = arguments!!.getInt("weekDay")
         setUp2(year, month, day, weekDay)
-        return view;
+        return view
     }
 
 
@@ -70,7 +71,7 @@ class WeekFragment : Fragment(), View.OnScrollChangeListener {
 
                     dayColumn.setBackgroundColor(resources.getColor(R.color.colorPrimaryDark))
                     dayColumn.gravity = Gravity.CENTER
-                    dayColumn.setPadding(20, 15, 20, 15);
+                    dayColumn.setPadding(20, 15, 20, 15)
 
                     var dayDate = day1 - (weekDay - 2) + i
                     if (weekDay == 0) {
@@ -89,7 +90,7 @@ class WeekFragment : Fragment(), View.OnScrollChangeListener {
                     val day = TextView(context)
                     val blockDayBtn = TextView(context)
                     blockDayBtn.layoutParams = LinearLayout.LayoutParams(90, 90)
-                    blockDayBtn.gravity = Gravity.RIGHT
+                    blockDayBtn.gravity = Gravity.END
 
 
                     if (User.datesUnavailable.contains(dateKey)) {
@@ -104,7 +105,7 @@ class WeekFragment : Fragment(), View.OnScrollChangeListener {
                     day.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
 
                     day.setTextColor(Color.WHITE)
-                    dayColumn.addView(day);
+                    dayColumn.addView(day)
                     dayColumn.addView(blockDayBtn)
                     headerLayout.addView(dayColumn)
                 }
@@ -228,6 +229,7 @@ class WeekFragment : Fragment(), View.OnScrollChangeListener {
             FirebaseController.updateUnavailableDates(User.datesUnavailable)
             dialog.dismiss()
         }
+
     }
 }
 

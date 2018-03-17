@@ -8,7 +8,6 @@ import android.os.Bundle
 import android.support.design.widget.NavigationView
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
-import android.util.Log
 import android.view.Gravity
 import android.view.MenuItem
 import android.widget.Button
@@ -23,14 +22,12 @@ import com.facebook.login.LoginManager
 import com.facebook.login.LoginResult
 import com.google.firebase.auth.FacebookAuthProvider
 import com.google.firebase.auth.FirebaseAuth
-import io.reactivex.Observable
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
 import pami.com.pami.R.id.*
 
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
-
 
     val firebaseAuth = FirebaseAuth.getInstance()
     lateinit var profileImageView: ImageView
@@ -47,8 +44,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         this.sp = this.getPreferences(android.content.Context.MODE_PRIVATE)
         this.clockedInShiftId = this.sp.getString("clockedInId", "");
-
-//        toolbar.setBackgroundResource(R.color.colorPrimaryLight)
 
         setSupportActionBar(toolbar)
         val toggle = ActionBarDrawerToggle(
@@ -71,6 +66,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             nav_view.menu.findItem(nav_calendar).setVisible(false)
             nav_view.menu.findItem(nav_shifts).setVisible(false)
             nav_view.menu.findItem(nav_contacts).setVisible(false)
+        }
+        if(User.role!="boss"){
+            nav_view.menu.findItem(nav_shift_manager).setVisible(false)
         }
 
         FirebaseAuth.getInstance().currentUser!!.providerData.forEach {
@@ -134,9 +132,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             nav_calendar -> {
                 supportFragmentManager.beginTransaction().replace(fragment_container.id, ScheduleFragment(), "schedule").commit()
             }
-            nav_settings -> {
-                supportFragmentManager.beginTransaction().replace(fragment_container.id, SettingsFragment(), "settings").commit()
-            }
+//            nav_settings -> {
+//                supportFragmentManager.beginTransaction().replace(fragment_container.id, SettingsFragment(), "settings").commit()
+//            }
 
             nav_logout -> {
                 firebaseAuth.signOut()
@@ -150,6 +148,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
             nav_contacts -> {
                 supportFragmentManager.beginTransaction().replace(fragment_container.id, DashboardFragment(), "contacts").commit()
+            }
+            nav_shift_manager->{
+                supportFragmentManager.beginTransaction().replace(fragment_container.id, ShiftManagerFragment(), "shiftManager").commit()
             }
 
             nav_link -> {

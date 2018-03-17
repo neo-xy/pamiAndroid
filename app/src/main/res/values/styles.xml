@@ -34,6 +34,7 @@
         <item name="android:backgroundTint">@android:color/white</item>
     </style>
     <style name="LoginActivityTheme"  parent="Theme.AppCompat.Light.NoActionBar">
+        <!--changes statusbar color in loginActivity-->
         <item name="colorPrimaryDark">@color/blackish</item>
     </style>
 
