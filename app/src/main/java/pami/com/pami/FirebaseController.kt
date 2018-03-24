@@ -111,6 +111,7 @@ object FirebaseController {
 
     fun saveImgUrl(photoUrl: Uri?) {
         FirebaseFirestore.getInstance().collection("users").document(User.employeeId).update("imgUrl", photoUrl.toString())
+        FirebaseFirestore.getInstance().collection("companies").document(User.companyId).collection("employees").document(User.employeeId).update("imgUrl", photoUrl.toString())
     }
 
     fun setUpColleagues() {
