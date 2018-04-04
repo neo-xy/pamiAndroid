@@ -90,19 +90,8 @@ class ClockInDialogFragment : DialogFragment() {
     }
 
     private fun clockIn() {
-
-
         val date = Date()
-
         val clockedShift = ClockedShift()
-
-        FirebaseController.shifts.forEach {
-            if(it.timeStempIn-date.time< TimeUnit.MINUTES.toMillis(60)){
-                clockedShift.correspondingShiftId = it.shiftId
-                return@forEach
-            }
-
-        }
 
         clockedShift.timeStempIn = date.time
         clockedShift.firstName = User.firstName

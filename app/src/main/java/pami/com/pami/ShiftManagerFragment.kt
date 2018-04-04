@@ -116,12 +116,7 @@ class ShiftManagerFragment : Fragment(), RecyclerViewClickListener {
         val date = Date()
         val clockedShift = ClockedShift()
 
-        FirebaseController.shifts.forEach {
-            if (it.timeStempIn - date.time < TimeUnit.MINUTES.toMillis(60)) {
-                clockedShift.correspondingShiftId = it.shiftId
-                return@forEach
-            }
-        }
+
         var emp = Employee()
 
         FirebaseController.employees.forEach {
