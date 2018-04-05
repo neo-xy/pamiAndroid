@@ -162,10 +162,10 @@ object FirebaseController {
     fun addToClockedInShifts(clockedShift: ClockedShift): Observable<String> {
         return create {
             val emiter = it
-            FirebaseFirestore.getInstance().collection("companies").document(User.companyId).collection("clockedInShifts").add(clockedShift).addOnCompleteListener {
+            FirebaseFirestore.getInstance().collection("companies").document(User.companyId).collection("activeShifts").add(clockedShift).addOnCompleteListener {
                 if (it.isSuccessful) {
                     emiter.onNext(it.getResult().id)
-                    FirebaseFirestore.getInstance().collection("data").document("clockedInShift").set(clockedShift)
+//                    FirebaseFirestore.getInstance().collection("data").document("clockedInShift").set(clockedShift)
                 } else {
                     emiter.onNext("");
                 }
@@ -176,7 +176,7 @@ object FirebaseController {
     fun getClockedInShifts(): Observable<MutableList<ClockedShift>> {
         return Observable.create {
             val emitter = it
-            FirebaseFirestore.getInstance().collection("companies").document(User.companyId).collection("clockedInShifts").addSnapshotListener(object : EventListener<QuerySnapshot> {
+            FirebaseFirestore.getInstance().collection("companies").document(User.companyId).collection("activeShifts").addSnapshotListener(object : EventListener<QuerySnapshot> {
                 override fun onEvent(p0: QuerySnapshot, p1: FirebaseFirestoreException?) {
 
                     val clockedShifts= mutableListOf<ClockedShift>()
@@ -196,7 +196,7 @@ object FirebaseController {
     fun removeShiftFromClockedInShifts(clockedShift: ClockedShift): Observable<Boolean> {
         return Observable.create {
             val emitter = it
-            FirebaseFirestore.getInstance().collection("companies").document(User.companyId).collection("clockedInShifts").document(clockedShift.clockedShiftId).delete().addOnCompleteListener {
+            FirebaseFirestore.getInstance().collection("companies").document(User.companyId).collection("activeShifts").document(clockedShift.clockedShiftId).delete().addOnCompleteListener {
                 if (it.isSuccessful) {
                     emitter.onNext(true)
                 } else {
