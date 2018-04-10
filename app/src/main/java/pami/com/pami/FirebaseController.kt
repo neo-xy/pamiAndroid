@@ -9,6 +9,7 @@ import com.google.firebase.firestore.*
 import com.google.firebase.firestore.EventListener
 import io.reactivex.Observable
 import io.reactivex.Observable.create
+import org.json.JSONObject
 import java.util.*
 
 object FirebaseController {
@@ -54,6 +55,7 @@ object FirebaseController {
                     shifts.removeAll(shifts)
                     Log.d("pawell","ii "+ p0?.size())
                     p0?.forEach {
+                        Log.d("pawell",it.toString())
                         var shift = it.toObject(Shift::class.java)
                         shift.shiftId = it.id
                         shifts.add(shift)

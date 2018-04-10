@@ -27,7 +27,7 @@ class PersonalInformationFragment : Fragment() {
     lateinit var socialNumberView:TextView
     lateinit var bankAccountView:TextView
     lateinit var phoneNrView:TextView
-    var totalSalary =0
+    var totalSalary =0L
     var totalHours=0
 
 

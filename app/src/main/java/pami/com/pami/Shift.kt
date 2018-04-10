@@ -21,4 +21,5 @@ class Shift {
     var shiftId: String = ""
     var timeStempIn:Long=0
     var timeStempOut:Long=0
+
 }
