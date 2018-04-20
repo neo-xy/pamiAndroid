@@ -221,5 +221,19 @@ object FirebaseController {
         }
     }
 
+    fun getAcceptedShifts():Observable<MutableList<Shift>>{
+        return create{
+            FirebaseFirestore.getInstance().collection("users").document(User.employeeId).collection("acceptedShifts").addSnapshotListener(object:EventListener<QuerySnapshot>{
+                val emitter = it
+                override fun onEvent(p0: QuerySnapshot?, p1: FirebaseFirestoreException?) {
+                    var acceptedShifts = mutableListOf<Shift>()
+                    acceptedShifts = p0!!.toObjects(Shift::class.java)
+                    emitter.onNext(acceptedShifts);
+                }
+
+            })
+        }
+    }
+
 }
 

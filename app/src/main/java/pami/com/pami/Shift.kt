@@ -16,7 +16,7 @@ class Shift {
     var employeeId: String = ""
     var employmentType: String = ""
     var message: String = ""
-    var duration: Double = 0.0
+    var duration: Long = 0L
     var badge: String = ""
     var shiftId: String = ""
     var timeStempIn:Long=0

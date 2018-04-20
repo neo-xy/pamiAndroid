@@ -12,7 +12,6 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.Toast
 import java.util.*
-import java.util.concurrent.TimeUnit
 
 class ShiftManagerFragment : Fragment(), RecyclerViewClickListener {
 
