@@ -58,11 +58,11 @@ class PersonalInformationFragment : Fragment() {
 
 
         var salarySuffix ="Sek/tim"
-        if(User.salery>1000){
+        if(User.salaries[0].salary>1000){
             salarySuffix = "Sek/månad"
         }
 
-        currentSalaryView.text = User.salery.toString()+" "+ salarySuffix
+        currentSalaryView.text = User.salaries[0].salary.toString()+" "+ salarySuffix
 
         FirebaseController.salaries.forEach {
             totalHours+=it.duration!!
@@ -73,10 +73,13 @@ class PersonalInformationFragment : Fragment() {
         totalWorkedHoursView.text = ""+ totalHours +" timmar"
 
         val shifts = Shared.sortShifts(FirebaseController.shifts)
-       firstWorkDateView.text = ""+shifts[0].startTime.year +"/"+Shared.df.format(shifts[0].startTime.month)+"/"+
-               Shared.df.format(shifts[0].startTime.day)
-       lastWorkDateView.text = ""+shifts[shifts.size-1].startTime.year +"/"+Shared.df.format(shifts[shifts.size-1].startTime.month)+"/"+
-               Shared.df.format(shifts[shifts.size-1].startTime.day)
+        if(shifts.size>0){
+            firstWorkDateView.text = ""+shifts[0].startTime.year +"/"+Shared.df.format(shifts[0]?.startTime.month)+"/"+
+                    Shared.df.format(shifts[0]?.startTime.day)
+            lastWorkDateView.text = ""+shifts[shifts.size-1]?.startTime.year +"/"+Shared.df.format(shifts[shifts.size-1]?.startTime.month)+"/"+
+                    Shared.df.format(shifts[shifts.size-1]?.startTime.day)
+        }
+
 
         Glide.with(this)
                 .load(User.imgUrl)

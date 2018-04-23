@@ -9,7 +9,6 @@ import com.google.firebase.firestore.*
 import com.google.firebase.firestore.EventListener
 import io.reactivex.Observable
 import io.reactivex.Observable.create
-import org.json.JSONObject
 import java.util.*
 
 object FirebaseController {
@@ -19,6 +18,7 @@ object FirebaseController {
     var employees: MutableList<Employee> = mutableListOf()
     var colleague = mutableListOf<Colleague>()
     var salaries = mutableListOf<Salary>()
+    var unavailableShifts = mutableListOf<UnavailableDate>();
     lateinit var token: String
 
     fun getUser(): Observable<Boolean> {
@@ -27,6 +27,9 @@ object FirebaseController {
                 override fun onEvent(p0: DocumentSnapshot?, p1: FirebaseFirestoreException?) {
                     if (p0!!.exists()) {
                         p0.toObject(User::class.java)
+//                        User.saleries.sortBy({
+//                            it.salary
+//                        })
                         it.onNext(true)
                     } else {
                     }
@@ -109,6 +112,35 @@ object FirebaseController {
 
     fun updateUnavailableDates(dates: List<Int>) {
         FirebaseFirestore.getInstance().collection("users").document(User.employeeId).update("datesUnavailable", dates)
+    }
+    fun updateUnavailableDates2(us:UnavailableDate, dateKey:String) {
+        FirebaseFirestore.getInstance().collection("companies").document(User.companyId).collection("months").document(dateKey).collection("datesUnavailable").add(us).addOnCompleteListener(OnCompleteListener {
+           val id = it.result.id
+            FirebaseFirestore.getInstance().collection("users").document(User.employeeId).collection("datesUnavailable").document(id).set(us)
+        })
+
+    }
+
+    fun getUanavailableDates():Observable<MutableList<UnavailableDate>>{
+        return create({
+            FirebaseFirestore.getInstance().collection("users").document(User.employeeId).collection("datesUnavailable").addSnapshotListener(object:  EventListener<QuerySnapshot> {
+                override fun onEvent(p0: QuerySnapshot?, p1: FirebaseFirestoreException?) {
+                    unavailableShifts.removeAll(unavailableShifts);
+                    p0?.forEach {
+                        Log.d("pawell","for each")
+                       var us = it.toObject(UnavailableDate::class.java)
+                        us.id = it.id
+                        unavailableShifts.add(us)
+                    }
+                }
+            })
+        })
+    }
+
+    fun removeUnavailableDate(us:UnavailableDate, dateKey:String){
+        Log.d("pawell","remove "+ us.id)
+        FirebaseFirestore.getInstance().collection("companies").document(User.companyId).collection("months").document(dateKey).collection("datesUnavailable").document(us.id).delete()
+        FirebaseFirestore.getInstance().collection("users").document(User.employeeId).collection("datesUnavailable").document(us.id).delete()
     }
 
     fun saveImgUrl(photoUrl: Uri?) {
@@ -226,8 +258,9 @@ object FirebaseController {
             FirebaseFirestore.getInstance().collection("users").document(User.employeeId).collection("acceptedShifts").addSnapshotListener(object:EventListener<QuerySnapshot>{
                 val emitter = it
                 override fun onEvent(p0: QuerySnapshot?, p1: FirebaseFirestoreException?) {
-                    var acceptedShifts = mutableListOf<Shift>()
-                    acceptedShifts = p0!!.toObjects(Shift::class.java)
+
+                   var acceptedShifts = p0!!.toObjects(Shift::class.java)
+
                     emitter.onNext(acceptedShifts);
                 }
 

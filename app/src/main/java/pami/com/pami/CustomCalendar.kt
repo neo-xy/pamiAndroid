@@ -58,10 +58,8 @@ class CustomCalendar : LinearLayout {
                 llCell.layoutParams = TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT, 1f)
                 val prick = TextView(context)
 
-                val rLp = RelativeLayout.LayoutParams(40, 40)
-                rLp.setMargins(86, 30, 0, 0)
-
-
+                val rLp = RelativeLayout.LayoutParams(30, 30)
+                rLp.setMargins(91, 30, 0, 0)
 
                 prick.layoutParams = rLp
 
@@ -75,12 +73,24 @@ class CustomCalendar : LinearLayout {
                 val month2 = calendar.get(Calendar.MONTH) + 1
                 val year2 = calendar.get(Calendar.YEAR)
                 val weekDay = calendar.get(Calendar.DAY_OF_WEEK)
-                if (User.datesUnavailable.contains((year2.toString() + String.format("%02d", month2) + String.format("%02d", day)).toInt())) {
-
-                    prick.setBackgroundResource(R.drawable.bg_red_circle)
 
 
+
+                var dateSaved =false;
+                FirebaseController.unavailableShifts.forEach {
+                    val c =Calendar.getInstance()
+                    c.time= it.date
+                    if(c.get(Calendar.YEAR)==year&&c.get(Calendar.MONTH)==(month2-1)&&c.get(Calendar.DATE)==day){
+                        dateSaved = true
+                        return@forEach
+                    }
                 }
+
+                if (dateSaved) {
+                    prick.setBackgroundResource(R.drawable.bg_red_circle)
+                }
+
+
                 if (this.currentMonth != calendar.get(Calendar.MONTH)) {
                     cell.setBackgroundColor( ContextCompat.getColor(context,R.color.main_gray))
                     cell.setTextColor(ContextCompat.getColor(context,R.color.gray_light))

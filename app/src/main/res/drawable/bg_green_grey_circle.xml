@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:state_pressed="false">
-        <shape android:shape="oval">
-            <gradient android:type="radial" android:gradientRadius="40"
-                android:startColor="#0db101" android:endColor="#c1c1c1" />
+        <shape android:shape="oval" >
+            <gradient android:type="radial" android:gradientRadius="48"
+                android:startColor="#0db101" android:endColor="#ffffff" />
+
         </shape>
     </item>
 

@@ -7,7 +7,7 @@ object User{
     val employeeId:String=""
     val city:String = ""
     val email:String=""
-    val salery:Int=0
+    val salaries = mutableListOf<Salary>()
     val imgUrl:String=""
     val employmentStatus:String=""
     val employmentDate: CustomDateModel = CustomDateModel()

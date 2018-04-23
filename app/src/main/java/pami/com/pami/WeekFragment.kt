@@ -9,13 +9,14 @@ import android.os.Bundle
 import android.os.Vibrator
 import android.support.annotation.RequiresApi
 import android.support.v4.app.Fragment
-import android.support.v4.content.ContextCompat
+import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import java.util.*
+
 
 
 class WeekFragment : Fragment(), View.OnScrollChangeListener {
@@ -77,23 +78,34 @@ class WeekFragment : Fragment(), View.OnScrollChangeListener {
                     if (weekDay == 0) {
                         dayDate = day1 - (7 - 2) + i
                     }
-
+                    val cal = Calendar.getInstance()
                     if (dayDate < 1) {
-                        val cal = Calendar.getInstance()
+
                         cal.set(year, month2 - 1, 1)
                         cal.add(Calendar.DAY_OF_MONTH, (dayDate - 1))
                         dayDate = cal.get(Calendar.DAY_OF_MONTH)
                         month2 = cal.get(Calendar.MONTH) + 1
                     }
 
-                    val dateKey = (year.toString() + String.format("%02d", month2) + String.format("%02d", dayDate)).toInt()
+                    val dateKey = year.toString() + String.format("%02d", month2)
                     val day = TextView(context)
                     val blockDayBtn = TextView(context)
                     blockDayBtn.layoutParams = LinearLayout.LayoutParams(90, 90)
                     blockDayBtn.gravity = Gravity.END
 
 
-                    if (User.datesUnavailable.contains(dateKey)) {
+                    var dateSaved =false;
+
+                    FirebaseController.unavailableShifts.forEach {
+                        val c =Calendar.getInstance()
+                        c.time= it.date
+                        if(c.get(Calendar.YEAR)==year&&c.get(Calendar.MONTH)==(month-1)&&c.get(Calendar.DATE)==dayDate){
+                            dateSaved = true
+                            return@forEach
+                        }
+                    }
+
+                    if (dateSaved) {
                         blockDayBtn.setBackgroundResource(R.drawable.bg_green_red_circle)
                     } else {
                         blockDayBtn.setBackgroundResource(R.drawable.bg_green_grey_circle)
@@ -196,7 +208,15 @@ class WeekFragment : Fragment(), View.OnScrollChangeListener {
 
     private fun blockDay(year: Int, month: Int, date: Int, blockDayBtn: TextView) {
 
-        val dateKey = (year.toString() + String.format("%02d", month) + String.format("%02d", date)).toInt()
+        val dateKey = year.toString() + String.format("%02d", month)
+
+        val cal = Calendar.getInstance()
+        cal.set(Calendar.YEAR,year)
+        cal.set(Calendar.MONTH,month-1)
+        cal.set(Calendar.DATE,date)
+
+        val d =cal.time
+
 
         val vibrator = activity?.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator;
         vibrator.vibrate(200)
@@ -210,23 +230,39 @@ class WeekFragment : Fragment(), View.OnScrollChangeListener {
         val radioGroup = dialog.findViewById<RadioGroup>(R.id.radio_group)
         val availablRadioBtn = dialog.findViewById<RadioButton>(R.id.available_btn)
         val notAvailablRadioBtn = dialog.findViewById<RadioButton>(R.id.not_available_btn)
-        if (!User.datesUnavailable.contains(dateKey)) {
+
+       var dateSaved =false;
+        var dateClicked:UnavailableDate=UnavailableDate()
+        dateClicked.date = d;
+        dateClicked.employeeId = User.employeeId
+        FirebaseController.unavailableShifts.forEach {
+            val c =Calendar.getInstance()
+            c.time = it.date
+            if(c.get(Calendar.YEAR)==year&&c.get(Calendar.MONTH)==(month-1)&&c.get(Calendar.DATE)==date){
+                dateSaved = true
+                dateClicked = it
+                return@forEach
+            }
+        }
+
+        if (!dateSaved) {
             availablRadioBtn.isChecked = true
         } else {
             notAvailablRadioBtn.isChecked = true
         }
         dialog.findViewById<Button>(R.id.save_availability_btn).setOnClickListener {
 
-            if (availablRadioBtn.isChecked) {
-                User.datesUnavailable.remove(dateKey)
+            if (availablRadioBtn.isChecked&&dateSaved) {
+
+                FirebaseController.removeUnavailableDate(dateClicked,dateKey)
                 blockDayBtn.setBackgroundResource(R.drawable.bg_green_grey_circle)
 
-            } else if (!availablRadioBtn.isChecked && !User.datesUnavailable.contains(dateKey)) {
-                User.datesUnavailable.add(dateKey)
+            } else if (!availablRadioBtn.isChecked && !dateSaved) {
+
+                FirebaseController.updateUnavailableDates2(dateClicked,dateKey)
                 blockDayBtn.setBackgroundResource(R.drawable.bg_green_red_circle)
             }
 
-            FirebaseController.updateUnavailableDates(User.datesUnavailable)
             dialog.dismiss()
         }
 

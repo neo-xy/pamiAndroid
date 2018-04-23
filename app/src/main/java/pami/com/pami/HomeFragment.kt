@@ -61,6 +61,9 @@ class HomeFragment : Fragment() {
                 adap.notifyDataSetChanged()
             }
         }
+
+        FirebaseController.getUanavailableDates().subscribe();
+
         if (User.employmentStatus == "passed") {
             infoCardBoss.visibility = View.GONE
         }

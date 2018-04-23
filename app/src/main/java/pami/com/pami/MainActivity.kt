@@ -124,7 +124,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         when (item.itemId) {
             nav_shifts -> {
 
-                supportFragmentManager.beginTransaction().replace(fragment_container.id, (ShiftsFragment.getInstance())).commit()
+                supportFragmentManager.beginTransaction().replace(fragment_container.id, (SaleriesFragment.getInstance())).commit()
             }
             nav_home -> {
                 supportFragmentManager.beginTransaction().replace(fragment_container.id, (HomeFragment())).commit()

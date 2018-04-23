@@ -28,6 +28,7 @@ class ScheduleFragment : Fragment(), OnCalendarClickedListener {
         val view = inflater.inflate(R.layout.fragment_schedule, container, false)
         this.container = view.findViewById<LinearLayout>(R.id.calendar_switch_container)
         setUp()
+
         return view
     }
 
