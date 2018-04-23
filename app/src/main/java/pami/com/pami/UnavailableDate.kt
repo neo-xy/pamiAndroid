@@ -7,5 +7,6 @@ import java.util.*
 class UnavailableDate {
     var employeeId: String = ""
     var date: Date? = null
-    var id: String =""
+    var id: String = ""
+    var markDate: Date? = null
 }

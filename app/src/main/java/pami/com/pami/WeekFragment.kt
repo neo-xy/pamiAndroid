@@ -111,7 +111,7 @@ class WeekFragment : Fragment(), View.OnScrollChangeListener {
                         blockDayBtn.setBackgroundResource(R.drawable.bg_green_grey_circle)
                     }
 
-                    blockDayBtn.setOnClickListener { this.blockDay(year, month, dayDate, blockDayBtn) }
+                    blockDayBtn.setOnClickListener { this.blockDay(year, month2, dayDate, blockDayBtn) }
 
                     day.text = weekDays[i] + " " + dayDate + "/" + month2
                     day.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
@@ -232,15 +232,16 @@ class WeekFragment : Fragment(), View.OnScrollChangeListener {
         val notAvailablRadioBtn = dialog.findViewById<RadioButton>(R.id.not_available_btn)
 
        var dateSaved =false;
-        var dateClicked:UnavailableDate=UnavailableDate()
-        dateClicked.date = d;
-        dateClicked.employeeId = User.employeeId
+        var unavailableDate:UnavailableDate=UnavailableDate()
+        unavailableDate.date = d;
+        unavailableDate.employeeId = User.employeeId
+        unavailableDate.markDate = Date()
         FirebaseController.unavailableShifts.forEach {
             val c =Calendar.getInstance()
             c.time = it.date
             if(c.get(Calendar.YEAR)==year&&c.get(Calendar.MONTH)==(month-1)&&c.get(Calendar.DATE)==date){
                 dateSaved = true
-                dateClicked = it
+                unavailableDate = it
                 return@forEach
             }
         }
@@ -254,12 +255,12 @@ class WeekFragment : Fragment(), View.OnScrollChangeListener {
 
             if (availablRadioBtn.isChecked&&dateSaved) {
 
-                FirebaseController.removeUnavailableDate(dateClicked,dateKey)
+                FirebaseController.removeUnavailableDate(unavailableDate,dateKey)
                 blockDayBtn.setBackgroundResource(R.drawable.bg_green_grey_circle)
 
             } else if (!availablRadioBtn.isChecked && !dateSaved) {
 
-                FirebaseController.updateUnavailableDates2(dateClicked,dateKey)
+                FirebaseController.updateUnavailableDates2(unavailableDate,dateKey)
                 blockDayBtn.setBackgroundResource(R.drawable.bg_green_red_circle)
             }
 

@@ -114,7 +114,7 @@ object FirebaseController {
         FirebaseFirestore.getInstance().collection("users").document(User.employeeId).update("datesUnavailable", dates)
     }
     fun updateUnavailableDates2(us:UnavailableDate, dateKey:String) {
-        FirebaseFirestore.getInstance().collection("companies").document(User.companyId).collection("months").document(dateKey).collection("datesUnavailable").add(us).addOnCompleteListener(OnCompleteListener {
+        FirebaseFirestore.getInstance().collection("companies").document(User.companyId).collection("datesUnavailable").add(us).addOnCompleteListener(OnCompleteListener {
            val id = it.result.id
             FirebaseFirestore.getInstance().collection("users").document(User.employeeId).collection("datesUnavailable").document(id).set(us)
         })
@@ -139,7 +139,7 @@ object FirebaseController {
 
     fun removeUnavailableDate(us:UnavailableDate, dateKey:String){
         Log.d("pawell","remove "+ us.id)
-        FirebaseFirestore.getInstance().collection("companies").document(User.companyId).collection("months").document(dateKey).collection("datesUnavailable").document(us.id).delete()
+        FirebaseFirestore.getInstance().collection("companies").document(User.companyId).collection("datesUnavailable").document(us.id).delete()
         FirebaseFirestore.getInstance().collection("users").document(User.employeeId).collection("datesUnavailable").document(us.id).delete()
     }
 
