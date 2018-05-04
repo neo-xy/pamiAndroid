@@ -258,7 +258,7 @@ object FirebaseController {
             FirebaseFirestore.getInstance().collection("users").document(User.employeeId).collection("acceptedShifts").addSnapshotListener(object:EventListener<QuerySnapshot>{
                 val emitter = it
                 override fun onEvent(p0: QuerySnapshot?, p1: FirebaseFirestoreException?) {
-
+Log.d("pawell","eeee" + p0.toString())
                    var acceptedShifts = p0!!.toObjects(Shift::class.java)
 
                     emitter.onNext(acceptedShifts);

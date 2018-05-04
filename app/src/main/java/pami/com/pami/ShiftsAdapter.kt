@@ -37,9 +37,12 @@ class ShiftsAdapter() : RecyclerView.Adapter<ShiftsAdapter.MyViewHolder>(){
         if(shifts[position].badge.length>0){
             holder.badge?.text =" (" +shifts[position].badge+")"
         }
-        if(shifts[position].message.length<1){
-            holder.extraContainer?.visibility = View.GONE
+        if(shifts[position].message!==null){
+            if(shifts[position].message!!.isEmpty()){
+                holder.extraContainer?.visibility = View.GONE
+            }
         }
+
         holder.departmentColor?.setBackgroundColor(Color.parseColor(shifts[position].department.color))
     }
 
