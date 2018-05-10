@@ -9,6 +9,7 @@ import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.media.RingtoneManager
 import android.os.Build
+import android.provider.Settings
 import android.support.v4.app.NotificationCompat
 import android.util.Log
 import com.google.firebase.iid.FirebaseInstanceIdService
@@ -18,48 +19,51 @@ import java.lang.Exception
 import java.text.SimpleDateFormat
 import java.util.*
 
-class NotificationService : FirebaseMessagingService(){
+class NotificationService : FirebaseMessagingService() {
 
     override fun onMessageReceived(p0: RemoteMessage) {
-        Log.d("pawell","message recived "+p0.data.get("title")+" "+ p0.data.get("timeStemps"))
-//        createChannel()
-        val timeArray = p0.data.get("timeStemps")!!.split(" ")
+
+        val timeArray = p0.data.get("timeStemps")!!.split(",")
 
         var dates = ""
-    val df = SimpleDateFormat("dd MMM")
+        val df = SimpleDateFormat("dd MMM")
 
-        timeArray.forEach {
-            val stemp:Long = it.toLong()
-            dates = dates+" "+(df.format(Date(stemp)))
-        }
+        timeArray.toString()
+
+            timeArray.forEach {
+                val stemp: Long = it.toLong()
+                dates = dates + ", " + (df.format(Date(stemp)))
+            }
 
         val mBuilder = NotificationCompat.Builder(this, CHANNEL_ID)
-                .setSmallIcon(R.drawable.ic_alarm)
+                .setSmallIcon(R.drawable.p)
                 .setContentTitle(p0.data.get("title"))
-                .setContentText(dates)
+                .setContentText(  timeArray.toString())
                 .setStyle(NotificationCompat.BigTextStyle()
-                        .bigText(dates))
+                        .bigText( dates))
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-        val nm:NotificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        nm.notify(0,mBuilder.build())
+                .setSound(Settings.System.DEFAULT_NOTIFICATION_URI)
+        val nm: NotificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        var index =p0.data.get("msg") as String
+        nm.notify(index.toInt(), mBuilder.build())
 
         super.onMessageReceived(p0)
 
     }
 
     override fun onMessageSent(p0: String?) {
-        Log.d("pawell","message recived22 "+ p0)
+
         super.onMessageSent(p0)
     }
 
     override fun onDeletedMessages() {
-        Log.d("pawell","message recived333 ")
+
         super.onDeletedMessages()
     }
 
     override fun onSendError(p0: String?, p1: Exception?) {
         super.onSendError(p0, p1)
-        Log.d("pawell","message recived444 "+ p0)
+
     }
 
     private lateinit var mNotification: Notification
@@ -68,7 +72,6 @@ class NotificationService : FirebaseMessagingService(){
     @SuppressLint("NewApi")
     private fun createChannel() {
 
-        Log.d("pawell","jjjjjjjjj")
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 
@@ -96,9 +99,10 @@ class NotificationService : FirebaseMessagingService(){
         const val CHANNEL_ID = "samples.notification.devdeeds.com.CHANNEL_ID"
         const val CHANNEL_NAME = "Sample Notification"
     }
-     fun onHandleIntent(intent: Intent) {
 
-        Log.d("pawell","handllle")
+    fun onHandleIntent(intent: Intent) {
+
+        Log.d("pawell", "handllle")
 
         //Create Channel
         createChannel()
@@ -174,12 +178,10 @@ class NotificationService : FirebaseMessagingService(){
         }
 
 
-
-
     }
 
 
-    fun fierNtification(){
+    fun fierNtification() {
 
 
     }
