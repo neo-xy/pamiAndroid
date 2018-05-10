@@ -14,7 +14,7 @@ class ClockedShiftAdapter() : RecyclerView.Adapter<ClockedShiftAdapter.CustomeHo
         list1 = list
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): CustomeHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CustomeHolder {
         val view = LayoutInflater.from(parent?.context).inflate(R.layout.clocked_in_entry, parent, false)
         return CustomeHolder(view)
     }
@@ -23,7 +23,7 @@ class ClockedShiftAdapter() : RecyclerView.Adapter<ClockedShiftAdapter.CustomeHo
         return list1.size
     }
 
-    override fun onBindViewHolder(holder: CustomeHolder?, position: Int) {
+    override fun onBindViewHolder(holder: CustomeHolder, position: Int) {
         val firstName = list1[position].firstName
         val lastName = list1[position].lastName
         holder?.name?.text = firstName +" "+ lastName

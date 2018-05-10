@@ -35,7 +35,7 @@ class ColleaguesAdapter() : RecyclerView.Adapter<ColleaguesAdapter.MyViewHolder>
             }
         })
         colleagues.forEach {
-            Log.d("pawell", it.firstName)
+
         }
     }
 
@@ -59,7 +59,6 @@ class ColleaguesAdapter() : RecyclerView.Adapter<ColleaguesAdapter.MyViewHolder>
         val mail = this.colleagues[position].email
 
         if (role == "boss") {
-            Log.d("pawell", "boss")
 
             holder.card.setCardBackgroundColor(ContextCompat.getColor(context,R.color.colorPrimaryDark))
             holder.name.setTextColor(Color.WHITE)

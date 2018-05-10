@@ -42,4 +42,5 @@
     <string name="from">Från:</string>
     <string name="drawer_personal_information">Mina Info</string>
     <string name="total_worked_hours">Sammanlagda antal timmar:</string>
+    <string name="notification_channel_description">weeee</string>
 </resources>

@@ -19,6 +19,7 @@ object User{
     var bankName=""
     var clearNr=""
     var role=""
+    var registrationToken=""
 
 }
 

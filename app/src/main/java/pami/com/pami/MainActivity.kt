@@ -1,6 +1,9 @@
 package pami.com.pami
 
 
+import android.app.Activity
+import android.app.AlarmManager
+import android.app.PendingIntent
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.res.ColorStateList
@@ -8,6 +11,7 @@ import android.os.Bundle
 import android.support.design.widget.NavigationView
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
 import android.view.Gravity
 import android.view.MenuItem
 import android.widget.Button
@@ -22,9 +26,11 @@ import com.facebook.login.LoginManager
 import com.facebook.login.LoginResult
 import com.google.firebase.auth.FacebookAuthProvider
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.iid.FirebaseInstanceId
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
 import pami.com.pami.R.id.*
+import java.util.*
 
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
@@ -40,6 +46,14 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        val refreshedToken = FirebaseInstanceId.getInstance().token
+        if (refreshedToken != null) {
+            Log.d("pawell","token "+ refreshedToken)
+            FirebaseController.updateRegistrationToken(refreshedToken)
+        };
+
+
         supportFragmentManager.beginTransaction().add(fragment_container.id, HomeFragment.getInstance()).commit()
 
         this.sp = this.getPreferences(android.content.Context.MODE_PRIVATE)
@@ -114,9 +128,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         FirebaseController.setupSalleries()
 
     }
-
-
-
 
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {

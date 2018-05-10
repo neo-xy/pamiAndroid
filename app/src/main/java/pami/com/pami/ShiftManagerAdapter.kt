@@ -25,7 +25,6 @@ class ShiftManagerAdapter(employeesClockedInEntres: MutableList<ClockedInEntre>,
     }
 
     override fun getItemCount(): Int {
-        Log.d("pawell",emp.size.toString())
 
         return emp.size
     }
