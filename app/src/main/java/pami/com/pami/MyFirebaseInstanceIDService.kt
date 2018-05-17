@@ -10,7 +10,7 @@ class MyFirebaseInstanceIDService: FirebaseInstanceIdService() {
 
     override fun onTokenRefresh() {
         val refreshedToken = FirebaseInstanceId.getInstance().token
-        Log.d("pawell","refvv "+refreshedToken)
+        Log.d("pawell","refresh token "+refreshedToken)
 
     }
 }

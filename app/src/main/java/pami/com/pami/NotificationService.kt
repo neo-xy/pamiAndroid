@@ -32,7 +32,7 @@ class NotificationService : FirebaseMessagingService() {
 
             timeArray.forEach {
                 val stemp: Long = it.toLong()
-                dates = dates + ", " + (df.format(Date(stemp)))
+                dates = dates + (df.format(Date(stemp)))+ ", "
             }
 
         val mBuilder = NotificationCompat.Builder(this, CHANNEL_ID)

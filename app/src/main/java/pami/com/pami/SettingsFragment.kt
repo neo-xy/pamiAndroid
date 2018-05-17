@@ -13,6 +13,7 @@ import com.bumptech.glide.Glide
 import com.facebook.CallbackManager
 import com.google.firebase.auth.FacebookAuthProvider
 import com.google.firebase.auth.FirebaseAuth
+import pami.com.pami.models.User
 
 
 class SettingsFragment : Fragment() {

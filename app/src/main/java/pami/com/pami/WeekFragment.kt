@@ -9,12 +9,15 @@ import android.os.Bundle
 import android.os.Vibrator
 import android.support.annotation.RequiresApi
 import android.support.v4.app.Fragment
-import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import pami.com.pami.models.Department
+import pami.com.pami.models.Shift
+import pami.com.pami.models.UnavailableDate
+import pami.com.pami.models.User
 import java.util.*
 
 
@@ -232,7 +235,7 @@ class WeekFragment : Fragment(), View.OnScrollChangeListener {
         val notAvailablRadioBtn = dialog.findViewById<RadioButton>(R.id.not_available_btn)
 
        var dateSaved =false;
-        var unavailableDate:UnavailableDate=UnavailableDate()
+        var unavailableDate: UnavailableDate = UnavailableDate()
         unavailableDate.date = d;
         unavailableDate.employeeId = User.employeeId
         unavailableDate.markDate = Date()

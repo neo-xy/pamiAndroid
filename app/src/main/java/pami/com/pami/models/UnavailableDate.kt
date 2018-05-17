@@ -1,4 +1,4 @@
-package pami.com.pami
+package pami.com.pami.models
 
 import com.google.firebase.firestore.IgnoreExtraProperties
 import java.util.*

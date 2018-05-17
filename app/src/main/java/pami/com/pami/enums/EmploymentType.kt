@@ -1,4 +1,4 @@
-package pami.com.pami
+package pami.com.pami.enums
 
 enum class EmploymentType {
    hourly,fullTime,partTime

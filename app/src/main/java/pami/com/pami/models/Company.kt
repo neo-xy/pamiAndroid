@@ -1,9 +1,9 @@
-package pami.com.pami
+package pami.com.pami.models
 
 import java.util.*
 
 class Company {
-    var infoMessage:InfoMessage? = null
+    var infoMessage: InfoMessage? = null
     var companyId:String?=null
 }
 

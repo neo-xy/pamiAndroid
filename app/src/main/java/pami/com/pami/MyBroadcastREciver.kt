@@ -8,7 +8,6 @@ import android.util.Log
 class MyBroadcastREciver:BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
 
-        Log.d("pawell","reciverrrr")
 
 
         val service = Intent(context, NotificationService::class.java)

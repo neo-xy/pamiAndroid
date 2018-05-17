@@ -8,6 +8,7 @@ import com.google.firebase.firestore.*
 import com.google.firebase.firestore.EventListener
 import io.reactivex.Observable
 import io.reactivex.Observable.create
+import pami.com.pami.models.*
 import java.util.*
 
 object FirebaseController {
@@ -18,6 +19,7 @@ object FirebaseController {
     var colleague = mutableListOf<Colleague>()
     var salaries = mutableListOf<Salary>()
     var unavailableShifts = mutableListOf<UnavailableDate>();
+    var accteptedShifts = mutableListOf<Shift>()
     lateinit var token: String
 
     fun getUser(): Observable<Boolean> {
@@ -264,10 +266,9 @@ object FirebaseController {
             FirebaseFirestore.getInstance().collection("users").document(User.employeeId).collection("acceptedShifts").addSnapshotListener(object : EventListener<QuerySnapshot> {
                 val emitter = it
                 override fun onEvent(p0: QuerySnapshot?, p1: FirebaseFirestoreException?) {
-                    Log.d("pawell", "eeee" + p0.toString())
-                    var acceptedShifts = p0!!.toObjects(Shift::class.java)
 
-                    emitter.onNext(acceptedShifts);
+                    accteptedShifts =p0!!.toObjects(Shift::class.java)
+                    emitter.onNext(accteptedShifts);
                 }
 
             })
@@ -275,13 +276,38 @@ object FirebaseController {
     }
 
     fun updateRegistrationToken(token: String) {
-        Log.d("pawell", "updnnn registration " + token + User.companyId + " " + User.employeeId + FirebaseFirestore.getInstance().collection("users").document(User.employeeId))
-
         FirebaseFirestore.getInstance().collection("users").document(User.employeeId).update("refreshToken", token)
-        FirebaseFirestore.getInstance().collection("companies").document(User.companyId).collection("employees").document(User.employeeId).update("refreshToken", token)
+        FirebaseFirestore.getInstance().collection("companies").document(User.companyId).collection("employees").document(User.employeeId)
+                .update("refreshToken",token)
+    }
 
+    fun getShiftsToTake():Observable<MutableList<ShiftsToTake>>{
+        return create {
+            FirebaseFirestore.getInstance().collection("companies").document(User.companyId).collection("shiftsToTake").addSnapshotListener(object:EventListener<QuerySnapshot>{
+                val emiter = it;
+                override fun onEvent(p0: QuerySnapshot?, p1: FirebaseFirestoreException?) {
+                    if(p0!=null){
+                        var shiftsToTake = mutableListOf<ShiftsToTake>()
+                        p0.forEach {
+                            val id = it.id
+                            var shift = it.toObject(ShiftsToTake::class.java)
+                            shift.id = id;
+                            shiftsToTake.add(shift)
+                        }
 
+                        emiter.onNext(shiftsToTake)
+                    }
+                }
+
+            })
+        }
+    }
+
+    fun addShiftToTakeIntress(shiftToTake:ShiftsToTake){
+        Log.d("pawell","adddd")
+        FirebaseFirestore.getInstance().collection("companies").document(User.companyId).collection("interests").add(shiftToTake)
     }
 
 }
+
 

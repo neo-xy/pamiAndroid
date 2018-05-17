@@ -40,6 +40,18 @@
                     android:textStyle="normal" />
 
                 <Button
+                    android:id="@+id/to_take_btn"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:gravity="end"
+                    android:layout_marginEnd="10dp"
+                    android:visibility="gone"
+                    android:background="@drawable/ic_priority_high_black_24dp"
+                    android:backgroundTint="@color/colorAccent"
+                    >
+                </Button>
+
+                <Button
                     android:id="@+id/clock_in_btn"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
@@ -50,8 +62,6 @@
                      />
 
             </LinearLayout>
-
-
         </android.support.v7.widget.Toolbar>
 
     </android.support.design.widget.AppBarLayout>

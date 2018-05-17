@@ -1,4 +1,4 @@
-package pami.com.pami
+package pami.com.pami.adapters
 
 import android.graphics.Color
 import android.support.v7.widget.RecyclerView
@@ -7,6 +7,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
+import pami.com.pami.R
+import pami.com.pami.models.Shift
 import java.text.DecimalFormat
 import java.text.SimpleDateFormat
 import java.util.*

@@ -1,16 +1,16 @@
-package pami.com.pami
+package pami.com.pami.adapters
 
 import android.content.Context
 import android.graphics.Color
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.CardView
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import org.w3c.dom.Text
+import pami.com.pami.R
+import pami.com.pami.models.Colleague
 import java.util.*
 import kotlin.Comparator
 
@@ -60,7 +60,7 @@ class ColleaguesAdapter() : RecyclerView.Adapter<ColleaguesAdapter.MyViewHolder>
 
         if (role == "boss") {
 
-            holder.card.setCardBackgroundColor(ContextCompat.getColor(context,R.color.colorPrimaryDark))
+            holder.card.setCardBackgroundColor(ContextCompat.getColor(context, R.color.colorPrimaryDark))
             holder.name.setTextColor(Color.WHITE)
             holder.tel.setTextColor(Color.WHITE)
             holder.phoneTitle.setTextColor(Color.WHITE)

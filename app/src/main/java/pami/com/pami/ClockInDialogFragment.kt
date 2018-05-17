@@ -3,15 +3,17 @@ package pami.com.pami
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.support.v4.app.DialogFragment
-import android.support.v7.app.AlertDialog
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import pami.com.pami.adapters.ClockedShiftAdapter
+import pami.com.pami.models.ClockedShift
+import pami.com.pami.models.Shift
+import pami.com.pami.models.User
 import java.util.*
-import java.util.concurrent.TimeUnit
 
 
 class ClockInDialogFragment : DialogFragment() {

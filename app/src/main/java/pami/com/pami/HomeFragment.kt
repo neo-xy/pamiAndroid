@@ -1,7 +1,6 @@
 package pami.com.pami
 
 import android.os.Bundle
-import android.support.design.widget.FloatingActionButton
 import android.support.v4.app.Fragment
 import android.support.v7.widget.CardView
 import android.support.v7.widget.LinearLayoutManager
@@ -12,6 +11,9 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.fragment_home.*
+import pami.com.pami.adapters.ShiftsAdapter
+import pami.com.pami.models.Shift
+import pami.com.pami.models.User
 import java.text.DecimalFormat
 import java.text.SimpleDateFormat
 import java.util.*
@@ -63,6 +65,7 @@ class HomeFragment : Fragment() {
         }
 
         FirebaseController.getUanavailableDates().subscribe();
+        FirebaseController.getAcceptedShifts().subscribe();
 
         if (User.employmentStatus == "passed") {
             infoCardBoss.visibility = View.GONE

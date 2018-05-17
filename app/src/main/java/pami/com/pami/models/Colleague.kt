@@ -1,4 +1,4 @@
-package pami.com.pami
+package pami.com.pami.models
 
 /**
  * Created by Pawel on 10/03/2018.

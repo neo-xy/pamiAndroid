@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
+import pami.com.pami.adapters.ColleaguesAdapter
 
 
 class DashboardFragment : Fragment() {
@@ -20,7 +21,7 @@ class DashboardFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_dashboard, container, false)
         val recyclerView = view.findViewById<RecyclerView>(R.id.colleagues_info_recycler_view)
         recyclerView.layoutManager = LinearLayoutManager(context, LinearLayout.VERTICAL, false)
-        recyclerView.adapter = ColleaguesAdapter(FirebaseController.colleague,context)
+        recyclerView.adapter = ColleaguesAdapter(FirebaseController.colleague, context)
 
         return view
     }

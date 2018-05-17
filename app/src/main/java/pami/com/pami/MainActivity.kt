@@ -1,19 +1,18 @@
 package pami.com.pami
 
 
-import android.app.Activity
-import android.app.AlarmManager
-import android.app.PendingIntent
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.res.ColorStateList
 import android.os.Bundle
+import android.os.Parcelable
 import android.support.design.widget.NavigationView
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.Gravity
 import android.view.MenuItem
+import android.view.View
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
@@ -27,10 +26,13 @@ import com.facebook.login.LoginResult
 import com.google.firebase.auth.FacebookAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.iid.FirebaseInstanceId
+import pami.com.pami.R.id.*
+import pami.com.pami.models.ShiftsToTake
+import pami.com.pami.models.User
+import java.util.*
+import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
-import pami.com.pami.R.id.*
-import java.util.*
 
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
@@ -40,8 +42,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     lateinit var callbackManager: CallbackManager
     lateinit var loginManager: LoginManager
     lateinit var clockedInShiftId: String
-    lateinit var clockInBtn:Button
+    lateinit var clockInBtn: Button
+    lateinit var toTakeBtn: Button
     lateinit var sp: SharedPreferences
+    lateinit var shiftsToTake: MutableList<ShiftsToTake>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,9 +53,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         val refreshedToken = FirebaseInstanceId.getInstance().token
         if (refreshedToken != null) {
-            Log.d("pawell","token "+ refreshedToken)
+            Log.d("pawell", "token " + refreshedToken)
             FirebaseController.updateRegistrationToken(refreshedToken)
         };
+
+
+
 
 
         supportFragmentManager.beginTransaction().add(fragment_container.id, HomeFragment.getInstance()).commit()
@@ -65,8 +72,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         drawer_layout.addDrawerListener(toggle)
         toggle.syncState()
 
-        this.clockInBtn =findViewById(R.id.clock_in_btn)
+        this.clockInBtn = findViewById(R.id.clock_in_btn)
+        this.toTakeBtn = findViewById(R.id.to_take_btn)
         clockInBtn.setOnClickListener { openClockInDialog() }
+        toTakeBtn.setOnClickListener { openShiftsToTakeDialog() }
         this.loginManager = LoginManager.getInstance()
         callbackManager = CallbackManager.Factory.create()
         this.linkWithFacebook()
@@ -75,13 +84,23 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         profileImageView = nav_view.getHeaderView(0).findViewById<ImageView>(R.id.profile_image)
 
+        FirebaseController.getShiftsToTake().subscribe() {
+
+            if (it.size > 0) {
+                this.shiftsToTake = it
+                this.toTakeBtn.visibility = View.VISIBLE
+            } else {
+                this.toTakeBtn.visibility = View.GONE
+            }
+        }
+
 
         if (User.employmentStatus == "passed") {
             nav_view.menu.findItem(nav_calendar).setVisible(false)
             nav_view.menu.findItem(nav_shifts).setVisible(false)
             nav_view.menu.findItem(nav_contacts).setVisible(false)
         }
-        if(User.role!="boss"){
+        if (User.role != "boss") {
             nav_view.menu.findItem(nav_shift_manager).setVisible(false)
         }
 
@@ -109,18 +128,18 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             drawerMailTV.text = User.email
         }
 
-        FirebaseController.getClockedInShifts().subscribe(){
+        FirebaseController.getClockedInShifts().subscribe() {
             var isClockedIn = false
             it.forEach {
-                if(it.employeeId==User.employeeId){
+                if (it.employeeId == User.employeeId) {
                     isClockedIn = true
                     return@forEach
                 }
             }
 
-            if(isClockedIn){
+            if (isClockedIn) {
                 clockInBtn.backgroundTintList = ColorStateList.valueOf(resources.getColor(R.color.colorAccent))
-            }else{
+            } else {
                 clockInBtn.backgroundTintList = ColorStateList.valueOf(resources.getColor(R.color.colorPrimaryDark))
             }
         }
@@ -128,7 +147,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         FirebaseController.setupSalleries()
 
     }
-
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
 
@@ -160,7 +178,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             nav_contacts -> {
                 supportFragmentManager.beginTransaction().replace(fragment_container.id, DashboardFragment(), "contacts").commit()
             }
-            nav_shift_manager->{
+            nav_shift_manager -> {
                 supportFragmentManager.beginTransaction().replace(fragment_container.id, ShiftManagerFragment(), "shiftManager").commit()
             }
 
@@ -206,12 +224,21 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     private fun openClockInDialog() {
-
         val clockInDialogFragment = ClockInDialogFragment()
+        clockInDialogFragment.show(supportFragmentManager, "clockIn")
+    }
 
-        clockInDialogFragment.show(supportFragmentManager,"clockIn")
+    private fun openShiftsToTakeDialog() {
+        val toTakeDialogFragment = ToTakeDialogFragment()
+        var bundle =  Bundle()
+
+        bundle.putParcelableArrayList("shiftsToTake",this.shiftsToTake as ArrayList<out Parcelable>)
+        toTakeDialogFragment.arguments = bundle;
+        toTakeDialogFragment.arguments
+        toTakeDialogFragment.show(supportFragmentManager, "toTake")
     }
 }
+
 
 
 

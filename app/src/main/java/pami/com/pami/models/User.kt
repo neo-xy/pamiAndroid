@@ -1,4 +1,7 @@
-package pami.com.pami
+package pami.com.pami.models
+
+import pami.com.pami.models.CustomDateModel
+import pami.com.pami.models.Salary
 
 
 object User{
@@ -20,6 +23,8 @@ object User{
     var clearNr=""
     var role=""
     var registrationToken=""
+    var phoneNumber=""
+    var socialSecurityNumber:Long=0;
 
 }
 

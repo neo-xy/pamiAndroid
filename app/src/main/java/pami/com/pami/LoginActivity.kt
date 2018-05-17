@@ -15,6 +15,7 @@ import com.facebook.CallbackManager
 import com.google.firebase.auth.FirebaseAuth
 import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.activity_login.*
+import pami.com.pami.models.User
 
 
 private const val INTENT_USER_ID = "user_id"
@@ -46,8 +47,10 @@ class LoginActivity : AppCompatActivity() {
         FirebaseAuth.getInstance().addAuthStateListener {
             if (it.currentUser != null) {
 
+                Log.d("pawell","user "+ it.currentUser)
                 this.kk = FirebaseController.getUser().subscribe() {
                     if (it == true) {
+                        Log.d("pawell","login user true")
 
                         this.sp.edit().putString("mail", User.email).commit()
                         FirebaseController.setUpDepartments()
@@ -59,6 +62,7 @@ class LoginActivity : AppCompatActivity() {
                     }
                 }
             } else {
+                Log.d("pawell","login user else")
                 splashView.visibility = View.GONE
                 loginView.visibility = View.VISIBLE
                 bg.visibility = View.VISIBLE

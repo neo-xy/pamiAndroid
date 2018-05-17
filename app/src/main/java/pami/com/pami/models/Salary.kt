@@ -1,5 +1,6 @@
-package pami.com.pami
+package pami.com.pami.models
 
+import pami.com.pami.enums.EmploymentType
 import java.util.*
 
 class Salary {
@@ -16,7 +17,7 @@ class Salary {
     var salary = 0;
     var bossId:String? =""
     var changeDate: Date? =null
-    var employmentType:EmploymentType?=null
+    var employmentType: EmploymentType?=null
     var salaryMessage:String?=""
     var startDate:Date?=null
     var tax:Int?=0

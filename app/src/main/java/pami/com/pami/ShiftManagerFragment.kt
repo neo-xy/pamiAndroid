@@ -6,11 +6,16 @@ import android.support.v4.app.Fragment
 import android.support.v7.app.AlertDialog
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.Toast
+import pami.com.pami.adapters.ShiftManagerAdapter
+import pami.com.pami.models.ClockedShift
+import pami.com.pami.models.Employee
+import pami.com.pami.models.User
 import java.util.*
 
 class ShiftManagerFragment : Fragment(), RecyclerViewClickListener {
@@ -175,5 +180,7 @@ class ClockedInEntre {
 }
 
 interface RecyclerViewClickListener {
-    fun listItemClicked(view: View, position: Int)
+    fun listItemClicked(view: View, position: Int){
+        Log.d("pawell", "position "+ position)
+    }
 }
