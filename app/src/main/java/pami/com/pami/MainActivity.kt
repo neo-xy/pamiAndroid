@@ -93,6 +93,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 this.toTakeBtn.visibility = View.GONE
             }
         }
+        FirebaseController.getInterests().subscribe()
+
+
 
 
         if (User.employmentStatus == "passed") {

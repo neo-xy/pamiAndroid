@@ -21,6 +21,7 @@ object FirebaseController {
     var unavailableShifts = mutableListOf<UnavailableDate>();
     var accteptedShifts = mutableListOf<Shift>()
     lateinit var token: String
+    var interests = mutableListOf<Interest>()
 
     fun getUser(): Observable<Boolean> {
         return Observable.create<Boolean> {
@@ -121,7 +122,7 @@ object FirebaseController {
         FirebaseFirestore.getInstance().collection("companies").document(User.companyId).collection("datesUnavailable").add(us).addOnCompleteListener(OnCompleteListener {
             val id = it.result.id
 
-            Log.d("pawell","compl")
+            Log.d("pawell", "compl")
             FirebaseFirestore.getInstance().collection("users").document(User.employeeId).collection("datesUnavailable").document(id).set(us)
         })
 
@@ -267,7 +268,7 @@ object FirebaseController {
                 val emitter = it
                 override fun onEvent(p0: QuerySnapshot?, p1: FirebaseFirestoreException?) {
 
-                    accteptedShifts =p0!!.toObjects(Shift::class.java)
+                    accteptedShifts = p0!!.toObjects(Shift::class.java)
                     emitter.onNext(accteptedShifts);
                 }
 
@@ -278,19 +279,19 @@ object FirebaseController {
     fun updateRegistrationToken(token: String) {
         FirebaseFirestore.getInstance().collection("users").document(User.employeeId).update("refreshToken", token)
         FirebaseFirestore.getInstance().collection("companies").document(User.companyId).collection("employees").document(User.employeeId)
-                .update("refreshToken",token)
+                .update("refreshToken", token)
     }
 
-    fun getShiftsToTake():Observable<MutableList<ShiftsToTake>>{
+    fun getShiftsToTake(): Observable<MutableList<ShiftsToTake>> {
         return create {
-            FirebaseFirestore.getInstance().collection("companies").document(User.companyId).collection("shiftsToTake").addSnapshotListener(object:EventListener<QuerySnapshot>{
+            FirebaseFirestore.getInstance().collection("companies").document(User.companyId).collection("shiftsToTake").addSnapshotListener(object : EventListener<QuerySnapshot> {
                 val emiter = it;
                 override fun onEvent(p0: QuerySnapshot?, p1: FirebaseFirestoreException?) {
-                    if(p0!=null){
-                        var shiftsToTake = mutableListOf<ShiftsToTake>()
+                    if (p0 != null) {
+                        val shiftsToTake = mutableListOf<ShiftsToTake>()
                         p0.forEach {
                             val id = it.id
-                            var shift = it.toObject(ShiftsToTake::class.java)
+                            val shift = it.toObject(ShiftsToTake::class.java)
                             shift.id = id;
                             shiftsToTake.add(shift)
                         }
@@ -303,9 +304,41 @@ object FirebaseController {
         }
     }
 
-    fun addShiftToTakeIntress(shiftToTake:ShiftsToTake){
-        Log.d("pawell","adddd")
-        FirebaseFirestore.getInstance().collection("companies").document(User.companyId).collection("interests").add(shiftToTake)
+    fun getInterests(): Observable<MutableList<Interest>> {
+        return create {
+            FirebaseFirestore.getInstance().collection("companies").document(User.companyId).collection("interests").addSnapshotListener(object : EventListener<QuerySnapshot> {
+                val emiter = it;
+
+                override fun onEvent(p0: QuerySnapshot?, p1: FirebaseFirestoreException?) {
+                    if (p0 != null) {
+                        val interestList = mutableListOf<Interest>()
+                        p0.forEach {
+
+
+                            val id = it.id;
+                            val interest = it.toObject(Interest::class.java)
+                            if(User.employeeId==interest.employeeId){
+                                interest.interestId = id;
+                                interestList.add(interest);
+                            }
+                        }
+
+                        interests  = interestList;
+                        emiter.onNext(interestList);
+                    }
+                }
+            }
+            )
+        }
+    }
+
+    fun addIntress(interest: Interest) {
+        Log.d("pawell", "adddd")
+        FirebaseFirestore.getInstance().collection("companies").document(User.companyId).collection("interests").add(interest)
+    }
+
+    fun removeInterest(interest:Interest){
+        FirebaseFirestore.getInstance().collection("companies").document(User.companyId).collection("interests").document(interest.interestId).delete()
     }
 
 }

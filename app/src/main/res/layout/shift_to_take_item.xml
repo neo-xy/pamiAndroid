@@ -4,44 +4,39 @@
     android:layout_height="wrap_content"
     android:layout_weight="6"
     android:orientation="horizontal"
+    android:layout_marginBottom="1dp"
     android:padding="8dp">
+
 
     <TextView
         android:id="@+id/date"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:text="daaa" />
+        />
 
     <TextView
         android:id="@+id/time"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="2"
-        android:text="12:00" />
+         />
 
     <TextView
         android:id="@+id/department_name"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="2"
-        android:text="barrr" />
+         />
 
-    <LinearLayout
-        android:layout_width="0dp"
-        android:layout_weight="1"
+
+    <CheckBox
+        android:id="@+id/send_intress_btn"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:buttonTint="@color/colorPrimaryDark"
 
-        <Button
-            android:id="@+id/send_intress_btn"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:background="@drawable/ic_done"
-            android:backgroundTint="@color/colorPrimaryDark"
-             />
-
-    </LinearLayout>
+        android:layout_weight="1" />
 
 
 </LinearLayout>
