@@ -68,7 +68,7 @@ class ToTakeAdapter() : RecyclerView.Adapter<ToTakeAdapter.CustomHolder>(){
 
     override fun onBindViewHolder(holder: CustomHolder, position: Int) {
 
-        holder.time.text = simpleDateFormat.format(list1[position].startDate)+"-"+simpleDateFormat.format(list1[position].startDate)
+        holder.time.text = simpleDateFormat.format(list1[position].startDate)+"-"+simpleDateFormat.format(list1[position].endDate)
         holder.departmentName.text = list1[position].departmentName
         holder.date.text = sdf.format(list1[position].date)
 

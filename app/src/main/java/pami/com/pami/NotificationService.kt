@@ -18,34 +18,63 @@ import com.google.firebase.messaging.RemoteMessage
 import java.lang.Exception
 import java.text.SimpleDateFormat
 import java.util.*
+import android.app.NotificationManager
+import android.app.NotificationChannel
+import android.app.PendingIntent
+
+
+
 
 class NotificationService : FirebaseMessagingService() {
 
+    val CHANNEL_NAME = "PAMI"
+    val CHANNEL_ID = "pami.com.pami"
     override fun onMessageReceived(p0: RemoteMessage) {
+
+        createChannel()
+        var intent = Intent(this,LoginActivity::class.java);
+        val pintent = PendingIntent.getActivity(this, 0,
+                intent, 0)
 
         val timeArray = p0.data.get("timeStemps")!!.split(",")
 
         var dates = ""
-        val df = SimpleDateFormat("dd MMM")
+        val df = SimpleDateFormat("dd MMM",Locale("sv","SE"))
 
         timeArray.toString()
 
-            timeArray.forEach {
-                val stemp: Long = it.toLong()
-                dates = dates + (df.format(Date(stemp)))+ ", "
-            }
+        timeArray.forEach {
+            val stemp: Long = it.toLong()
+            Log.d("pawell","stemp" + stemp.toString())
+            dates = dates + (df.format(Date(stemp))) + ", "
+        }
+
+
+        val newMessageNotification = NotificationCompat.Builder(this, CHANNEL_ID)
+                .setSmallIcon(R.drawable.p)
+                .setGroup("schedule")
+                .setGroupSummary(true)
+                .setContentIntent(pintent)
+                .build()
 
         val mBuilder = NotificationCompat.Builder(this, CHANNEL_ID)
                 .setSmallIcon(R.drawable.p)
                 .setContentTitle(p0.data.get("title"))
-                .setContentText(  timeArray.toString())
+                .setContentText(dates)
                 .setStyle(NotificationCompat.BigTextStyle()
-                        .bigText( dates))
+                        .bigText(dates))
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .setSound(Settings.System.DEFAULT_NOTIFICATION_URI)
+                .setGroup("schedule")
+                .setContentIntent(pintent)
+
+
         val nm: NotificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        var index =p0.data.get("msg") as String
+
+        val index = p0.data.get("msg") as String
+        nm.notify(3,newMessageNotification)
         nm.notify(index.toInt(), mBuilder.build())
+
 
         super.onMessageReceived(p0)
 
@@ -75,6 +104,8 @@ class NotificationService : FirebaseMessagingService() {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 
+            Log.d("pawell", "createChanel")
+
             // Create the NotificationChannel, but only on API 26+ because
             // the NotificationChannel class is new and not in the support library
 
@@ -96,7 +127,7 @@ class NotificationService : FirebaseMessagingService() {
 
     companion object {
 
-        const val CHANNEL_ID = "samples.notification.devdeeds.com.CHANNEL_ID"
+        const val CHANNEL_ID = "pami.com.pami"
         const val CHANNEL_NAME = "Sample Notification"
     }
 
@@ -178,6 +209,20 @@ class NotificationService : FirebaseMessagingService() {
         }
 
 
+    }
+
+    private fun createNotificationChannel() {
+        // Create the NotificationChannel, but only on API 26+ because
+        // the NotificationChannel class is new and not in the support library
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val importance = NotificationManager.IMPORTANCE_DEFAULT
+            val channel = NotificationChannel(CHANNEL_ID, CHANNEL_NAME, importance)
+            channel.description = "dfdfdf"
+            // Register the channel with the system; you can't change the importance
+            // or other notification behaviors after this
+            val notificationManager = getSystemService(NotificationManager::class.java)
+            notificationManager!!.createNotificationChannel(channel)
+        }
     }
 
 

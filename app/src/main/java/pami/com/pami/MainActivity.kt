@@ -141,9 +141,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             }
 
             if (isClockedIn) {
-                clockInBtn.backgroundTintList = ColorStateList.valueOf(resources.getColor(R.color.colorAccent))
-            } else {
                 clockInBtn.backgroundTintList = ColorStateList.valueOf(resources.getColor(R.color.colorPrimaryDark))
+            } else {
+                clockInBtn.backgroundTintList = ColorStateList.valueOf(resources.getColor(R.color.main_gray))
             }
         }
         FirebaseController.setUpColleagues();

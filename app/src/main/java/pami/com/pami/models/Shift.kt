@@ -3,6 +3,8 @@ package pami.com.pami.models
 import com.google.firebase.firestore.IgnoreExtraProperties
 import pami.com.pami.models.CustomDateModel
 import pami.com.pami.models.Department
+import java.time.LocalDate
+import java.util.*
 
 
 @IgnoreExtraProperties
@@ -25,6 +27,10 @@ class Shift {
     var timeStempOut:Long=0
     var tax:Double=0.0;
     var shiftStatus:String=""
+
+    var startDate:Date = Date()
+    var endDate:Date = Date()
+
 
 
 }

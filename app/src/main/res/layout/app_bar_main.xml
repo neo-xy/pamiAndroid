@@ -47,7 +47,7 @@
                     android:layout_marginEnd="10dp"
                     android:visibility="gone"
                     android:background="@drawable/ic_priority_high_black_24dp"
-                    android:backgroundTint="@color/colorAccent"
+                    android:backgroundTint="@color/colorPrimaryDark"
                     >
                 </Button>
 
@@ -58,7 +58,7 @@
                     android:gravity="end"
                     android:layout_marginEnd="10dp"
                     android:background="@drawable/ic_alarm"
-                    android:backgroundTint="@color/colorPrimary"
+                    android:backgroundTint="@color/main_gray"
                      />
 
             </LinearLayout>
