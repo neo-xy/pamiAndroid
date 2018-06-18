@@ -20,13 +20,15 @@ class Shift {
     var employeeId: String = ""
     var employmentType: String = ""
     var message: String? =null;
-    var duration: Long = 0L
+    var duration: Double = 0.0
     var badge: String = ""
     var shiftId: String = ""
     var timeStempIn:Long=0
     var timeStempOut:Long=0
     var tax:Double=0.0;
     var shiftStatus:String=""
+    var netto = 0
+    var brutto = 0
 
     var startDate:Date = Date()
     var endDate:Date = Date()

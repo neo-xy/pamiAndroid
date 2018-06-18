@@ -98,12 +98,17 @@ object FirebaseController {
         }
     }
 
-    fun setUpDepartments() {
-        FirebaseFirestore.getInstance().collection("companies").document(User.companyId).collection("departments").addSnapshotListener(object : EventListener<QuerySnapshot> {
-            override fun onEvent(p0: QuerySnapshot?, p1: FirebaseFirestoreException?) {
-                departments = p0?.toObjects(Department::class.java)
-            }
-        })
+    fun setUpDepartments(): Observable<Boolean> {
+      return  Observable.create {
+          val obs = it
+            FirebaseFirestore.getInstance().collection("companies").document(User.companyId).collection("departments").addSnapshotListener(object : EventListener<QuerySnapshot> {
+                override fun onEvent(p0: QuerySnapshot?, p1: FirebaseFirestoreException?) {
+                    departments = p0?.toObjects(Department::class.java)
+                    obs.onNext(true)
+                }
+            })
+        }
+
     }
 
     fun setUpEmployees() {
@@ -229,10 +234,7 @@ object FirebaseController {
                     }
                     emitter.onNext(clockedShifts)
                 }
-
-
             })
-
         }
     }
 

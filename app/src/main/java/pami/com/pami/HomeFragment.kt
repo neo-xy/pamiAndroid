@@ -9,8 +9,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
+import android.widget.TextView
 import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.fragment_home.*
+import pami.com.pami.R.id.*
 import pami.com.pami.adapters.ShiftsAdapter
 import pami.com.pami.models.Shift
 import pami.com.pami.models.User
@@ -26,6 +28,11 @@ class HomeFragment : Fragment() {
     val simpleDateFormat: SimpleDateFormat = SimpleDateFormat("dd MMM HH:mm")
     lateinit var companyObservable: Disposable
 
+    lateinit var infoName:TextView;
+    lateinit var infoDate:TextView
+    lateinit var infoMsg:TextView
+    lateinit var infoTel:TextView
+
     companion object {
         fun getInstance(): HomeFragment {
             return HomeFragment()
@@ -40,6 +47,11 @@ class HomeFragment : Fragment() {
         val recyclerView = view.findViewById<RecyclerView>(R.id.recycler_view)
         val calendar = Calendar.getInstance()
         val infoCardBoss = view.findViewById<CardView>(R.id.info_card)
+
+        infoName = view.findViewById<TextView>(R.id.info_name_tv)
+        infoDate = view.findViewById<TextView>(R.id.info_date_tv)
+        infoMsg = view.findViewById<TextView>(R.id.info_message_tv)
+        infoTel = view.findViewById<TextView>(R.id.info_tel_tv)
 
         calendar.time = currantDate
 
@@ -75,10 +87,10 @@ class HomeFragment : Fragment() {
             if (it.infoMessage!!.message.isEmpty()) {
                 infoCardBoss.visibility = View.GONE
             }
-            info_name_tv.text = it.infoMessage?.author?.capitalize()
-            info_message_tv.text = it.infoMessage?.message?.capitalize()
-            info_tel_tv.text = it.infoMessage?.authorTel
-            info_date_tv.text = simpleDateFormat.format(it.infoMessage?.date)
+            infoName.text = it.infoMessage?.author?.capitalize()
+            infoMsg.text = it.infoMessage?.message?.capitalize()
+            infoTel.text = it.infoMessage?.authorTel
+            infoDate.text = simpleDateFormat.format(it.infoMessage?.date)
         }
         return view
     }

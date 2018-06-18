@@ -1,20 +1,18 @@
 package pami.com.pami
 
-import android.content.DialogInterface
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.support.constraint.ConstraintLayout
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
-import android.util.Log
 import android.view.View
 import android.widget.*
 import com.bumptech.glide.Glide
 import com.facebook.CallbackManager
 import com.google.firebase.auth.FirebaseAuth
+import io.reactivex.Observable
 import io.reactivex.disposables.Disposable
-import kotlinx.android.synthetic.main.activity_login.*
 import pami.com.pami.models.User
 
 
@@ -22,9 +20,12 @@ private const val INTENT_USER_ID = "user_id"
 
 class LoginActivity : AppCompatActivity() {
 
-    lateinit var callbackManager: CallbackManager;
-    lateinit var sp: SharedPreferences
-    lateinit var kk: Disposable;
+    private lateinit var callbackManager: CallbackManager
+    private lateinit var sp: SharedPreferences
+    private lateinit var disposable: Disposable
+    private lateinit var  emailView:EditText
+    private lateinit var  password:EditText
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
@@ -37,6 +38,9 @@ class LoginActivity : AppCompatActivity() {
         val forgetPasswordTv = findViewById<TextView>(R.id.forget_password_tv)
         this.sp = this.getPreferences(android.content.Context.MODE_PRIVATE)
 
+        this.emailView = findViewById(R.id.email_et)
+        this.password = findViewById(R.id.password_et)
+
 
         Glide.with(this)
                 .load(R.drawable.clock_bg)
@@ -46,23 +50,24 @@ class LoginActivity : AppCompatActivity() {
 
         FirebaseAuth.getInstance().addAuthStateListener {
             if (it.currentUser != null) {
-
-                Log.d("pawell","user "+ it.currentUser)
-                this.kk = FirebaseController.getUser().subscribe() {
+                this.disposable = FirebaseController.getUser().subscribe {
                     if (it == true) {
-                        Log.d("pawell","login user true")
+                        this.sp.edit().putString("mail", User.email).apply()
 
-                        this.sp.edit().putString("mail", User.email).commit()
-                        FirebaseController.setUpDepartments()
-                        FirebaseController.setUpEmployees()
-                        val intent = Intent(this, MainActivity::class.java)
-                        intent.putExtra(INTENT_USER_ID, FirebaseAuth.getInstance().uid)
-                        startActivity(intent)
-                        finish()
+
+                            FirebaseController.setUpEmployees()
+                            FirebaseController.setUpDepartments().subscribe{
+                                val intent = Intent(this, MainActivity::class.java)
+                                intent.putExtra(INTENT_USER_ID, FirebaseAuth.getInstance().uid)
+                                startActivity(intent)
+                                finish()
+                            }
+
+
+
                     }
                 }
             } else {
-                Log.d("pawell","login user else")
                 splashView.visibility = View.GONE
                 loginView.visibility = View.VISIBLE
                 bg.visibility = View.VISIBLE
@@ -74,12 +79,10 @@ class LoginActivity : AppCompatActivity() {
 
         val builder = AlertDialog.Builder(this)
         val insertEmail = EditText(this)
-
         val container = LinearLayout(baseContext)
-
         val ll = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
-        ll.setMargins(50, 80, 50, 50)
 
+        ll.setMargins(50, 80, 50, 50)
 
         insertEmail.layoutParams = ll
         insertEmail.hint = "Din e-post"
@@ -88,25 +91,27 @@ class LoginActivity : AppCompatActivity() {
 
         builder.setTitle("Återställ lösenord")
         builder.setView(container)
-        builder.setPositiveButton("skicka e-post", object : DialogInterface.OnClickListener {
-            override fun onClick(p0: DialogInterface?, p1: Int) {
-                FirebaseAuth.getInstance().sendPasswordResetEmail(insertEmail.text.toString()).addOnCompleteListener {
-                    if (it.isSuccessful) {
-                        Toast.makeText(baseContext, "E-post blev skickad", Toast.LENGTH_SHORT).show()
-                    } else {
-
-                        Toast.makeText(baseContext, "ett fel uppstog, kontrollera angivet e-post", Toast.LENGTH_LONG).show()
-                    }
+        builder.setPositiveButton("skicka e-post") {_, _ ->
+            FirebaseAuth.getInstance().sendPasswordResetEmail(insertEmail.text.toString()).addOnCompleteListener {
+                if (it.isSuccessful) {
+                    Toast.makeText(baseContext, "E-post blev skickad", Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(baseContext, "ett fel uppstog, kontrollera angivet e-post", Toast.LENGTH_LONG).show()
                 }
             }
-        })
+        }
         builder.create().show()
     }
 
-    fun logIn() {
-        if (!email_et.text.isEmpty() && !password_et.text.isEmpty()) {
-            FirebaseAuth.getInstance().signInWithEmailAndPassword(email_et.text.toString(), password_et.text.toString()).addOnCompleteListener() { task ->
+    private fun logIn() {
+
+        if (emailView.text.isEmpty() && !password.text.isEmpty()) {
+            FirebaseAuth.getInstance().signInWithEmailAndPassword(emailView.text.toString(), password.text.toString()).addOnCompleteListener { task ->
                 if (task.isSuccessful) {
+
+
+
+
                 } else {
                     Toast.makeText(this, "Fel e-mail eller lösenord", Toast.LENGTH_SHORT).show()
                 }
@@ -116,7 +121,7 @@ class LoginActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        kk.dispose()
+        disposable.dispose()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
