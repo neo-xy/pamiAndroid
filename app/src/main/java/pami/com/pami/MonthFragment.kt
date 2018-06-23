@@ -4,6 +4,7 @@ import android.graphics.Typeface
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.view.ViewPager
+import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -40,11 +41,12 @@ class MonthFragment : Fragment() {
         return view
     }
 
-    public fun setUpGrid() {
+    fun setUpGrid() {
         val date = Date()
         val cal = Calendar.getInstance()
         cal.time = date
 
+        Log.d("pawell","month fragment")
         val myAdapter = CalendarAdapter(context, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), oncalendarClickedListener)
         header.text = simpleDateFormat.format(date)
         pager.adapter = myAdapter

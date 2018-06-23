@@ -1,5 +1,7 @@
 package pami.com.pami.models
 
+import java.util.*
+
 
 object User {
     val firstName: String = ""
@@ -10,7 +12,7 @@ object User {
     val salaries = mutableListOf<Salary>()
     val imgUrl: String = ""
     val employmentStatus: String = ""
-    val employmentDate: CustomDateModel = CustomDateModel()
+    var employmentDate: Date = Date()
     val companyId: String = ""
     var datesUnavailable = mutableListOf<Int>()
     var address: String = ""

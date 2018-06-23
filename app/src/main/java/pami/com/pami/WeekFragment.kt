@@ -9,6 +9,7 @@ import android.os.Bundle
 import android.os.Vibrator
 import android.support.annotation.RequiresApi
 import android.support.v4.app.Fragment
+import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -21,7 +22,7 @@ import pami.com.pami.models.User
 import java.util.*
 
 
-
+@RequiresApi(Build.VERSION_CODES.M)
 class WeekFragment : Fragment(), View.OnScrollChangeListener {
     override fun onScrollChange(p0: View?, scrollX: Int, scrolY: Int, oldScrollX: Int, oldScrollY: Int) {
         this.followingViews.forEach {
@@ -34,7 +35,7 @@ class WeekFragment : Fragment(), View.OnScrollChangeListener {
 
     var followingViews = mutableListOf<TextView>()
 
-    var weekDays = listOf<String>("Måndag", "Tisdag", "Onsdag", "Torsdag", "Fredag", "Lördag", "Söndag")
+    var weekDays = listOf("Måndag", "Tisdag", "Onsdag", "Torsdag", "Fredag", "Lördag", "Söndag")
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -44,22 +45,24 @@ class WeekFragment : Fragment(), View.OnScrollChangeListener {
         horizontalScrollView.setOnScrollChangeListener(this)
         val scroll = view.findViewById<ScrollView>(R.id.scrollCont)
 
+        Log.d("pawell","week fragment 1")
         scroll.addView(this.container)
 
         val year = arguments!!.getInt("year")
         val month = arguments!!.getInt("month")
         val day = arguments!!.getInt("day")
         val weekDay = arguments!!.getInt("weekDay")
-        setUp2(year, month, day, weekDay)
+        Log.d("pawell","week fragment 2")
+        setUp(year, month, day, weekDay)
         return view
     }
 
 
-    fun setUp2(year: Int, month: Int, day1: Int, weekDay: Int) {
+    fun setUp(year: Int, month: Int, day1: Int, weekDay: Int) {
         this.container.orientation = LinearLayout.VERTICAL
-
+        Log.d("pawell","week fragment 3")
         FirebaseController.getShiftsOfaMonth(year.toString() + "" + String.format("%02d", month)).subscribe() {
-
+            Log.d("pawell","week fragment 4")
             //todo if context is not chacked it trows null exception on context when shifts is added while in the view(implement better)
             if (context != null) {
                 val shifts = it
@@ -90,7 +93,6 @@ class WeekFragment : Fragment(), View.OnScrollChangeListener {
                         month2 = cal.get(Calendar.MONTH) + 1
                     }
 
-                    val dateKey = year.toString() + String.format("%02d", month2)
                     val day = TextView(context)
                     val blockDayBtn = TextView(context)
                     blockDayBtn.layoutParams = LinearLayout.LayoutParams(90, 90)
@@ -185,7 +187,6 @@ class WeekFragment : Fragment(), View.OnScrollChangeListener {
 
         shiftCard.setBackgroundResource(R.drawable.shadow_3)
 
-        var cell = TextView(context)
         var name = "undefined"
         var lastName = "undefined"
         FirebaseController.employees!!.forEach {
@@ -230,13 +231,13 @@ class WeekFragment : Fragment(), View.OnScrollChangeListener {
         val dialog = alerDialog.create()
 
         dialog.show()
-        val radioGroup = dialog.findViewById<RadioGroup>(R.id.radio_group)
+
         val availablRadioBtn = dialog.findViewById<RadioButton>(R.id.available_btn)
         val notAvailablRadioBtn = dialog.findViewById<RadioButton>(R.id.not_available_btn)
 
-       var dateSaved =false;
-        var unavailableDate: UnavailableDate = UnavailableDate()
-        unavailableDate.date = d;
+       var dateSaved =false
+        var unavailableDate = UnavailableDate()
+        unavailableDate.date = d
         unavailableDate.employeeId = User.employeeId
         unavailableDate.markDate = Date()
         FirebaseController.unavailableShifts.forEach {
@@ -266,7 +267,6 @@ class WeekFragment : Fragment(), View.OnScrollChangeListener {
                 FirebaseController.updateUnavailableDates2(unavailableDate,dateKey)
                 blockDayBtn.setBackgroundResource(R.drawable.bg_green_red_circle)
             }
-
             dialog.dismiss()
         }
 

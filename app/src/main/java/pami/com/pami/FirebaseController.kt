@@ -2,7 +2,8 @@ package pami.com.pami
 
 import android.net.Uri
 import android.util.Log
-import com.google.android.gms.tasks.*
+import com.google.android.gms.tasks.OnCompleteListener
+import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.*
 import com.google.firebase.firestore.EventListener
@@ -28,10 +29,7 @@ object FirebaseController {
             FirebaseFirestore.getInstance().collection("users").document(FirebaseAuth.getInstance().currentUser!!.uid).addSnapshotListener(object : EventListener<DocumentSnapshot> {
                 override fun onEvent(p0: DocumentSnapshot?, p1: FirebaseFirestoreException?) {
                     if (p0!!.exists()) {
-                        p0.toObject(User::class.java)
-//                        User.saleries.sortBy({
-//                            it.salary
-//                        })
+                        p0.toObject(User::class.java)!!
                         it.onNext(true)
                     } else {
                     }
@@ -77,6 +75,7 @@ object FirebaseController {
         return create {
             FirebaseFirestore.getInstance().collection("companies").document(User.companyId).collection("months").document(dateKey).collection("shifts").addSnapshotListener(object : EventListener<QuerySnapshot> {
                 override fun onEvent(p0: QuerySnapshot?, p1: FirebaseFirestoreException?) {
+                    Log.d("pawell", "get shifts of month 1")
                     it.onNext(p0!!.toObjects(Shift::class.java))
                 }
             })
@@ -89,6 +88,7 @@ object FirebaseController {
                 override fun onEvent(p0: DocumentSnapshot?, p1: FirebaseFirestoreException?) {
                     if (p0 != null) {
                         val comp = p0.toObject(Company::class.java)
+
                         if (comp != null) {
                             it.onNext(comp)
                         }
@@ -99,8 +99,8 @@ object FirebaseController {
     }
 
     fun setUpDepartments(): Observable<Boolean> {
-      return  Observable.create {
-          val obs = it
+        return Observable.create {
+            val obs = it
             FirebaseFirestore.getInstance().collection("companies").document(User.companyId).collection("departments").addSnapshotListener(object : EventListener<QuerySnapshot> {
                 override fun onEvent(p0: QuerySnapshot?, p1: FirebaseFirestoreException?) {
                     departments = p0?.toObjects(Department::class.java)
@@ -319,13 +319,13 @@ object FirebaseController {
 
                             val id = it.id;
                             val interest = it.toObject(Interest::class.java)
-                            if(User.employeeId==interest.employeeId){
+                            if (User.employeeId == interest.employeeId) {
                                 interest.interestId = id;
                                 interestList.add(interest);
                             }
                         }
 
-                        interests  = interestList;
+                        interests = interestList;
                         emiter.onNext(interestList);
                     }
                 }
@@ -339,7 +339,7 @@ object FirebaseController {
         FirebaseFirestore.getInstance().collection("companies").document(User.companyId).collection("interests").add(interest)
     }
 
-    fun removeInterest(interest:Interest){
+    fun removeInterest(interest: Interest) {
         FirebaseFirestore.getInstance().collection("companies").document(User.companyId).collection("interests").document(interest.interestId).delete()
     }
 

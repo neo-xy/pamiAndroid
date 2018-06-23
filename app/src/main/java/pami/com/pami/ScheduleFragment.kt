@@ -1,7 +1,10 @@
 package pami.com.pami
 
+import android.os.Build
 import android.os.Bundle
+import android.support.annotation.RequiresApi
 import android.support.v4.app.Fragment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,6 +14,7 @@ class ScheduleFragment : Fragment(), OnCalendarClickedListener {
 
     lateinit var container: LinearLayout
 
+    @RequiresApi(Build.VERSION_CODES.M)
     override fun onCalendarClicked(year: Int, month: Int, day: Int, weekDay: Int) {
 
         val bundle = Bundle()
@@ -21,6 +25,7 @@ class ScheduleFragment : Fragment(), OnCalendarClickedListener {
         val weekFragment = WeekFragment()
         weekFragment.arguments = bundle
 
+        Log.d("pawell","scheduel fragment")
         activity!!.supportFragmentManager.beginTransaction().replace(container.id, weekFragment).addToBackStack("month").commit()
     }
 
