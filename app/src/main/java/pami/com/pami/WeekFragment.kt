@@ -63,6 +63,8 @@ class WeekFragment : Fragment(), View.OnScrollChangeListener {
         Log.d("pawell","week fragment 3")
         FirebaseController.getShiftsOfaMonth(year.toString() + "" + String.format("%02d", month)).subscribe() {
             Log.d("pawell","week fragment 4")
+            //need to be clear in case of new shift being add so that double week view does not come up
+            this.container.removeAllViews()
             //todo if context is not chacked it trows null exception on context when shifts is added while in the view(implement better)
             if (context != null) {
                 val shifts = it

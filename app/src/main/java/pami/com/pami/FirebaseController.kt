@@ -87,6 +87,7 @@ object FirebaseController {
             FirebaseFirestore.getInstance().collection("companies").document(User.companyId).addSnapshotListener(object : EventListener<DocumentSnapshot> {
                 override fun onEvent(p0: DocumentSnapshot?, p1: FirebaseFirestoreException?) {
                     if (p0 != null) {
+                        Log.d("pawell", "comp "+ p0)
                         val comp = p0.toObject(Company::class.java)
 
                         if (comp != null) {

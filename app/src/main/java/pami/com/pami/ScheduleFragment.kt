@@ -31,7 +31,7 @@ class ScheduleFragment : Fragment(), OnCalendarClickedListener {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_schedule, container, false)
-        this.container = view.findViewById<LinearLayout>(R.id.calendar_switch_container)
+        this.container = view.findViewById(R.id.calendar_switch_container)
         setUp()
 
         return view

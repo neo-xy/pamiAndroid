@@ -59,10 +59,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         };
 
 
-        val permissions = arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION,android.Manifest.permission.ACCESS_COARSE_LOCATION)
-        ActivityCompat.requestPermissions(this, permissions,0)
-
-
         supportFragmentManager.beginTransaction().add(fragment_container.id, HomeFragment.getInstance()).commit()
 
         this.sp = this.getPreferences(android.content.Context.MODE_PRIVATE)

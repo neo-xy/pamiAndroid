@@ -1,8 +1,11 @@
 package pami.com.pami
 
 import android.annotation.SuppressLint
+import android.app.AlertDialog
 import android.content.Context
+import android.content.DialogInterface
 import android.content.SharedPreferences
+import android.content.pm.PackageManager
 import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
@@ -20,12 +23,18 @@ import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
+import io.reactivex.disposables.Disposable
 import pami.com.pami.adapters.ClockedShiftAdapter
-import pami.com.pami.models.*
+import pami.com.pami.models.ClockedShift
+import pami.com.pami.models.Company
+import pami.com.pami.models.LocationType
+import pami.com.pami.models.User
 import java.util.*
 
 
 class ClockInDialogFragment : DialogFragment() {
+
+
     lateinit var clockInBtn: Button
     lateinit var clockOutBtn: Button
     lateinit var clockedMessage: TextView
@@ -34,11 +43,15 @@ class ClockInDialogFragment : DialogFragment() {
 
     var clockedShift = ClockedShift()
     var clockedShifts = mutableListOf<ClockedShift>()
-    var isGpsOn = false
 
     lateinit var locationManager: LocationManager;
     lateinit var company: Company;
     lateinit var savedLocation: Location;
+
+    lateinit var dispComp: Disposable;
+    lateinit var dispClockedInShifts: Disposable;
+
+    val permissionArray = arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION)
 
     @SuppressLint("MissingPermission")
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -53,7 +66,10 @@ class ClockInDialogFragment : DialogFragment() {
 
         locationManager = context!!.getSystemService(Context.LOCATION_SERVICE) as LocationManager
 
-        FirebaseController.getCompany().subscribe {
+        dispComp = FirebaseController.getCompany().subscribe {
+
+            clockInBtn.isEnabled = false
+            clockOutBtn.isEnabled = false
             this.company = it;
             if (this.company.gpsLocation != null) {
                 savedLocation = Location("")
@@ -75,11 +91,7 @@ class ClockInDialogFragment : DialogFragment() {
             }
         }
 
-
-
         this.sp = activity!!.getPreferences(android.content.Context.MODE_PRIVATE)
-
-
 
         clockInBtn.setOnClickListener { clockIn() }
         clockOutBtn.setOnClickListener { clockOut() }
@@ -88,52 +100,60 @@ class ClockInDialogFragment : DialogFragment() {
     }
 
     private fun handleWifiSecurity() {
-        val wm: WifiManager = context!!.getSystemService(Context.WIFI_SERVICE) as WifiManager
+        val wm: WifiManager = activity!!.applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
+
         val id = wm.connectionInfo.ssid
 
         //needed because id containes quotation characters
         val index = id.indexOf(company.wifiName!!)
         locationManager.removeUpdates(locationListener)
 
-        if (!wm.isWifiEnabled) {
+        if (!wm.isWifiEnabled || index < 0) {
             Toast.makeText(context, "Koppla mobilen till företagets wifi att kunna stmpla in", Toast.LENGTH_LONG).show()
+
+            AlertDialog.Builder(context)
+                    .setTitle("Stämpelklocka")
+                    .setMessage("Koppla mobilen till företagets Wifi för att kunna stämpla In och Ut")
+                    .setPositiveButton("Ok", object : DialogInterface.OnClickListener {
+                        override fun onClick(p0: DialogInterface?, p1: Int) {
+                            dismiss()
+                        }
+                    }).create().show()
         } else {
-            if (index > -1) {
-                Log.d("pawell", "wer")
-                handleClockInStatusOfEmployee()
-            } else {
-                Log.d("pawell", "else 2344")
-                clockInBtn.isEnabled = false
-                clockOutBtn.isEnabled = false
-                Toast.makeText(context, "koppla till företagets wifi och starta om ", Toast.LENGTH_LONG).show()
-            }
+            handleClockInStatusOfEmployee()
         }
     }
 
-    @SuppressLint("MissingPermission")
+
     private fun handleGpsSecurity() {
-        Log.d("pawell", "handlegsp")
-
-
-        isGpsOn = locationManager.isProviderEnabled(LocationManager.PASSIVE_PROVIDER)
+        this@ClockInDialogFragment.requestPermissions(permissionArray, 3)
 
         if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-            Log.d("pawell", "111")
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000L, 0f, locationListener)
+            Toast.makeText(context, "dröj medans din Gps ställs in ", Toast.LENGTH_LONG).show()
+            if (this.checkPermission(context!!, permissionArray)) {
+                this.locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000L, 0f, locationListener)
+            }
+
         } else {
-//            Toast.makeText(context, "sätt på gps att kunna stämlpa in", Toast.LENGTH_LONG).show()
-            Log.d("pawell", "222")
-            val permissions = arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION)
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                Log.d("pawell", "if")
-                activity!!.requestPermissions(permissions, 0)
-            } else {
-                Log.d("pawell", "else")
-                Toast.makeText(context, "sätt på gps att kunna stämlpa in", Toast.LENGTH_LONG).show()
+            AlertDialog.Builder(context)
+                    .setTitle("Stämpelklocka")
+                    .setMessage("Sätt på ditt GPS att kunna stämpla in och ut")
+                    .setPositiveButton("Ok", object : DialogInterface.OnClickListener {
+                        override fun onClick(p0: DialogInterface?, p1: Int) {
+                            dismiss()
+                        }
+                    }).create().show()
+        }
+    }
+
+    fun checkPermission(context: Context, permissionArray: Array<String>): Boolean {
+        var allSuccess = true
+        for (i in permissionArray.indices) {
+            if (context.checkCallingOrSelfPermission(permissionArray[i]) == PackageManager.PERMISSION_DENIED) {
+                allSuccess = false
             }
         }
-
-
+        return allSuccess
     }
 
     private fun clockOut() {
@@ -155,7 +175,6 @@ class ClockInDialogFragment : DialogFragment() {
             }
         }
     }
-
 
     private fun clockIn() {
 
@@ -186,9 +205,7 @@ class ClockInDialogFragment : DialogFragment() {
 
                 val distance = p0.distanceTo(savedLocation)
 
-                if (distance < 70) {
-//                    clockInBtn.isEnabled = true
-//                    clockOutBtn.isEnabled = true
+                if (distance < 100) {
                     handleClockInStatusOfEmployee()
                 } else {
                     clockInBtn.isEnabled = false
@@ -201,21 +218,17 @@ class ClockInDialogFragment : DialogFragment() {
         }
 
         override fun onProviderEnabled(p0: String?) {
-            clockInBtn.isEnabled = true
-            clockOutBtn.isEnabled = true
-            isGpsOn = true
         }
 
         override fun onProviderDisabled(p0: String?) {
-            isGpsOn = false
             clockOutBtn.isEnabled = false
-            clockInBtn.isEnabled = true
+            clockInBtn.isEnabled = false
         }
     }
 
 
     fun handleClockInStatusOfEmployee() {
-        FirebaseController.getClockedInShifts().subscribe {
+        dispClockedInShifts = FirebaseController.getClockedInShifts().subscribe {
             clockedShifts = it
             clockedShifts.forEach {
                 if (it.employeeId == User.employeeId) {
@@ -243,7 +256,26 @@ class ClockInDialogFragment : DialogFragment() {
 
     override fun onDestroy() {
         super.onDestroy()
+        Log.d("pawell", "onDestroyyy")
+        dispComp.dispose()
+        dispClockedInShifts.dispose()
         locationManager.removeUpdates(locationListener)
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+
+        if (grantResults[0] == PackageManager.PERMISSION_DENIED) {
+            AlertDialog.Builder(context)
+                    .setTitle("Tillåtelse för platstjänsten")
+                    .setMessage("För att kunna stämpla in måste du tillåta platstjänsten för appen, det hittar du under appens inställningar -> Behörighet")
+                    .setPositiveButton("Ok", object : DialogInterface.OnClickListener {
+                        override fun onClick(p0: DialogInterface?, p1: Int) {
+                            dismiss()
+                        }
+                    }).create().show()
+        }
+
     }
 }
 
