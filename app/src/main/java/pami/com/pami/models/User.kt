@@ -13,21 +13,24 @@ object User {
     val imgUrl: String = ""
     val employmentStatus: String = ""
     var employmentDate: Date = Date()
-    val companyId: String = ""
     var datesUnavailable = mutableListOf<Int>()
     var address: String = ""
     var personNummer: Long = 0
     var accountNr = ""
     var bankName = ""
     var clearNr = ""
-    var role = ""
     var registrationToken = ""
     var phoneNumber = ""
     var socialSecurityNumber: Long = 0;
+    var latestCompanyIndex = 0;
+    var companies = mutableListOf <UserCompany>();
 
 }
 
 
-
+object UserCompany {
+    var companyId = "";
+    var role = ""
+}
 
 

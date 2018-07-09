@@ -44,12 +44,12 @@ class ClockInDialogFragment : DialogFragment() {
     var clockedShift = ClockedShift()
     var clockedShifts = mutableListOf<ClockedShift>()
 
-    lateinit var locationManager: LocationManager;
-    lateinit var company: Company;
-    lateinit var savedLocation: Location;
+    lateinit var locationManager: LocationManager
+    lateinit var company: Company
+    lateinit var savedLocation: Location
 
-    lateinit var dispComp: Disposable;
-    lateinit var dispClockedInShifts: Disposable;
+    lateinit var dispComp: Disposable
+   var dispClockedInShifts: Disposable? =null
 
     val permissionArray = arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION)
 
@@ -76,6 +76,7 @@ class ClockInDialogFragment : DialogFragment() {
                 savedLocation.latitude = this.company.gpsLocation!!.latitude
                 savedLocation.longitude = this.company.gpsLocation!!.longitude
             }
+
 
             when (company.locationType) {
                 LocationType.none.name -> {
@@ -256,9 +257,14 @@ class ClockInDialogFragment : DialogFragment() {
 
     override fun onDestroy() {
         super.onDestroy()
-        Log.d("pawell", "onDestroyyy")
+        if(!dispComp.isDisposed){
+            dispComp.dispose()
+        }
         dispComp.dispose()
-        dispClockedInShifts.dispose()
+        if(dispClockedInShifts != null && !dispClockedInShifts!!.isDisposed){
+            dispClockedInShifts!!.dispose()
+        }
+
         locationManager.removeUpdates(locationListener)
     }
 

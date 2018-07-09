@@ -68,7 +68,6 @@ class CustomCalendar : LinearLayout {
 
                 val day = calendar.get(Calendar.DAY_OF_MONTH)
                 val month2 = calendar.get(Calendar.MONTH) + 1
-                val year2 = calendar.get(Calendar.YEAR)
                 val weekDay = calendar.get(Calendar.DAY_OF_WEEK)
 
 

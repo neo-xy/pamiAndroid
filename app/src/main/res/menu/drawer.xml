@@ -28,6 +28,11 @@
             android:title="Kontakter" />
 
         <item
+            android:id="@+id/nav_sick"
+            android:icon="@drawable/ic_snow"
+            android:title="Sjuk anmällan" />
+
+        <item
             android:id="@+id/nav_shift_manager"
             android:icon="@drawable/ic_people"
             android:title="Hantera passen"

@@ -73,7 +73,7 @@ object FirebaseController {
 
     fun getShiftsOfaMonth(dateKey: String): Observable<MutableList<Shift>> {
         return create {
-            FirebaseFirestore.getInstance().collection("companies").document(User.companyId).collection("months").document(dateKey).collection("shifts").addSnapshotListener(object : EventListener<QuerySnapshot> {
+            FirebaseFirestore.getInstance().collection("companies").document(User.companies[User.latestCompanyIndex].companyId).collection("months").document(dateKey).collection("shifts").addSnapshotListener(object : EventListener<QuerySnapshot> {
                 override fun onEvent(p0: QuerySnapshot?, p1: FirebaseFirestoreException?) {
                     Log.d("pawell", "get shifts of month 1")
                     it.onNext(p0!!.toObjects(Shift::class.java))
@@ -84,7 +84,7 @@ object FirebaseController {
 
     fun getCompany(): Observable<Company> {
         return Observable.create<Company> {
-            FirebaseFirestore.getInstance().collection("companies").document(User.companyId).addSnapshotListener(object : EventListener<DocumentSnapshot> {
+            FirebaseFirestore.getInstance().collection("companies").document(User.companies[User.latestCompanyIndex].companyId).addSnapshotListener(object : EventListener<DocumentSnapshot> {
                 override fun onEvent(p0: DocumentSnapshot?, p1: FirebaseFirestoreException?) {
                     if (p0 != null) {
                         Log.d("pawell", "comp "+ p0)
@@ -102,7 +102,7 @@ object FirebaseController {
     fun setUpDepartments(): Observable<Boolean> {
         return Observable.create {
             val obs = it
-            FirebaseFirestore.getInstance().collection("companies").document(User.companyId).collection("departments").addSnapshotListener(object : EventListener<QuerySnapshot> {
+            FirebaseFirestore.getInstance().collection("companies").document(User.companies[User.latestCompanyIndex].companyId).collection("departments").addSnapshotListener(object : EventListener<QuerySnapshot> {
                 override fun onEvent(p0: QuerySnapshot?, p1: FirebaseFirestoreException?) {
                     departments = p0?.toObjects(Department::class.java)
                     obs.onNext(true)
@@ -113,7 +113,7 @@ object FirebaseController {
     }
 
     fun setUpEmployees() {
-        FirebaseFirestore.getInstance().collection("companies").document(User.companyId).collection("employees").addSnapshotListener(object : EventListener<QuerySnapshot> {
+        FirebaseFirestore.getInstance().collection("companies").document(User.companies[User.latestCompanyIndex].companyId).collection("employees").addSnapshotListener(object : EventListener<QuerySnapshot> {
             override fun onEvent(p0: QuerySnapshot?, p1: FirebaseFirestoreException?) {
                 employees = p0?.toObjects(Employee::class.java) as MutableList<Employee>
             }
@@ -125,7 +125,7 @@ object FirebaseController {
     }
 
     fun updateUnavailableDates2(us: UnavailableDate, dateKey: String) {
-        FirebaseFirestore.getInstance().collection("companies").document(User.companyId).collection("datesUnavailable").add(us).addOnCompleteListener(OnCompleteListener {
+        FirebaseFirestore.getInstance().collection("companies").document(User.companies[User.latestCompanyIndex].companyId).collection("datesUnavailable").add(us).addOnCompleteListener(OnCompleteListener {
             val id = it.result.id
 
             Log.d("pawell", "compl")
@@ -152,17 +152,17 @@ object FirebaseController {
 
     fun removeUnavailableDate(us: UnavailableDate, dateKey: String) {
 
-        FirebaseFirestore.getInstance().collection("companies").document(User.companyId).collection("datesUnavailable").document(us.id).delete()
+        FirebaseFirestore.getInstance().collection("companies").document(User.companies[User.latestCompanyIndex].companyId).collection("datesUnavailable").document(us.id).delete()
         FirebaseFirestore.getInstance().collection("users").document(User.employeeId).collection("datesUnavailable").document(us.id).delete()
     }
 
     fun saveImgUrl(photoUrl: Uri?) {
         FirebaseFirestore.getInstance().collection("users").document(User.employeeId).update("imgUrl", photoUrl.toString())
-        FirebaseFirestore.getInstance().collection("companies").document(User.companyId).collection("employees").document(User.employeeId).update("imgUrl", photoUrl.toString())
+        FirebaseFirestore.getInstance().collection("companies").document(User.companies[User.latestCompanyIndex].companyId).collection("employees").document(User.employeeId).update("imgUrl", photoUrl.toString())
     }
 
     fun setUpColleagues() {
-        FirebaseFirestore.getInstance().collection("companies").document(User.companyId).collection("employees").addSnapshotListener(object : EventListener<QuerySnapshot> {
+        FirebaseFirestore.getInstance().collection("companies").document(User.companies[User.latestCompanyIndex].companyId).collection("employees").addSnapshotListener(object : EventListener<QuerySnapshot> {
             override fun onEvent(p0: QuerySnapshot?, p1: FirebaseFirestoreException?) {
                 if (p0 !== null) {
                     colleague = p0.toObjects(Colleague::class.java)
@@ -188,20 +188,20 @@ object FirebaseController {
 
     fun updateShift(it: Shift) {
         FirebaseFirestore.getInstance().collection("users").document(User.employeeId).collection("shifts").document(it.shiftId).set(it)
-        FirebaseFirestore.getInstance().collection("companies").document(User.companyId).collection("months")
+        FirebaseFirestore.getInstance().collection("companies").document(User.companies[User.latestCompanyIndex].companyId).collection("months")
                 .document("" + it.startTime.year + "" + Shared.df.format(it.startTime.month)).collection("shifts").document(it.shiftId).set(it)
     }
 
     fun markAsToAccept(shift: Shift) {
 
-        FirebaseFirestore.getInstance().collection("companies").document(User.companyId).collection("shiftsToAccept").document(shift.shiftId).set(shift)
+        FirebaseFirestore.getInstance().collection("companies").document(User.companies[User.latestCompanyIndex].companyId).collection("shiftsToAccept").document(shift.shiftId).set(shift)
     }
 
     fun markAsToAcceptNew(shift: Shift): Observable<String> {
 
         return Observable.create<String> {
             val observableEmitter = it
-            FirebaseFirestore.getInstance().collection("companies").document(User.companyId).collection("shiftsToAccept").add(shift)
+            FirebaseFirestore.getInstance().collection("companies").document(User.companies[User.latestCompanyIndex].companyId).collection("shiftsToAccept").add(shift)
                     .addOnCompleteListener() {
                         observableEmitter.onNext(it.getResult().id)
                     }
@@ -211,7 +211,7 @@ object FirebaseController {
     fun addToClockedInShifts(clockedShift: ClockedShift): Observable<String> {
         return create {
             val emiter = it
-            FirebaseFirestore.getInstance().collection("companies").document(User.companyId).collection("activeShifts").add(clockedShift).addOnCompleteListener {
+            FirebaseFirestore.getInstance().collection("companies").document(User.companies[User.latestCompanyIndex].companyId).collection("activeShifts").add(clockedShift).addOnCompleteListener {
                 if (it.isSuccessful) {
                     emiter.onNext(it.getResult().id)
 //                    FirebaseFirestore.getInstance().collection("data").document("clockedInShift").set(clockedShift)
@@ -225,7 +225,7 @@ object FirebaseController {
     fun getClockedInShifts(): Observable<MutableList<ClockedShift>> {
         return Observable.create {
             val emitter = it
-            FirebaseFirestore.getInstance().collection("companies").document(User.companyId).collection("activeShifts").addSnapshotListener(object : EventListener<QuerySnapshot> {
+            FirebaseFirestore.getInstance().collection("companies").document(User.companies[User.latestCompanyIndex].companyId).collection("activeShifts").addSnapshotListener(object : EventListener<QuerySnapshot> {
                 override fun onEvent(p0: QuerySnapshot?, p1: FirebaseFirestoreException?) {
                     val clockedShifts = mutableListOf<ClockedShift>()
                     p0?.forEach {
@@ -242,7 +242,7 @@ object FirebaseController {
     fun removeShiftFromClockedInShifts(clockedShift: ClockedShift): Observable<Boolean> {
         return Observable.create {
             val emitter = it
-            FirebaseFirestore.getInstance().collection("companies").document(User.companyId).collection("activeShifts").document(clockedShift.clockedShiftId).delete().addOnCompleteListener {
+            FirebaseFirestore.getInstance().collection("companies").document(User.companies[User.latestCompanyIndex].companyId).collection("activeShifts").document(clockedShift.clockedShiftId).delete().addOnCompleteListener {
                 if (it.isSuccessful) {
                     emitter.onNext(true)
                 } else {
@@ -255,7 +255,7 @@ object FirebaseController {
     fun addShiftsToAccept(clockedShift: ClockedShift): Observable<Boolean> {
         return Observable.create {
             val emitter = it
-            FirebaseFirestore.getInstance().collection("companies").document(User.companyId).collection("shiftsToAccept").document(clockedShift.clockedShiftId).set(clockedShift).addOnCompleteListener {
+            FirebaseFirestore.getInstance().collection("companies").document(User.companies[User.latestCompanyIndex].companyId).collection("shiftsToAccept").document(clockedShift.clockedShiftId).set(clockedShift).addOnCompleteListener {
                 if (it.isSuccessful) {
                     emitter.onNext(true)
                 } else {
@@ -281,13 +281,13 @@ object FirebaseController {
 
     fun updateRegistrationToken(token: String) {
         FirebaseFirestore.getInstance().collection("users").document(User.employeeId).update("refreshToken", token)
-        FirebaseFirestore.getInstance().collection("companies").document(User.companyId).collection("employees").document(User.employeeId)
+        FirebaseFirestore.getInstance().collection("companies").document(User.companies[User.latestCompanyIndex].companyId).collection("employees").document(User.employeeId)
                 .update("refreshToken", token)
     }
 
     fun getShiftsToTake(): Observable<MutableList<ShiftsToTake>> {
         return create {
-            FirebaseFirestore.getInstance().collection("companies").document(User.companyId).collection("shiftsToTake").addSnapshotListener(object : EventListener<QuerySnapshot> {
+            FirebaseFirestore.getInstance().collection("companies").document(User.companies[User.latestCompanyIndex].companyId).collection("shiftsToTake").addSnapshotListener(object : EventListener<QuerySnapshot> {
                 val emiter = it;
                 override fun onEvent(p0: QuerySnapshot?, p1: FirebaseFirestoreException?) {
                     if (p0 != null) {
@@ -309,7 +309,7 @@ object FirebaseController {
 
     fun getInterests(): Observable<MutableList<Interest>> {
         return create {
-            FirebaseFirestore.getInstance().collection("companies").document(User.companyId).collection("interests").addSnapshotListener(object : EventListener<QuerySnapshot> {
+            FirebaseFirestore.getInstance().collection("companies").document(User.companies[User.latestCompanyIndex].companyId).collection("interests").addSnapshotListener(object : EventListener<QuerySnapshot> {
                 val emiter = it;
 
                 override fun onEvent(p0: QuerySnapshot?, p1: FirebaseFirestoreException?) {
@@ -337,11 +337,40 @@ object FirebaseController {
 
     fun addIntress(interest: Interest) {
         Log.d("pawell", "adddd")
-        FirebaseFirestore.getInstance().collection("companies").document(User.companyId).collection("interests").add(interest)
+        FirebaseFirestore.getInstance().collection("companies").document(User.companies[User.latestCompanyIndex].companyId).collection("interests").add(interest)
     }
 
     fun removeInterest(interest: Interest) {
-        FirebaseFirestore.getInstance().collection("companies").document(User.companyId).collection("interests").document(interest.interestId).delete()
+        FirebaseFirestore.getInstance().collection("companies").document(User.companies[User.latestCompanyIndex].companyId).collection("interests").document(interest.interestId).delete()
+    }
+    fun getSickReports():Observable<MutableList<SickReport>>{
+        return create {
+            FirebaseFirestore.getInstance().collection("companies").document(User.companies[User.latestCompanyIndex].companyId).collection("sickReports").addSnapshotListener { querySnapshot, firebaseFirestoreException ->
+                if(querySnapshot != null){
+                    var reports = mutableListOf<SickReport>()
+
+                    querySnapshot.filter {
+                        val employeeId = it.get("employeeId")
+                        employeeId ==User.employeeId
+                    }
+
+                    querySnapshot.forEach {
+                        var report = SickReport()
+                        report = it.toObject(SickReport::class.java)
+                        report.reportId = it.id
+                        reports.add(report)
+                    }
+
+                    it.onNext(reports)
+                }
+            }
+        }
+    }
+    fun addSickReport(sickReport:SickReport){
+        FirebaseFirestore.getInstance().collection("companies").document(User.companies[User.latestCompanyIndex].companyId).collection("sickReports").add(sickReport)
+    }
+    fun removeSickReport(){
+
     }
 
 }

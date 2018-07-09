@@ -101,7 +101,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             nav_view.menu.findItem(nav_shifts).setVisible(false)
             nav_view.menu.findItem(nav_contacts).setVisible(false)
         }
-        if (User.role != "boss") {
+        if (User.companies[User.latestCompanyIndex].role != "boss") {
             nav_view.menu.findItem(nav_shift_manager).setVisible(false)
         }
 
@@ -175,6 +175,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             nav_personal_information -> {
                 supportFragmentManager.beginTransaction().replace(fragment_container.id, PersonalInformationFragment(), "personalInfo").commit()
             }
+            nav_sick -> {
+                supportFragmentManager.beginTransaction().replace(fragment_container.id, SickFragment(), "sick").commit()
+            }
 
             nav_contacts -> {
                 supportFragmentManager.beginTransaction().replace(fragment_container.id, DashboardFragment(), "contacts").commit()
@@ -231,9 +234,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     private fun openShiftsToTakeDialog() {
         val toTakeDialogFragment = ToTakeDialogFragment()
-        var bundle =  Bundle()
+        var bundle = Bundle()
 
-        bundle.putParcelableArrayList("shiftsToTake",this.shiftsToTake as ArrayList<out Parcelable>)
+        bundle.putParcelableArrayList("shiftsToTake", this.shiftsToTake as ArrayList<out Parcelable>)
         toTakeDialogFragment.arguments = bundle;
         toTakeDialogFragment.arguments
         toTakeDialogFragment.show(supportFragmentManager, "toTake")
