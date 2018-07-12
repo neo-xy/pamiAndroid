@@ -34,6 +34,9 @@ import java.util.*
 import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
+import pami.com.pami.models.Company
+import pami.com.pami.models.Salary
+import kotlin.Comparator
 
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
@@ -104,6 +107,27 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         if (User.companies[User.latestCompanyIndex].role != "boss") {
             nav_view.menu.findItem(nav_shift_manager).setVisible(false)
         }
+
+        User.salaries.sortWith(object:Comparator<Salary>{
+            override fun compare(p0: Salary, p1: Salary): Int = when {
+                p0.startDate > p1.startDate -> -1
+                p0.startDate == p1.startDate -> 0
+                else -> 1
+
+            }
+
+        })
+        nav_view.menu.findItem(nav_sick).setVisible(false)
+
+        FirebaseController.getCompany().subscribe {
+            nav_view.menu.findItem(nav_sick).setVisible(false)
+            it.sickAccess.forEach {
+                if(it == User.salaries[0].employmentType?.name){
+                    nav_view.menu.findItem(nav_sick).setVisible(true)
+                }
+            }
+        }
+
 
         FirebaseAuth.getInstance().currentUser!!.providerData.forEach {
             if (it.providerId == "facebook.com") {

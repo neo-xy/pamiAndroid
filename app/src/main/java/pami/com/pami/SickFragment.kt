@@ -13,6 +13,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView
 import kotlinx.android.synthetic.main.fragment_sick.view.*
 import pami.com.pami.models.SickReport
@@ -42,6 +43,7 @@ class SickFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_sick, container, false)
 
         FirebaseController.getSickReports().subscribe {
+            reports.removeAll(reports)
             it.forEach {
                 if (it.rangeEnd > Date()) {
                     reports.add(it)
@@ -88,6 +90,8 @@ class SickFragment : Fragment() {
                     startDate = dates[0].date
                     endDate = dates[dates.size - 1].date
                 }
+            }else{
+                Toast.makeText(context,"Maximal antal anmälningar nåddes",Toast.LENGTH_LONG).show()
             }
 
         }
@@ -134,7 +138,11 @@ class SickFragment : Fragment() {
     fun showReports(view: View) {
         var reportsString = mutableListOf<String>()
         reports.forEach {
-            reportsString.add(df.format(it.rangeStart) + "  ->  " + df.format(it.rangeEnd)+ " ("+it.type.name+")")
+            var type =""
+          if(it.type == SickType.CHILD){
+              type = "(VAB)"
+          }
+            reportsString.add(df.format(it.rangeStart) + "  ->  " + df.format(it.rangeEnd)+ " $type")
         }
 
         var builder = AlertDialog.Builder(context!!)

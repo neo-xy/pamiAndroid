@@ -10,6 +10,7 @@ class Company {
     var wifiName:String? = null
     var salt:String? = null
     var locationType:String? = null
+    var sickAccess = mutableListOf<String>()
 
 }
 
@@ -28,4 +29,10 @@ class PamiLocation{
 
 enum class LocationType{
     none, gps, wifi
+}
+
+class SickAccess{
+    var fullTime = false
+    var hourly = false
+    var partTime = false
 }

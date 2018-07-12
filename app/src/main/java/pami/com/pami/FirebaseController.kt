@@ -31,6 +31,7 @@ object FirebaseController {
                     if (p0!!.exists()) {
                         p0.toObject(User::class.java)!!
                         it.onNext(true)
+
                     } else {
                     }
                 }
