@@ -24,6 +24,8 @@ object User {
     var socialSecurityNumber: Long = 0;
     var latestCompanyIndex = 0;
     var companies = mutableListOf <UserCompany>();
+    var companyId = ""
+    var role ="boss"
 
 }
 

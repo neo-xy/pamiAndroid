@@ -29,8 +29,8 @@ class ClockedShiftAdapter() : RecyclerView.Adapter<ClockedShiftAdapter.CustomeHo
     override fun onBindViewHolder(holder: CustomeHolder, position: Int) {
         val firstName = list1[position].firstName
         val lastName = list1[position].lastName
-        holder?.name?.text = firstName +" "+ lastName
-        holder?.time?.text = Shared.df.format(Shared.getHour(list1[position].timeStempIn))+":"+ Shared.df.format(Shared.getMinute(list1[position].timeStempIn))
+        holder.name?.text = firstName +" "+ lastName
+        holder.time?.text = Shared.df.format(Shared.getHour(list1[position].timeStempIn))+":"+ Shared.df.format(Shared.getMinute(list1[position].timeStempIn))
     }
 
     class CustomeHolder(view: View) : RecyclerView.ViewHolder(view) {

@@ -8,4 +8,9 @@ class SickReport {
     var employeeId = ""
     var dateAdded = Date()
     var reportId = ""
+    var type:SickType = SickType.CHILD
+}
+
+enum class SickType{
+    NORMAL,CHILD
 }

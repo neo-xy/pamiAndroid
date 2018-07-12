@@ -27,8 +27,8 @@ class Shift {
     var timeStempOut:Long=0
     var tax:Double=0.0;
     var shiftStatus:String=""
-    var netto = 0
-    var brutto = 0
+    var netto = 0L
+    var brutto = 0L
 
     var startDate:Date = Date()
     var endDate:Date = Date()
