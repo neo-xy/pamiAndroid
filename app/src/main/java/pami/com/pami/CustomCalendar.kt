@@ -92,7 +92,7 @@ class CustomCalendar : LinearLayout {
                     cell.setTextColor(ContextCompat.getColor(context,R.color.gray_light))
                 }
                 shifts.forEach() {
-                    if (day == it.startTime.day && month2 == it.startTime.month) {
+                    if (day == it.start.get(Calendar.DATE) && month2 == it.start.get(Calendar.MONTH)) {
                         cell.setBackgroundColor( ContextCompat.getColor(context,R.color.colorAccent))
                         cell.setTextColor(Color.WHITE)
                     }

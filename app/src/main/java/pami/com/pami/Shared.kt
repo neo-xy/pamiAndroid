@@ -12,20 +12,20 @@ object Shared {
    fun sortShifts(shifts:MutableList<Shift>):MutableList<Shift>{
        Collections.sort(shifts, object : Comparator<Shift> {
             override fun compare(p0: Shift, p1: Shift): Int {
-                if (p0.startTime.year > p1.startTime.year) {
+                if (p0.start.get(Calendar.YEAR) > p1.start.get(Calendar.YEAR)) {
                     return 1
-                } else if (p0.startTime.year < p1.startTime.year) {
+                } else if (p0.start.get(Calendar.YEAR) < p1.start.get(Calendar.YEAR)) {
                     return -1
                 } else {
-                    if (p0.startTime.month > p1.startTime.month) {
+                    if (p0.start.get(Calendar.MONTH) > p1.start.get(Calendar.MONTH)) {
                         return 1
-                    } else if (p0.startTime.month < p1.startTime.month) {
+                    } else if (p0.start.get(Calendar.MONTH) < p1.start.get(Calendar.MONTH)) {
                         return -1
                     } else {
 
-                        if (p0.startTime.day > p1.startTime.day) {
+                        if (p0.start.get(Calendar.DATE) > p1.start.get(Calendar.DATE)) {
                             return 1
-                        } else if (p0.startTime.day < p1.startTime.day) {
+                        } else if (p0.start.get(Calendar.DATE) < p1.start.get(Calendar.DATE)) {
                             return -1
                         } else {
                             return 0

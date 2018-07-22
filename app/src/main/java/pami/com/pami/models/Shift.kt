@@ -1,5 +1,7 @@
 package pami.com.pami.models
 
+import com.google.firebase.Timestamp
+import com.google.firebase.firestore.Exclude
 import com.google.firebase.firestore.IgnoreExtraProperties
 import pami.com.pami.models.CustomDateModel
 import pami.com.pami.models.Department
@@ -15,24 +17,26 @@ class Shift {
     var OBnattMoney: Double = 0.0
     var employeeSalary: Int = 0
     var department: Department = Department()
-    var startTime: CustomDateModel = CustomDateModel()
-    var endTime: CustomDateModel = CustomDateModel()
+
     var employeeId: String = ""
     var employmentType: String = ""
-    var message: String? =null;
+    var message: String? = null
     var duration: Double = 0.0
     var badge: String = ""
     var shiftId: String = ""
-    var timeStempIn:Long=0
-    var timeStempOut:Long=0
-    var tax:Double=0.0;
-    var shiftStatus:String=""
+    var timeStempIn: Long = 0
+    var timeStempOut: Long = 0
+    var tax: Double = 0.0;
+    var shiftStatus: String = ""
     var netto = 0L
     var brutto = 0L
 
-    var startDate:Date = Date()
-    var endDate:Date = Date()
 
+    var startDate: Date = Date()
+
+    var endDate: Date = Date()
+    var start: Calendar = Calendar.getInstance()
+    var end: Calendar = Calendar.getInstance()
 
 
 }

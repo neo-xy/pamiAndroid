@@ -5,18 +5,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import kotlinx.android.synthetic.main.row_sick_report.view.*
 import pami.com.pami.R
-import pami.com.pami.models.SickReport
+import pami.com.pami.models.AbsenceReport
 import java.text.SimpleDateFormat
-import java.util.zip.Inflater
 
 class SickReportAdapter(): RecyclerView.Adapter<SickReportAdapter.CustomHolder>() {
 
-   lateinit var list:MutableList<SickReport>
+   lateinit var list:MutableList<AbsenceReport>
     var df =SimpleDateFormat("MMM dd")
 
-    constructor(list : MutableList<SickReport>):this(){
+    constructor(list : MutableList<AbsenceReport>):this(){
         this.list = list
     }
 
@@ -31,8 +29,8 @@ class SickReportAdapter(): RecyclerView.Adapter<SickReportAdapter.CustomHolder>(
     }
 
     override fun onBindViewHolder(holder: CustomHolder?, position: Int) {
-       holder?.from?.text = df.format(this.list[position].rangeStart)
-       holder?.to?.text = df.format(this.list[position].rangeEnd)
+       holder?.from?.text = df.format(this.list[position].startDate)
+       holder?.to?.text = df.format(this.list[position].endDate)
     }
 
 

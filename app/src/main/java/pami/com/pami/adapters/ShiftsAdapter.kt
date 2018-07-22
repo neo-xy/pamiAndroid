@@ -23,18 +23,18 @@ class ShiftsAdapter() : RecyclerView.Adapter<ShiftsAdapter.MyViewHolder>(){
     }
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
 
-        holder.startTime?.text = df.format(shifts[position].startTime.hour) + ":"+ df.format(shifts[position].startTime.minute)
-        holder.endTime?.text ="-"+ df.format(shifts[position].endTime.hour) + ":"+ df.format(shifts[position].endTime.minute)
-        holder.dayNr?.text = df.format(shifts[position].startTime.day)
+        holder.startTime?.text = df.format(shifts[position].start.get(Calendar.HOUR)) + ":"+ df.format(shifts[position].start.get(Calendar.MINUTE))
+        holder.endTime?.text ="-"+ df.format(shifts[position].end.get(Calendar.HOUR)) + ":"+ df.format(shifts[position].end.get(Calendar.MINUTE))
+        holder.dayNr?.text = df.format(shifts[position].start.get(Calendar.DATE))
 
         val cal =Calendar.getInstance()
-        cal.set(shifts[position].startTime.year,shifts[position].startTime.month-1,shifts[position].startTime.day)
+        cal.set(shifts[position].start.get(Calendar.YEAR),shifts[position].start.get(Calendar.MONTH),shifts[position].start.get(Calendar.DATE))
         val date:Date = cal.time
         val df = SimpleDateFormat("MMMM", Locale("swe"))
         holder.month?.text = " " + df.format(date).capitalize()
 
         holder.extraInfo?.text = shifts[position].message
-        holder.department?.text = shifts[position].department.id
+        holder.department?.text = shifts[position].department!!.id
 
         if(shifts[position].badge.length>0){
             holder.badge?.text =" (" +shifts[position].badge+")"
@@ -45,7 +45,7 @@ class ShiftsAdapter() : RecyclerView.Adapter<ShiftsAdapter.MyViewHolder>(){
             }
         }
 
-        holder.departmentColor?.setBackgroundColor(Color.parseColor(shifts[position].department.color))
+        holder.departmentColor?.setBackgroundColor(Color.parseColor(shifts[position].department!!.color))
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {

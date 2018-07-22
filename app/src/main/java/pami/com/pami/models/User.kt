@@ -1,8 +1,9 @@
 package pami.com.pami.models
 
+import com.google.firebase.firestore.IgnoreExtraProperties
 import java.util.*
 
-
+@IgnoreExtraProperties
 object User {
     val firstName: String = ""
     val lastName: String = ""

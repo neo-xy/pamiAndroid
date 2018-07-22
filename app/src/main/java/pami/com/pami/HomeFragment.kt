@@ -5,6 +5,7 @@ import android.support.v4.app.Fragment
 import android.support.v7.widget.CardView
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -56,18 +57,21 @@ class HomeFragment : Fragment() {
         calendar.time = currantDate
 
         FirebaseController.getUserShifts().subscribe() {
+
+            Log.d("pawell","sssss "+ it.size)
             if (it.size > 0) {
 
                 var upcomingShifts = mutableListOf<Shift>()
-                val currentDateKey = (calendar.get(Calendar.YEAR).toString() + df.format(calendar.get(Calendar.MONTH) + 1) + df.format(calendar.get(Calendar.DATE))).toInt()
+                val currentDateKey = (calendar.get(Calendar.YEAR).toString() + df.format(calendar.get(Calendar.MONTH) ) + df.format(calendar.get(Calendar.DATE))).toInt()
 
                 it.forEach { shift ->
-                    val shiftDateKey = (shift.startTime.year.toString() + df.format(shift.startTime.month) + df.format(shift.startTime.day)).toInt()
+                    val shiftDateKey = (shift.start.get(Calendar.YEAR).toString() + df.format(shift.start.get(Calendar.MONTH)) + df.format(shift.start.get(Calendar.DATE))).toInt()
                     if (shiftDateKey >= currentDateKey) {
                         upcomingShifts.add(shift)
                     }
                 }
                 upcomingShifts = Shared.sortShifts(upcomingShifts)
+                Log.d("pawell","sssss "+ it.size)
 
                 val adap = ShiftsAdapter(upcomingShifts)
                 recyclerView.layoutManager = LinearLayoutManager(context, LinearLayout.VERTICAL, false)

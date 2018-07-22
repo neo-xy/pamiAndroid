@@ -166,7 +166,7 @@ class WeekFragment : Fragment(), View.OnScrollChangeListener {
 
                         shifts.forEach {
                             val shift = it
-                            if (shift.startTime.day == dayDate && shift.department.id == department.id) {
+                            if (shift.start.get(Calendar.DATE) == dayDate && shift.department!!.id == department.id) {
                                 shiftColumn.addView(getCell(shift, dayDate, department))
                             }
                         }
@@ -202,8 +202,8 @@ class WeekFragment : Fragment(), View.OnScrollChangeListener {
         timeView.gravity = Gravity.CENTER
         nameView.gravity = Gravity.CENTER
 
-        timeView.text = "" + String.format("%02d", shift.startTime.hour) + ":" + String.format("%02d", shift.startTime.minute) +
-                "-" + String.format("%02d", shift.endTime.hour) + ":" + String.format("%02d", shift.endTime.minute)
+        timeView.text = "" + String.format("%02d", shift.start.get(Calendar.HOUR)) + ":" + String.format("%02d", shift.start.get(Calendar.MINUTE)) +
+                "-" + String.format("%02d", shift.end.get(Calendar.HOUR)) + ":" + String.format("%02d", shift.end.get(Calendar.MINUTE))
 
         nameView.text = "$name $lastName"
 

@@ -12,6 +12,7 @@ import android.widget.TextView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import pami.com.pami.models.User
+import java.util.*
 
 class PersonalInformationFragment : Fragment() {
     private lateinit var totalSalaryView: TextView
@@ -80,10 +81,10 @@ class PersonalInformationFragment : Fragment() {
 
         val shifts = Shared.sortShifts(FirebaseController.shifts)
         if (shifts.size > 0) {
-            firstWorkDateView.text = "" + shifts[0].startTime.year + "/" + Shared.df.format(shifts[0].startTime.month) + "/" +
-                    Shared.df.format(shifts[0].startTime.day)
-            lastWorkDateView.text = "" + shifts[shifts.size - 1].startTime.year + "/" + Shared.df.format(shifts[shifts.size - 1].startTime.month) + "/" +
-                    Shared.df.format(shifts[shifts.size - 1].startTime.day)
+            firstWorkDateView.text = "" + shifts[0].start.get(Calendar.YEAR) + "/" + Shared.df.format(shifts[0].start.get(Calendar.MONTH)) + "/" +
+                    Shared.df.format(shifts[0].start.get(Calendar.DATE))
+            lastWorkDateView.text = "" + shifts[shifts.size - 1].start.get(Calendar.YEAR) + "/" + Shared.df.format(shifts[shifts.size - 1].start.get(Calendar.MONTH)) + "/" +
+                    Shared.df.format(shifts[shifts.size - 1].start.get(Calendar.DATE))
         }
 
         Glide.with(this)

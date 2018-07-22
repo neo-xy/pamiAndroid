@@ -11,6 +11,7 @@ import io.reactivex.Observable
 import io.reactivex.Observable.create
 import pami.com.pami.models.*
 import java.util.*
+import kotlin.collections.ArrayList
 
 object FirebaseController {
 
@@ -25,10 +26,17 @@ object FirebaseController {
     var interests = mutableListOf<Interest>()
 
     fun getUser(): Observable<Boolean> {
+
+        Log.d("pawell", "gggggg")
         return Observable.create<Boolean> {
             FirebaseFirestore.getInstance().collection("users").document(FirebaseAuth.getInstance().currentUser!!.uid).addSnapshotListener(object : EventListener<DocumentSnapshot> {
                 override fun onEvent(p0: DocumentSnapshot?, p1: FirebaseFirestoreException?) {
                     if (p0!!.exists()) {
+Log.d("pawell", "ffff")
+                        val p = p0.get("salaries")
+                        Log.d("pawell","www "+ p)
+
+
                         p0.toObject(User::class.java)!!
                         it.onNext(true)
 
@@ -61,7 +69,15 @@ object FirebaseController {
                     p0?.forEach {
 
                         var shift = it.toObject(Shift::class.java)
+                      
                         shift.shiftId = it.id
+                        var cal = Calendar.getInstance()
+                        cal.time = shift.startDate
+                        shift.start = cal
+                        cal.time = shift.endDate
+                        shift.end = cal
+                      
+
                         shifts.add(shift)
                     }
 
@@ -76,7 +92,6 @@ object FirebaseController {
         return create {
             FirebaseFirestore.getInstance().collection("companies").document(User.companyId).collection("scheduledShifts").addSnapshotListener(object : EventListener<QuerySnapshot> {
                 override fun onEvent(p0: QuerySnapshot?, p1: FirebaseFirestoreException?) {
-                    Log.d("pawell", "get shifts of month 1")
                     it.onNext(p0!!.toObjects(Shift::class.java))
                 }
             })
@@ -88,7 +103,6 @@ object FirebaseController {
             FirebaseFirestore.getInstance().collection("companies").document(User.companyId).addSnapshotListener(object : EventListener<DocumentSnapshot> {
                 override fun onEvent(p0: DocumentSnapshot?, p1: FirebaseFirestoreException?) {
                     if (p0 != null) {
-                        Log.d("pawell", "comp " + p0)
                         val comp = p0.toObject(Company::class.java)
 
                         if (comp != null) {
@@ -129,7 +143,6 @@ object FirebaseController {
         FirebaseFirestore.getInstance().collection("companies").document(User.companyId).collection("datesUnavailable").add(us).addOnCompleteListener(OnCompleteListener {
             val id = it.result.id
 
-            Log.d("pawell", "compl")
             FirebaseFirestore.getInstance().collection("users").document(User.employeeId).collection("datesUnavailable").document(id).set(us)
         })
 
@@ -190,7 +203,7 @@ object FirebaseController {
     fun updateShift(it: Shift) {
         FirebaseFirestore.getInstance().collection("users").document(User.employeeId).collection("scheduledShifts").document(it.shiftId).set(it)
         FirebaseFirestore.getInstance().collection("companies").document(User.companyId).collection("months")
-                .document("" + it.startTime.year + "" + Shared.df.format(it.startTime.month)).collection("scheduledShifts").document(it.shiftId).set(it)
+                .document("" + it.start.get(Calendar.YEAR) + "" + Shared.df.format(it.start.get(Calendar.MONTH))).collection("scheduledShifts").document(it.shiftId).set(it)
     }
 
     fun markAsToAccept(shift: Shift) {
@@ -337,7 +350,6 @@ object FirebaseController {
     }
 
     fun addIntress(interest: Interest) {
-        Log.d("pawell", "adddd")
         FirebaseFirestore.getInstance().collection("companies").document(User.companyId).collection("interests").add(interest)
     }
 
@@ -345,15 +357,15 @@ object FirebaseController {
         FirebaseFirestore.getInstance().collection("companies").document(User.companyId).collection("interests").document(interest.interestId).delete()
     }
 
-    fun getSickReports(): Observable<MutableList<SickReport>> {
+    fun getAbsenceReports(): Observable<MutableList<AbsenceReport>> {
         return create {
-            FirebaseFirestore.getInstance().collection("users").document(User.employeeId).collection("sickReports").addSnapshotListener { querySnapshot, firebaseFirestoreException ->
+            FirebaseFirestore.getInstance().collection("users").document(User.employeeId).collection("absenceReports").addSnapshotListener { querySnapshot, firebaseFirestoreException ->
                 if (querySnapshot != null) {
-                    var reports = mutableListOf<SickReport>()
+                    var reports = mutableListOf<AbsenceReport>()
 
                     querySnapshot.forEach {
-                        var report = SickReport()
-                        report = it.toObject(SickReport::class.java)
+                        var report = AbsenceReport()
+                        report = it.toObject(AbsenceReport::class.java)
                         report.reportId = it.id
                         reports.add(report)
                     }
@@ -365,17 +377,16 @@ object FirebaseController {
     }
 
 
-    fun addSickReport(sickReport: SickReport) {
-        Log.d("pawell", " dddd " + sickReport)
-        FirebaseFirestore.getInstance().collection("companies").document(User.companyId).collection("sickReports").add(sickReport).addOnCompleteListener {
-            FirebaseFirestore.getInstance().collection("users").document(User.employeeId).collection("sickReports").document(it.result.id).set(sickReport)
+    fun addAbsenceReport(absenceReport: AbsenceReport) {
+        FirebaseFirestore.getInstance().collection("companies").document(User.companyId).collection("absenceReports").add(absenceReport).addOnCompleteListener {
+            FirebaseFirestore.getInstance().collection("users").document(User.employeeId).collection("absenceReports").document(it.result.id).set(absenceReport)
         }
 
     }
 
-    fun removeSickReport(reportId:String) {
-        FirebaseFirestore.getInstance().collection("companies").document(User.companyId).collection("sickReports").document(reportId).delete()
-        FirebaseFirestore.getInstance().collection("users").document(User.employeeId).collection("sickReports").document(reportId).delete()
+    fun removeAbsenceReport(reportId:String) {
+        FirebaseFirestore.getInstance().collection("companies").document(User.companyId).collection("absenceReports").document(reportId).delete()
+        FirebaseFirestore.getInstance().collection("users").document(User.employeeId).collection("absenceReports").document(reportId).delete()
     }
 }
 

@@ -2,11 +2,9 @@ package pami.com.pami
 
 
 import android.content.DialogInterface
-import android.graphics.Color
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.app.AlertDialog
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,7 +14,7 @@ import android.widget.TextView
 import android.widget.Toast
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView
 import kotlinx.android.synthetic.main.fragment_sick.view.*
-import pami.com.pami.models.SickReport
+import pami.com.pami.models.AbsenceReport
 import pami.com.pami.models.SickType
 import pami.com.pami.models.User
 import java.text.SimpleDateFormat
@@ -33,7 +31,7 @@ class SickFragment : Fragment() {
     lateinit var rangeContainer: LinearLayout
     var startDate: Date? = null
     var endDate: Date? = null
-    var reports = mutableListOf<SickReport>()
+    var reports = mutableListOf<AbsenceReport>()
 
     val df = SimpleDateFormat("yyyy MMM dd")
 
@@ -42,10 +40,10 @@ class SickFragment : Fragment() {
                               savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_sick, container, false)
 
-        FirebaseController.getSickReports().subscribe {
+        FirebaseController.getAbsenceReports().subscribe {
             reports.removeAll(reports)
             it.forEach {
-                if (it.rangeEnd > Date()) {
+                if (it.endDate > Date()) {
                     reports.add(it)
                 }
             }
@@ -98,22 +96,19 @@ class SickFragment : Fragment() {
         return view
     }
 
-    private fun showReports() {
-
-    }
-
     fun onSendSickReport(view: View) {
-        Log.d("pawell", "lll" + startDate + "  " + endDate)
-
         if (startDate != null && endDate != null) {
 
-            val sickReport = SickReport()
-            sickReport.rangeStart = startDate as Date
-            sickReport.rangeEnd = endDate as Date
+            val sickReport = AbsenceReport()
+            sickReport.startDate = startDate as Date
+            sickReport.endDate = endDate as Date
             sickReport.employeeId = User.employeeId
             sickReport.dateAdded = Date()
             sickReport.type = SickType.NORMAL
-            FirebaseController.addSickReport(sickReport)
+            sickReport.firstName = User.firstName
+            sickReport.lastName = User.lastName
+            sickReport.socialSecurityNumber  = User.socialSecurityNumber
+            FirebaseController.addAbsenceReport(sickReport)
             sendSickBtn.isEnabled = false
             sendChildSickBtn.isEnabled = false
         }
@@ -122,16 +117,18 @@ class SickFragment : Fragment() {
     fun onSendChildSickReport(view: View) {
         if (startDate != null && endDate != null) {
 
-            val sickReport = SickReport()
-            sickReport.rangeStart = startDate as Date
-            sickReport.rangeEnd = endDate as Date
+            val sickReport = AbsenceReport()
+            sickReport.startDate = startDate as Date
+            sickReport.endDate = endDate as Date
             sickReport.employeeId = User.employeeId
             sickReport.dateAdded = Date()
             sickReport.type = SickType.CHILD
-            FirebaseController.addSickReport(sickReport)
+            sickReport.firstName = User.firstName
+            sickReport.lastName = User.lastName
+            sickReport.socialSecurityNumber  = User.socialSecurityNumber
+            FirebaseController.addAbsenceReport(sickReport)
             sendSickBtn.isEnabled = false
             sendChildSickBtn.isEnabled = false
-
         }
     }
 
@@ -142,13 +139,13 @@ class SickFragment : Fragment() {
           if(it.type == SickType.CHILD){
               type = "(VAB)"
           }
-            reportsString.add(df.format(it.rangeStart) + "  ->  " + df.format(it.rangeEnd)+ " $type")
+            reportsString.add(df.format(it.startDate) + "  ->  " + df.format(it.endDate)+ " $type")
         }
 
         var builder = AlertDialog.Builder(context!!)
                 .setTitle("Tryck på tiden att ta bort")
                 .setItems(reportsString.toTypedArray(), DialogInterface.OnClickListener { dialogInterface, i ->
-                   FirebaseController.removeSickReport(reports[i].reportId)
+                   FirebaseController.removeAbsenceReport(reports[i].reportId)
                 })
                 .create()
         builder.show()
