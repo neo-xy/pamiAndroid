@@ -67,7 +67,7 @@ class CustomCalendar : LinearLayout {
                 cell.textSize = 18f
 
                 val day = calendar.get(Calendar.DAY_OF_MONTH)
-                val month2 = calendar.get(Calendar.MONTH) + 1
+                val month2 = calendar.get(Calendar.MONTH)
                 val weekDay = calendar.get(Calendar.DAY_OF_WEEK)
 
 

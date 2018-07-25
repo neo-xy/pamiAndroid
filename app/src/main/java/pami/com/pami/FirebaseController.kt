@@ -9,9 +9,11 @@ import com.google.firebase.firestore.*
 import com.google.firebase.firestore.EventListener
 import io.reactivex.Observable
 import io.reactivex.Observable.create
+import org.json.JSONObject
 import pami.com.pami.models.*
 import java.util.*
 import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 
 object FirebaseController {
 
@@ -32,12 +34,19 @@ object FirebaseController {
             FirebaseFirestore.getInstance().collection("users").document(FirebaseAuth.getInstance().currentUser!!.uid).addSnapshotListener(object : EventListener<DocumentSnapshot> {
                 override fun onEvent(p0: DocumentSnapshot?, p1: FirebaseFirestoreException?) {
                     if (p0!!.exists()) {
-Log.d("pawell", "ffff")
-                        val p = p0.get("salaries")
-                        Log.d("pawell","www "+ p)
 
+
+                       var s = p0.getData()!!.get("salaries") as MutableList<Salary>
+                        Log.d("pawell", "rrr "+ s.size)
 
                         p0.toObject(User::class.java)!!
+
+                       User.salaries!!.forEach {
+                            Log.d("pawell","g "+ it)
+                        }
+                        User.companies.forEach {
+                            Log.d("pawell","vv "+ it.companyId)
+                        }
                         it.onNext(true)
 
                     } else {

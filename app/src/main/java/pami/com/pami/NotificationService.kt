@@ -23,8 +23,6 @@ import android.app.NotificationChannel
 import android.app.PendingIntent
 
 
-
-
 class NotificationService : FirebaseMessagingService() {
 
     val CHANNEL_NAME = "PAMI"
@@ -32,20 +30,18 @@ class NotificationService : FirebaseMessagingService() {
     override fun onMessageReceived(p0: RemoteMessage) {
 
         createChannel()
-        var intent = Intent(this,LoginActivity::class.java);
+        var intent = Intent(this, LoginActivity::class.java);
         val pintent = PendingIntent.getActivity(this, 0,
                 intent, 0)
-
         val timeArray = p0.data.get("timeStemps")!!.split(",")
-
         var dates = ""
-        val df = SimpleDateFormat("dd MMM",Locale("sv","SE"))
+        val df = SimpleDateFormat("dd MMM", Locale("sv", "SE"))
 
         timeArray.toString()
 
         timeArray.forEach {
             val stemp: Long = it.toLong()
-            Log.d("pawell","stemp" + stemp.toString())
+            Log.d("pawell", "stemp" + stemp.toString())
             dates = dates + (df.format(Date(stemp))) + ", "
         }
 
@@ -72,7 +68,7 @@ class NotificationService : FirebaseMessagingService() {
         val nm: NotificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
         val index = p0.data.get("msg") as String
-        nm.notify(3,newMessageNotification)
+        nm.notify(3, newMessageNotification)
         nm.notify(index.toInt(), mBuilder.build())
 
 

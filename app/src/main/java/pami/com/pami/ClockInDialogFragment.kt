@@ -161,6 +161,8 @@ class ClockInDialogFragment : DialogFragment() {
         val date = Date()
         clockedShift.timeStempOut = date.time
 
+        clockedShift.endDate = date
+
         clockedShift.messageOut = clockedMessage.text.toString()
         FirebaseController.removeShiftFromClockedInShifts(clockedShift).subscribe {
             if (it == true) {
@@ -187,6 +189,7 @@ class ClockInDialogFragment : DialogFragment() {
         clockedShift.lastName = User.lastName
         clockedShift.employeeId = User.employeeId
         clockedShift.messageIn = clockedMessage.text.toString()
+        clockedShift.startDate = date
 
         FirebaseController.addToClockedInShifts(clockedShift).subscribe() {
             if (it == "") {

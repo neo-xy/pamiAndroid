@@ -108,7 +108,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             nav_view.menu.findItem(nav_shift_manager).setVisible(false)
         }
 
-        User.salaries.sortWith(object:Comparator<Salary>{
+
+
+        User.salaries!!.sortWith(object:Comparator<Salary>{
             override fun compare(p0: Salary, p1: Salary): Int = when {
                 p0.startDate > p1.startDate -> -1
                 p0.startDate == p1.startDate -> 0
@@ -117,14 +119,25 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             }
 
         })
+
+
         nav_view.menu.findItem(nav_sick).setVisible(false)
+//        User.salaries = Shared.sortSalaries(User.salaries)
 
         FirebaseController.getCompany().subscribe {
-            nav_view.menu.findItem(nav_sick).setVisible(false)
+            nav_view.menu.findItem(nav_sick).setVisible(true)
+
             it.sickAccess.forEach {
-                if(it == User.salaries[0].employmentType?.name){
+
+                Log.d("pawell","par "+ User.salaries!![0].employmentType?.name)
+                if(it == User.salaries!![0].employmentType?.name&& User.salaries!![0].partValue!= 100){
                     nav_view.menu.findItem(nav_sick).setVisible(true)
+                }else if(it=="fullTime"){
+                    if(User.salaries!![0].employmentType?.name == "partTime"&& User.salaries!![0].partValue == 100){
+                        nav_view.menu.findItem(nav_sick).setVisible(true)
+                    }
                 }
+
             }
         }
 

@@ -68,11 +68,11 @@ class PersonalInformationFragment : Fragment() {
         totalSalaryView.text = sumSalary.toString()
 
         var salarySuffix = "Sek/tim"
-        if (User.salaries[0].salary > 1000) {
+        if (User.salaries!![0].salary > 1000) {
             salarySuffix = "Sek/månad"
         }
 
-        currentSalaryView.text = User.salaries[0].salary.toString() + " " + salarySuffix
+        currentSalaryView.text = User.salaries!![0].salary.toString() + " " + salarySuffix
         FirebaseController.salaries.forEach {
             totalHours += it.duration!!
             totalSalary += it.total!!

@@ -89,10 +89,10 @@ class WeekFragment : Fragment(), View.OnScrollChangeListener {
                     val cal = Calendar.getInstance()
                     if (dayDate < 1) {
 
-                        cal.set(year, month2 - 1, 1)
+                        cal.set(year, month2, 1)
                         cal.add(Calendar.DAY_OF_MONTH, (dayDate - 1))
                         dayDate = cal.get(Calendar.DAY_OF_MONTH)
-                        month2 = cal.get(Calendar.MONTH) + 1
+                        month2 = cal.get(Calendar.MONTH)
                     }
 
                     val day = TextView(context)
@@ -120,7 +120,7 @@ class WeekFragment : Fragment(), View.OnScrollChangeListener {
 
                     blockDayBtn.setOnClickListener { this.blockDay(year, month2, dayDate, blockDayBtn) }
 
-                    day.text = weekDays[i] + " " + dayDate + "/" + month2
+                    day.text = weekDays[i] + " " + dayDate + "/" + (month2+1)
                     day.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
 
                     day.setTextColor(Color.WHITE)
@@ -218,7 +218,7 @@ class WeekFragment : Fragment(), View.OnScrollChangeListener {
 
         val cal = Calendar.getInstance()
         cal.set(Calendar.YEAR,year)
-        cal.set(Calendar.MONTH,month-1)
+        cal.set(Calendar.MONTH,month)
         cal.set(Calendar.DATE,date)
 
         val d =cal.time
@@ -229,7 +229,7 @@ class WeekFragment : Fragment(), View.OnScrollChangeListener {
 
         val alerDialog = AlertDialog.Builder(context)
         alerDialog.setView(R.layout.availability_dialog)
-        alerDialog.setTitle("Ändra tillgänglighet för: " + String.format("%02d", date) + "/" + String.format("%02d", month))
+        alerDialog.setTitle("Ändra tillgänglighet för: " + String.format("%02d", date) + "/" + String.format("%02d", month+1))
         val dialog = alerDialog.create()
 
         dialog.show()
@@ -245,7 +245,7 @@ class WeekFragment : Fragment(), View.OnScrollChangeListener {
         FirebaseController.unavailableShifts.forEach {
             val c =Calendar.getInstance()
             c.time = it.date
-            if(c.get(Calendar.YEAR)==year&&c.get(Calendar.MONTH)==(month-1)&&c.get(Calendar.DATE)==date){
+            if(c.get(Calendar.YEAR)==year&&c.get(Calendar.MONTH)==(month)&&c.get(Calendar.DATE)==date){
                 dateSaved = true
                 unavailableDate = it
                 return@forEach

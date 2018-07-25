@@ -10,7 +10,7 @@ object User {
     val employeeId: String = ""
     val city: String = ""
     val email: String = ""
-    val salaries = mutableListOf<Salary>()
+    var salaries :MutableList<Salary>? = null
     val imgUrl: String = ""
     val employmentStatus: String = ""
     var employmentDate: Date = Date()
