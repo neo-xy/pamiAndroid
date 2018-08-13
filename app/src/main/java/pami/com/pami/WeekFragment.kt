@@ -106,7 +106,7 @@ class WeekFragment : Fragment(), View.OnScrollChangeListener {
                     FirebaseController.unavailableShifts.forEach {
                         val c =Calendar.getInstance()
                         c.time= it.date
-                        if(c.get(Calendar.YEAR)==year&&c.get(Calendar.MONTH)==(month-1)&&c.get(Calendar.DATE)==dayDate){
+                        if(c.get(Calendar.YEAR)==year&&c.get(Calendar.MONTH)==(month)&&c.get(Calendar.DATE)==dayDate){
                             dateSaved = true
                             return@forEach
                         }

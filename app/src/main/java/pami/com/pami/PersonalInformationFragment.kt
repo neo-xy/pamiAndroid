@@ -74,8 +74,8 @@ class PersonalInformationFragment : Fragment() {
 
         currentSalaryView.text = User.salaries!![0].salary.toString() + " " + salarySuffix
         FirebaseController.salaries.forEach {
-            totalHours += it.duration!!
-            totalSalary += it.total!!
+//            totalHours += it.duration!!
+//            totalSalary += it.total!!
         }
 
 

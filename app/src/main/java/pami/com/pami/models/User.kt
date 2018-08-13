@@ -10,7 +10,7 @@ object User {
     val employeeId: String = ""
     val city: String = ""
     val email: String = ""
-    var salaries :MutableList<Salary>? = null
+    var salaries = mutableListOf<Salary>()
     val imgUrl: String = ""
     val employmentStatus: String = ""
     var employmentDate: Date = Date()
@@ -27,11 +27,10 @@ object User {
     var companies = mutableListOf <UserCompany>();
     var companyId = ""
     var role ="boss"
-
 }
 
 
-object UserCompany {
+class UserCompany {
     var companyId = "";
     var role = ""
 }

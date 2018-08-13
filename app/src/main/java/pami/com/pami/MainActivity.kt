@@ -64,6 +64,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         supportFragmentManager.beginTransaction().add(fragment_container.id, HomeFragment.getInstance()).commit()
 
+
         this.sp = this.getPreferences(android.content.Context.MODE_PRIVATE)
         this.clockedInShiftId = this.sp.getString("clockedInId", "");
 
@@ -125,7 +126,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 //        User.salaries = Shared.sortSalaries(User.salaries)
 
         FirebaseController.getCompany().subscribe {
-            nav_view.menu.findItem(nav_sick).setVisible(true)
+            nav_view.menu.findItem(nav_sick).setVisible(false)
 
             it.sickAccess.forEach {
 

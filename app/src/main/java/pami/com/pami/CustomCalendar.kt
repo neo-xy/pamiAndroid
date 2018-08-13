@@ -76,7 +76,7 @@ class CustomCalendar : LinearLayout {
                 FirebaseController.unavailableShifts.forEach {
                     val c =Calendar.getInstance()
                     c.time= it.date
-                    if(c.get(Calendar.YEAR)==year&&c.get(Calendar.MONTH)==(month2-1)&&c.get(Calendar.DATE)==day){
+                    if(c.get(Calendar.YEAR)==year&&c.get(Calendar.MONTH)==(month2)&&c.get(Calendar.DATE)==day){
                         dateSaved = true
                         return@forEach
                     }

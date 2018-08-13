@@ -84,7 +84,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
 
-                        android:text="Sammanlagt  lön:" />
+                        android:text="Total  lön:" />
 
                     <TextView
                         android:id="@+id/total_made_money"
@@ -105,7 +105,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
 
-                        android:text="Aktuell lön:" />
+                        android:text="Aktuell  lön:" />
 
                     <TextView
                         android:id="@+id/current_salary_tv"
@@ -168,7 +168,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center"
-                        android:text="Information din abretsgivare har om dig"
+                        android:text="Information din arbetsgivare har om dig"
                         android:textSize="14sp"
                         android:textStyle="bold" />
 
@@ -262,13 +262,11 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="8dp">
-
                     <TextView
-
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="Bank konto:" />
+                        android:text="Bankkonto:" />
 
                     <TextView
                         android:id="@+id/bank_account_tv"

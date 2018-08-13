@@ -4,15 +4,15 @@ import android.net.Uri
 import android.util.Log
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.Task
+import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.*
 import com.google.firebase.firestore.EventListener
 import io.reactivex.Observable
 import io.reactivex.Observable.create
-import org.json.JSONObject
+import pami.com.pami.enums.EmploymentType
 import pami.com.pami.models.*
 import java.util.*
-import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 
 object FirebaseController {
@@ -29,26 +29,17 @@ object FirebaseController {
 
     fun getUser(): Observable<Boolean> {
 
-        Log.d("pawell", "gggggg")
+        FirebaseFirestore.getInstance().collection("users").document(FirebaseAuth.getInstance().currentUser!!.uid)
+
         return Observable.create<Boolean> {
             FirebaseFirestore.getInstance().collection("users").document(FirebaseAuth.getInstance().currentUser!!.uid).addSnapshotListener(object : EventListener<DocumentSnapshot> {
                 override fun onEvent(p0: DocumentSnapshot?, p1: FirebaseFirestoreException?) {
                     if (p0!!.exists()) {
+                        p0.toObject(User::class.java)
 
 
-                       var s = p0.getData()!!.get("salaries") as MutableList<Salary>
-                        Log.d("pawell", "rrr "+ s.size)
 
-                        p0.toObject(User::class.java)!!
-
-                       User.salaries!!.forEach {
-                            Log.d("pawell","g "+ it)
-                        }
-                        User.companies.forEach {
-                            Log.d("pawell","vv "+ it.companyId)
-                        }
                         it.onNext(true)
-
                     } else {
                     }
                 }
@@ -78,14 +69,15 @@ object FirebaseController {
                     p0?.forEach {
 
                         var shift = it.toObject(Shift::class.java)
-                      
+
                         shift.shiftId = it.id
                         var cal = Calendar.getInstance()
                         cal.time = shift.startDate
                         shift.start = cal
+                        cal = Calendar.getInstance()
                         cal.time = shift.endDate
                         shift.end = cal
-                      
+
 
                         shifts.add(shift)
                     }
@@ -101,7 +93,23 @@ object FirebaseController {
         return create {
             FirebaseFirestore.getInstance().collection("companies").document(User.companyId).collection("scheduledShifts").addSnapshotListener(object : EventListener<QuerySnapshot> {
                 override fun onEvent(p0: QuerySnapshot?, p1: FirebaseFirestoreException?) {
-                    it.onNext(p0!!.toObjects(Shift::class.java))
+//                    it.onNext(p0!!.toObjects(Shift::class.java)
+
+                    val schedueledShifts = mutableListOf<Shift>()
+                    p0?.forEach {
+
+                        var shift = it.toObject(Shift::class.java)
+
+                        shift.shiftId = it.id
+                        var cal = Calendar.getInstance()
+                        cal.time = shift.startDate
+                        shift.start = cal
+                        cal = Calendar.getInstance()
+                        cal.time = shift.endDate
+                        shift.end = cal
+                        schedueledShifts.add(shift)
+                    }
+                    it.onNext(schedueledShifts)
                 }
             })
         }
@@ -215,6 +223,10 @@ object FirebaseController {
                 .document("" + it.start.get(Calendar.YEAR) + "" + Shared.df.format(it.start.get(Calendar.MONTH))).collection("scheduledShifts").document(it.shiftId).set(it)
     }
 
+    fun updateLastLoginDate(lastLoginDate:Date){
+        FirebaseFirestore.getInstance().collection("companies").document(User.companyId).collection("employees").document(User.employeeId).update("lastLoginDate",lastLoginDate)
+    }
+
     fun markAsToAccept(shift: Shift) {
 
         FirebaseFirestore.getInstance().collection("companies").document(User.companyId).collection("shiftsToAccept").document(shift.shiftId).set(shift)
@@ -303,6 +315,7 @@ object FirebaseController {
     }
 
     fun updateRegistrationToken(token: String) {
+        Log.d("pawell","updateToken "+User.employeeId+"  "+User.companyId)
         FirebaseFirestore.getInstance().collection("users").document(User.employeeId).update("refreshToken", token)
         FirebaseFirestore.getInstance().collection("companies").document(User.companyId).collection("employees").document(User.employeeId)
                 .update("refreshToken", token)
@@ -318,8 +331,10 @@ object FirebaseController {
                         p0.forEach {
                             val id = it.id
                             val shift = it.toObject(ShiftsToTake::class.java)
-                            shift.id = id;
-                            shiftsToTake.add(shift)
+                            if(shift.startDate > Date()){
+                                shift.id = id;
+                                shiftsToTake.add(shift)
+                            }
                         }
 
                         emiter.onNext(shiftsToTake)
@@ -393,7 +408,7 @@ object FirebaseController {
 
     }
 
-    fun removeAbsenceReport(reportId:String) {
+    fun removeAbsenceReport(reportId: String) {
         FirebaseFirestore.getInstance().collection("companies").document(User.companyId).collection("absenceReports").document(reportId).delete()
         FirebaseFirestore.getInstance().collection("users").document(User.employeeId).collection("absenceReports").document(reportId).delete()
     }

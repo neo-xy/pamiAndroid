@@ -22,13 +22,13 @@
     </string>
     <string name="password">Lössenord</string>
     <string name="log_in">Logga In</string>
-    <string name="e_mail">E-mail</string>
+    <string name="e_mail">E-post</string>
     <string name="navigation_drawer_open">open drawer</string>
     <string name="navigation_drawer_close">closed drawer</string>
     <string name="info_message_title">extra inforamtion:</string>
     <string name="menu_drawer_home">Hem</string>
     <string name="drawer_menu_schedule">Schema</string>
-    <string name="menu_drawer_payouts">Tider</string>
+    <string name="menu_drawer_payouts">Lön</string>
     <string name="drawer_menu_settings">Inställningar</string>
     <string name="drawer_menu_submenu_title">Komunikation</string>
     <string name="log_out">Logga ut</string>
@@ -41,7 +41,7 @@
     <string name="info_title">INFO</string>
     <string name="from">Från:</string>
     <string name="drawer_personal_information">Mina Info</string>
-    <string name="total_worked_hours">Sammanlagda antal timmar:</string>
+    <string name="total_worked_hours">Total antal timmar:</string>
     <string name="notification_channel_description">weeee</string>
     <string name="brutto">(Brutto)</string>
 </resources>
