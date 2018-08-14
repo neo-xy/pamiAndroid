@@ -9,4 +9,5 @@ class UnavailableDate {
     var date: Date? = null
     var id: String = ""
     var markDate: Date? = null
+    var message="";
 }

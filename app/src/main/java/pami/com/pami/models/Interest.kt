@@ -14,4 +14,5 @@ class Interest {
      var interestId:String="";
      var startDate:Date = Date();
      var endDate:Date = Date();
+     var message:String = "";
 }

@@ -234,8 +234,20 @@ class WeekFragment : Fragment(), View.OnScrollChangeListener {
 
         dialog.show()
 
+        var msg = dialog.findViewById<EditText>(R.id.not_availableMsg)
+
         val availablRadioBtn = dialog.findViewById<RadioButton>(R.id.available_btn)
         val notAvailablRadioBtn = dialog.findViewById<RadioButton>(R.id.not_available_btn)
+
+        availablRadioBtn.setOnClickListener { view->
+            if((view as RadioButton).isChecked) msg.visibility = View.GONE
+        }
+        notAvailablRadioBtn.setOnClickListener { view->
+            if((view as RadioButton).isChecked) msg.visibility = View.VISIBLE
+        }
+
+
+
 
        var dateSaved =false
         var unavailableDate = UnavailableDate()
@@ -254,9 +266,15 @@ class WeekFragment : Fragment(), View.OnScrollChangeListener {
 
         if (!dateSaved) {
             availablRadioBtn.isChecked = true
+
+            msg.visibility = View.GONE
         } else {
             notAvailablRadioBtn.isChecked = true
+            msg.visibility = View.VISIBLE
         }
+
+
+
         dialog.findViewById<Button>(R.id.save_availability_btn).setOnClickListener {
 
             if (availablRadioBtn.isChecked&&dateSaved) {
@@ -265,6 +283,8 @@ class WeekFragment : Fragment(), View.OnScrollChangeListener {
                 blockDayBtn.setBackgroundResource(R.drawable.bg_green_grey_circle)
 
             } else if (!availablRadioBtn.isChecked && !dateSaved) {
+
+                unavailableDate.message  = msg.editableText.toString()
 
                 FirebaseController.updateUnavailableDates2(unavailableDate,dateKey)
                 blockDayBtn.setBackgroundResource(R.drawable.bg_green_red_circle)
