@@ -14,6 +14,9 @@ import pami.com.pami.enums.EmploymentType
 import pami.com.pami.models.*
 import java.util.*
 import kotlin.collections.HashMap
+import com.google.firebase.firestore.FirebaseFirestoreSettings
+import com.google.firebase.firestore.FirebaseFirestore
+
 
 object FirebaseController {
 
@@ -27,7 +30,15 @@ object FirebaseController {
     lateinit var token: String
     var interests = mutableListOf<Interest>()
 
+
+
     fun getUser(): Observable<Boolean> {
+
+        val firestore = FirebaseFirestore.getInstance()
+        val settings = FirebaseFirestoreSettings.Builder()
+                .setTimestampsInSnapshotsEnabled(true)
+                .build()
+        firestore.firestoreSettings = settings
 
         FirebaseFirestore.getInstance().collection("users").document(FirebaseAuth.getInstance().currentUser!!.uid)
 
@@ -70,6 +81,8 @@ object FirebaseController {
 
                         var shift = it.toObject(Shift::class.java)
 
+
+
                         shift.shiftId = it.id
                         var cal = Calendar.getInstance()
                         cal.time = shift.startDate
@@ -77,6 +90,7 @@ object FirebaseController {
                         cal = Calendar.getInstance()
                         cal.time = shift.endDate
                         shift.end = cal
+
 
 
                         shifts.add(shift)
@@ -121,7 +135,6 @@ object FirebaseController {
                 override fun onEvent(p0: DocumentSnapshot?, p1: FirebaseFirestoreException?) {
                     if (p0 != null) {
                         val comp = p0.toObject(Company::class.java)
-
                         if (comp != null) {
                             it.onNext(comp)
                         }
@@ -166,19 +179,18 @@ object FirebaseController {
     }
 
     fun getUanavailableDates(): Observable<MutableList<UnavailableDate>> {
-        return create({
+        return create {
             FirebaseFirestore.getInstance().collection("users").document(User.employeeId).collection("datesUnavailable").addSnapshotListener(object : EventListener<QuerySnapshot> {
                 override fun onEvent(p0: QuerySnapshot?, p1: FirebaseFirestoreException?) {
                     unavailableShifts.removeAll(unavailableShifts);
-                    p0?.forEach {
-
-                        var us = it.toObject(UnavailableDate::class.java)
-                        us.id = it.id
+                    p0?.forEach { snapshot ->
+                        val us = snapshot.toObject(UnavailableDate::class.java)
+                        us.id = snapshot.id
                         unavailableShifts.add(us)
                     }
                 }
             })
-        })
+        }
     }
 
     fun removeUnavailableDate(us: UnavailableDate, dateKey: String) {
@@ -212,36 +224,32 @@ object FirebaseController {
         }
     }
 
-    fun ClockItShift(date: Date) {
+//
+//    fun updateShift(it: Shift) {
+//        FirebaseFirestore.getInstance().collection("users").document(User.employeeId).collection("scheduledShifts").document(it.shiftId).set(it)
+//        FirebaseFirestore.getInstance().collection("companies").document(User.companyId).collection("months")
+//                .document("" + it.start.get(Calendar.YEAR) + "" + Shared.df.format(it.start.get(Calendar.MONTH))).collection("scheduledShifts").document(it.shiftId).set(it)
+//    }
 
-
+    fun updateLastLoginDate(lastLoginDate: Date) {
+        FirebaseFirestore.getInstance().collection("companies").document(User.companyId).collection("employees").document(User.employeeId).update("lastLoginDate", lastLoginDate)
     }
 
-    fun updateShift(it: Shift) {
-        FirebaseFirestore.getInstance().collection("users").document(User.employeeId).collection("scheduledShifts").document(it.shiftId).set(it)
-        FirebaseFirestore.getInstance().collection("companies").document(User.companyId).collection("months")
-                .document("" + it.start.get(Calendar.YEAR) + "" + Shared.df.format(it.start.get(Calendar.MONTH))).collection("scheduledShifts").document(it.shiftId).set(it)
-    }
-
-    fun updateLastLoginDate(lastLoginDate:Date){
-        FirebaseFirestore.getInstance().collection("companies").document(User.companyId).collection("employees").document(User.employeeId).update("lastLoginDate",lastLoginDate)
-    }
-
-    fun markAsToAccept(shift: Shift) {
-
-        FirebaseFirestore.getInstance().collection("companies").document(User.companyId).collection("shiftsToAccept").document(shift.shiftId).set(shift)
-    }
-
-    fun markAsToAcceptNew(shift: Shift): Observable<String> {
-
-        return Observable.create<String> {
-            val observableEmitter = it
-            FirebaseFirestore.getInstance().collection("companies").document(User.companyId).collection("shiftsToAccept").add(shift)
-                    .addOnCompleteListener() {
-                        observableEmitter.onNext(it.getResult().id)
-                    }
-        }
-    }
+//    fun markAsToAccept(shift: Shift) {
+//
+//        FirebaseFirestore.getInstance().collection("companies").document(User.companyId).collection("shiftsToAccept").document(shift.shiftId).set(shift)
+//    }
+//
+//    fun markAsToAcceptNew(shift: Shift): Observable<String> {
+//
+//        return Observable.create<String> {
+//            val observableEmitter = it
+//            FirebaseFirestore.getInstance().collection("companies").document(User.companyId).collection("shiftsToAccept").add(shift)
+//                    .addOnCompleteListener() {
+//                        observableEmitter.onNext(it.getResult().id)
+//                    }
+//        }
+//    }
 
     fun addToClockedInShifts(clockedShift: ClockedShift): Observable<String> {
         return create {
@@ -258,17 +266,19 @@ object FirebaseController {
     }
 
     fun getClockedInShifts(): Observable<MutableList<ClockedShift>> {
-        return Observable.create {
-            val emitter = it
+        return Observable.create { emiter ->
             FirebaseFirestore.getInstance().collection("companies").document(User.companyId).collection("activeShifts").addSnapshotListener(object : EventListener<QuerySnapshot> {
                 override fun onEvent(p0: QuerySnapshot?, p1: FirebaseFirestoreException?) {
                     val clockedShifts = mutableListOf<ClockedShift>()
-                    p0?.forEach {
-                        val cs = it.toObject(ClockedShift::class.java)
-                        cs.clockedShiftId = it.id
-                        clockedShifts.add(cs)
+                    if (p0 != null) {
+
+                        p0.forEach {
+                            val cs = it.toObject(ClockedShift::class.java)
+                            cs.clockedShiftId = it.id
+                            clockedShifts.add(cs)
+                        }
+                        emiter.onNext(clockedShifts)
                     }
-                    emitter.onNext(clockedShifts)
                 }
             })
         }
@@ -288,6 +298,13 @@ object FirebaseController {
     }
 
     fun addShiftsToAccept(clockedShift: ClockedShift): Observable<Boolean> {
+        clockedShift.shiftStatus = ShiftStatus.utstämplat
+        val shiftLog = ShiftLog()
+        shiftLog.bossId = User.employeeId
+        shiftLog.bossFirstName = User.firstName
+        shiftLog.bossLastName = User.lastName
+        shiftLog.shiftStatus = ShiftStatus.utstämplat
+
         return Observable.create {
             val emitter = it
             FirebaseFirestore.getInstance().collection("companies").document(User.companyId).collection("shiftsToAccept").document(clockedShift.clockedShiftId).set(clockedShift).addOnCompleteListener {
@@ -301,21 +318,23 @@ object FirebaseController {
     }
 
     fun getAcceptedShifts(): Observable<MutableList<Shift>> {
-        return create {
-            FirebaseFirestore.getInstance().collection("users").document(User.employeeId).collection("acceptedShifts").addSnapshotListener(object : EventListener<QuerySnapshot> {
+        return create { it ->
+            FirebaseFirestore.getInstance().collection("users").document(User.employeeId).collection("shifts").addSnapshotListener(object : EventListener<QuerySnapshot> {
                 val emitter = it
                 override fun onEvent(p0: QuerySnapshot?, p1: FirebaseFirestoreException?) {
-
-                    accteptedShifts = p0!!.toObjects(Shift::class.java)
-                    emitter.onNext(accteptedShifts);
+                    if (p0 != null) {
+                        accteptedShifts = p0.toObjects(Shift::class.java)
+                        accteptedShifts.filter { shift -> shift.shiftStatus == ShiftStatus.accepterat }
+                        Log.d("pawell", accteptedShifts.size.toString())
+                        emitter.onNext(accteptedShifts);
+                    }
                 }
-
             })
         }
     }
 
     fun updateRegistrationToken(token: String) {
-        Log.d("pawell","updateToken "+User.employeeId+"  "+User.companyId)
+        Log.d("pawell", "updateToken " + User.employeeId + "  " + User.companyId)
         FirebaseFirestore.getInstance().collection("users").document(User.employeeId).update("refreshToken", token)
         FirebaseFirestore.getInstance().collection("companies").document(User.companyId).collection("employees").document(User.employeeId)
                 .update("refreshToken", token)
@@ -331,7 +350,7 @@ object FirebaseController {
                         p0.forEach {
                             val id = it.id
                             val shift = it.toObject(ShiftsToTake::class.java)
-                            if(shift.startDate > Date()){
+                            if (shift.startDate > Date()) {
                                 shift.id = id;
                                 shiftsToTake.add(shift)
                             }
@@ -412,6 +431,18 @@ object FirebaseController {
         FirebaseFirestore.getInstance().collection("companies").document(User.companyId).collection("absenceReports").document(reportId).delete()
         FirebaseFirestore.getInstance().collection("users").document(User.employeeId).collection("absenceReports").document(reportId).delete()
     }
+
+    fun getInfoMessagesForDay():Observable<MutableList<DayInfoMessage>>{
+       return Observable.create {
+           FirebaseFirestore.getInstance().collection("companies").document(User.companyId).collection("infoMessageDay").addSnapshotListener { querySnapshot, firebaseFirestoreException ->
+               if(querySnapshot !=null){
+                   Log.d("pawell", "fdfdf")
+                   it.onNext(querySnapshot.toObjects(DayInfoMessage::class.java))
+               }
+           }
+       }
+    }
+
 }
 
 

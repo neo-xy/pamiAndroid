@@ -3,23 +3,23 @@ package pami.com.pami
 
 import android.app.AlertDialog
 import android.content.Context
+import android.content.res.ColorStateList
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.os.Vibrator
 import android.support.annotation.RequiresApi
 import android.support.v4.app.Fragment
+import android.support.v7.widget.CardView
 import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
-import pami.com.pami.models.Department
-import pami.com.pami.models.Shift
-import pami.com.pami.models.UnavailableDate
-import pami.com.pami.models.User
 import java.util.*
+import android.widget.LinearLayout
+import pami.com.pami.models.*
 
 
 @RequiresApi(Build.VERSION_CODES.M)
@@ -33,12 +33,20 @@ class WeekFragment : Fragment(), View.OnScrollChangeListener {
     lateinit var container: LinearLayout
     var center = 0
 
+    lateinit var dayInfoMesages:MutableList<DayInfoMessage>
+
     var followingViews = mutableListOf<TextView>()
 
     var weekDays = listOf("Måndag", "Tisdag", "Onsdag", "Torsdag", "Fredag", "Lördag", "Söndag")
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
+        FirebaseController.getInfoMessagesForDay().subscribe {
+            Log.d("pawell", "ee" + it.size)
+            this.dayInfoMesages = it;
+        }
+
+
         val view = inflater.inflate(R.layout.fragment_week, container, false)
         this.container = LinearLayout(context)
         val horizontalScrollView = view.rootView as HorizontalScrollView
@@ -180,21 +188,27 @@ class WeekFragment : Fragment(), View.OnScrollChangeListener {
 
     private fun getCell(shift: Shift, dayDate: Int, department: Department): View? {
         val shiftCard = LinearLayout(context)
+        val shiftCard2 = CardView(context!!)
         shiftCard.orientation = LinearLayout.VERTICAL
-        val lp = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
-        lp.setMargins(25, 0, 25, 0)
-        shiftCard.layoutParams = lp
-        shiftCard.setPadding(15, 15, 15, 15)
         shiftCard.gravity = Gravity.CENTER_VERTICAL
 
-        shiftCard.setBackgroundResource(R.drawable.shadow_3)
+        val params = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT)
+
+        params.setMargins(25,10,25,10)
+        shiftCard2.layoutParams = params;
+        shiftCard2.cardElevation = 9.0f
+
+        shiftCard2.setContentPadding(15,15,15,15)
 
         var name = "undefined"
         var lastName = "undefined"
-        FirebaseController.employees!!.forEach {
+        var employeeId=""
+        FirebaseController.employees.forEach {
             if (it.employeeId == shift.employeeId) {
                 name = it.firstName
                 lastName = it.lastName
+                employeeId = it.employeeId
             }
         }
         val timeView = TextView(context)
@@ -206,10 +220,16 @@ class WeekFragment : Fragment(), View.OnScrollChangeListener {
                 "-" + String.format("%02d", shift.end.get(Calendar.HOUR)) + ":" + String.format("%02d", shift.end.get(Calendar.MINUTE))
 
         nameView.text = "$name $lastName"
+        if(User.employeeId == employeeId){
+            shiftCard2.backgroundTintList = ColorStateList.valueOf(resources.getColor(R.color.colorAccent))
+            nameView.setTextColor(Color.WHITE)
+            timeView.setTextColor(Color.WHITE)
+        }
 
         shiftCard.addView(timeView)
         shiftCard.addView(nameView)
-        return shiftCard
+        shiftCard2.addView(shiftCard)
+        return shiftCard2
     }
 
     private fun blockDay(year: Int, month: Int, date: Int, blockDayBtn: TextView) {

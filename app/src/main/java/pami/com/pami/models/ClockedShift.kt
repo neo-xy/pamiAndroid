@@ -16,4 +16,18 @@ class ClockedShift {
     var timeStempOut:Long=0
     var startDate:Date = Date()
     var endDate:Date = Date()
+    var shiftStatus: ShiftStatus? = null;
+   var logs = mutableListOf<ShiftLog>()
+}
+
+ class ShiftLog {
+
+    var startDate: Date?=null
+    var endDate: Date? = null
+    var bossId: String? = null
+    var bossFirstName: String? = null
+    var bossLastName: String? = null
+    var message: String? =null
+    var date: Date? = null
+     var shiftStatus: ShiftStatus? = null;
 }

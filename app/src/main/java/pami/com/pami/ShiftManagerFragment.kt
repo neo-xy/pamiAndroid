@@ -15,6 +15,7 @@ import android.widget.Toast
 import pami.com.pami.adapters.ShiftManagerAdapter
 import pami.com.pami.models.ClockedShift
 import pami.com.pami.models.Employee
+import pami.com.pami.models.ShiftStatus
 import pami.com.pami.models.User
 import java.util.*
 
@@ -106,10 +107,10 @@ class ShiftManagerFragment : Fragment(), RecyclerViewClickListener {
 
         shift.timeStempOut = date.time
         shift.messageOut = "Utstämplad av " + User.firstName + " " + User.lastName
+        shift.shiftStatus = ShiftStatus.utstämplat
         FirebaseController.removeShiftFromClockedInShifts(shift).subscribe {
             if (it == true) {
-                FirebaseController.addShiftsToAccept(shift).subscribe {
-                }
+                FirebaseController.addShiftsToAccept(shift)
             } else {
                 Toast.makeText(context, "Instämpling misslyckades", Toast.LENGTH_SHORT).show()
             }

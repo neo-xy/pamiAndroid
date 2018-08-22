@@ -25,10 +25,7 @@ import android.widget.TextView
 import android.widget.Toast
 import io.reactivex.disposables.Disposable
 import pami.com.pami.adapters.ClockedShiftAdapter
-import pami.com.pami.models.ClockedShift
-import pami.com.pami.models.Company
-import pami.com.pami.models.LocationType
-import pami.com.pami.models.User
+import pami.com.pami.models.*
 import java.util.*
 
 
@@ -162,6 +159,7 @@ class ClockInDialogFragment : DialogFragment() {
         clockedShift.timeStempOut = date.time
 
         clockedShift.endDate = date
+        clockedShift.shiftStatus = ShiftStatus.utstämplat
 
         clockedShift.messageOut = clockedMessage.text.toString()
         FirebaseController.removeShiftFromClockedInShifts(clockedShift).subscribe {
