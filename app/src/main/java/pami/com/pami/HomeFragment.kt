@@ -49,10 +49,10 @@ class HomeFragment : Fragment() {
         val calendar = Calendar.getInstance()
         val infoCardBoss = view.findViewById<CardView>(R.id.info_card)
 
-        infoName = view.findViewById<TextView>(R.id.info_name_tv)
-        infoDate = view.findViewById<TextView>(R.id.info_date_tv)
-        infoMsg = view.findViewById<TextView>(R.id.info_message_tv)
-        infoTel = view.findViewById<TextView>(R.id.info_tel_tv)
+        infoName = view.findViewById(R.id.info_name_tv)
+        infoDate = view.findViewById(R.id.info_date_tv)
+        infoMsg = view.findViewById(R.id.info_message_tv)
+        infoTel = view.findViewById(R.id.info_tel_tv)
 
         calendar.time = currantDate
 

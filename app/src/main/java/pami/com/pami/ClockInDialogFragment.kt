@@ -15,6 +15,7 @@ import android.os.Bundle
 import android.support.v4.app.DialogFragment
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.text.format.Formatter
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -26,6 +27,8 @@ import android.widget.Toast
 import io.reactivex.disposables.Disposable
 import pami.com.pami.adapters.ClockedShiftAdapter
 import pami.com.pami.models.*
+import java.net.Inet4Address
+import java.net.InetAddress
 import java.util.*
 
 
@@ -101,6 +104,7 @@ class ClockInDialogFragment : DialogFragment() {
         val wm: WifiManager = activity!!.applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
 
         val id = wm.connectionInfo.ssid
+        Log.d("pawell","1 "+wm.connectionInfo.bssid)
 
         //needed because id containes quotation characters
         val index = id.indexOf(company.wifiName!!)

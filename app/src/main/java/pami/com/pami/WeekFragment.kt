@@ -33,7 +33,7 @@ class WeekFragment : Fragment(), View.OnScrollChangeListener {
     lateinit var container: LinearLayout
     var center = 0
 
-    lateinit var dayInfoMesages:MutableList<DayInfoMessage>
+    var dayInfoMesages = mutableListOf<DayInfoMessage>()
 
     var followingViews = mutableListOf<TextView>()
 
@@ -41,10 +41,7 @@ class WeekFragment : Fragment(), View.OnScrollChangeListener {
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        FirebaseController.getInfoMessagesForDay().subscribe {
-            Log.d("pawell", "ee" + it.size)
-            this.dayInfoMesages = it;
-        }
+        this.dayInfoMesages =FirebaseController.dayInfoMesages
 
 
         val view = inflater.inflate(R.layout.fragment_week, container, false)
@@ -172,9 +169,8 @@ class WeekFragment : Fragment(), View.OnScrollChangeListener {
 
                         shiftColumn.addView(emptyView)
 
-                        shifts.forEach {
-                            val shift = it
-                            if (shift.start.get(Calendar.DATE) == dayDate && shift.department!!.id == department.id) {
+                        shifts.forEach {shift->
+                            if (shift.start.get(Calendar.DATE) == dayDate && shift.department.id == department.id) {
                                 shiftColumn.addView(getCell(shift, dayDate, department))
                             }
                         }
@@ -187,10 +183,11 @@ class WeekFragment : Fragment(), View.OnScrollChangeListener {
     }
 
     private fun getCell(shift: Shift, dayDate: Int, department: Department): View? {
-        val shiftCard = LinearLayout(context)
+
         val shiftCard2 = CardView(context!!)
-        shiftCard.orientation = LinearLayout.VERTICAL
-        shiftCard.gravity = Gravity.CENTER_VERTICAL
+        val linearLayout = LinearLayout(context)
+        linearLayout.orientation = LinearLayout.VERTICAL
+        linearLayout.gravity = Gravity.CENTER_VERTICAL
 
         val params = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT)
@@ -226,9 +223,9 @@ class WeekFragment : Fragment(), View.OnScrollChangeListener {
             timeView.setTextColor(Color.WHITE)
         }
 
-        shiftCard.addView(timeView)
-        shiftCard.addView(nameView)
-        shiftCard2.addView(shiftCard)
+        linearLayout.addView(timeView)
+        linearLayout.addView(nameView)
+        shiftCard2.addView(linearLayout)
         return shiftCard2
     }
 

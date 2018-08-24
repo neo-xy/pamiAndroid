@@ -65,6 +65,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         supportFragmentManager.beginTransaction().add(fragment_container.id, HomeFragment.getInstance()).commit()
 
 
+       FirebaseController.getInfoMessagesForDay()
+
         this.sp = this.getPreferences(android.content.Context.MODE_PRIVATE)
         this.clockedInShiftId = this.sp.getString("clockedInId", "");
 

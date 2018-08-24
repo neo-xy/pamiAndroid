@@ -25,7 +25,8 @@
     <string name="e_mail">E-post</string>
     <string name="navigation_drawer_open">open drawer</string>
     <string name="navigation_drawer_close">closed drawer</string>
-    <string name="info_message_title">extra inforamtion:</string>
+    <string name="info_message_title">Personlig nforamtion:</string>
+    <string name="daily_message_title">Inforamtion för dagen:</string>
     <string name="menu_drawer_home">Hem</string>
     <string name="drawer_menu_schedule">Schema</string>
     <string name="menu_drawer_payouts">Lön</string>

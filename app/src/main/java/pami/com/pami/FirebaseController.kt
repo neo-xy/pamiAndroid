@@ -30,6 +30,7 @@ object FirebaseController {
     lateinit var token: String
     var interests = mutableListOf<Interest>()
 
+   var dayInfoMesages = mutableListOf<DayInfoMessage>()
 
 
     fun getUser(): Observable<Boolean> {
@@ -432,15 +433,14 @@ object FirebaseController {
         FirebaseFirestore.getInstance().collection("users").document(User.employeeId).collection("absenceReports").document(reportId).delete()
     }
 
-    fun getInfoMessagesForDay():Observable<MutableList<DayInfoMessage>>{
-       return Observable.create {
-           FirebaseFirestore.getInstance().collection("companies").document(User.companyId).collection("infoMessageDay").addSnapshotListener { querySnapshot, firebaseFirestoreException ->
+    fun getInfoMessagesForDay(){
+        FirebaseFirestore.getInstance().collection("companies").document(User.companyId).collection("infoMessageDay").addSnapshotListener { querySnapshot, firebaseFirestoreException ->
                if(querySnapshot !=null){
                    Log.d("pawell", "fdfdf")
-                   it.onNext(querySnapshot.toObjects(DayInfoMessage::class.java))
+                 this.dayInfoMesages =querySnapshot.toObjects(DayInfoMessage::class.java)
                }
-           }
-       }
+        }
+
     }
 
 }

@@ -90,16 +90,37 @@
                     android:id="@+id/extra_title_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-
                     android:textStyle="italic"
                     android:text="@string/info_message_title"
                     android:textSize="12sp" />
                 <TextView
                     android:id="@+id/extra_info_tv"
-                    android:capitalize="sentences"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <View
+                    android:id="@+id/msg_divider"
+                    android:layout_width="match_parent"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp"
+                    android:background="@color/gray_light"
+                    android:layout_height="1dp"/>
+
+
+                <TextView
+                    android:id="@+id/daily_message_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-            />
+                    android:textStyle="italic"
+
+                    android:text="@string/daily_message_title"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/daily_message_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
             </LinearLayout>
         </LinearLayout>
 

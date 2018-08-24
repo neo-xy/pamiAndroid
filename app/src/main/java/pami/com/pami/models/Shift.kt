@@ -24,7 +24,6 @@ class Shift {
     var netto = 0L
     var brutto = 0L
 
-
     var startDate: Date = Date()
 
     var endDate: Date = Date()
@@ -32,7 +31,6 @@ class Shift {
     var end: Calendar = Calendar.getInstance()
 
     var shiftStatus: ShiftStatus? = null;
-
 }
 
 enum class ShiftStatus(val value: String) {
