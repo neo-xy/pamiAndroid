@@ -12,10 +12,14 @@ class ClockedShift {
     var clockedShiftId=""
     var messageIn = ""
     var messageOut = ""
-    var timeStempIn:Long=0
+    var duration=0.0;
+
+    var bossSocialNumber =""
+    var socialNumber =""
+
     var timeStempOut:Long=0
-    var startDate:Date = Date()
-    var endDate:Date = Date()
+    var startDate:Date? = null
+    var endDate:Date? = null
     var shiftStatus: ShiftStatus? = null;
    var logs = mutableListOf<ShiftLog>()
 }
@@ -30,4 +34,5 @@ class ClockedShift {
     var message: String? =null
     var date: Date? = null
      var shiftStatus: ShiftStatus? = null;
+     var bossSocialNumber ="";
 }

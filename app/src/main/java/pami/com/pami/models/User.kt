@@ -5,14 +5,14 @@ import java.util.*
 
 @IgnoreExtraProperties
 object User {
-    val firstName: String = ""
-    val lastName: String = ""
-    val employeeId: String = ""
-    val city: String = ""
-    val email: String = ""
+    var firstName: String = ""
+    var lastName: String = ""
+    var employeeId: String = ""
+    var city: String = ""
+    var email: String = ""
     var salaries = mutableListOf<Salary>()
-    val imgUrl: String = ""
-    val employmentStatus: String = ""
+    var imgUrl: String = ""
+    var employmentStatus: String = ""
     var employmentDate: Date = Date()
     var datesUnavailable = mutableListOf<Int>()
     var address: String = ""
@@ -22,7 +22,7 @@ object User {
     var clearNr = ""
     var registrationToken = ""
     var phoneNumber = ""
-    var socialSecurityNumber: Long = 0;
+    var socialSecurityNumber= "";
     var latestCompanyIndex = 0;
     var companies = mutableListOf <UserCompany>();
     var companyId = ""

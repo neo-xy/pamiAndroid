@@ -15,7 +15,6 @@ import android.os.Bundle
 import android.support.v4.app.DialogFragment
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.text.format.Formatter
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -27,9 +26,8 @@ import android.widget.Toast
 import io.reactivex.disposables.Disposable
 import pami.com.pami.adapters.ClockedShiftAdapter
 import pami.com.pami.models.*
-import java.net.Inet4Address
-import java.net.InetAddress
 import java.util.*
+import java.util.concurrent.TimeUnit
 
 
 class ClockInDialogFragment : DialogFragment() {
@@ -160,14 +158,30 @@ class ClockInDialogFragment : DialogFragment() {
 
     private fun clockOut() {
         val date = Date()
-        clockedShift.timeStempOut = date.time
 
         clockedShift.endDate = date
         clockedShift.shiftStatus = ShiftStatus.utstämplat
 
         clockedShift.messageOut = clockedMessage.text.toString()
-        FirebaseController.removeShiftFromClockedInShifts(clockedShift).subscribe {
-            if (it == true) {
+        clockedShift.firstName = User.firstName
+        clockedShift.lastName = User.lastName
+        clockedShift.duration = (Math.round((TimeUnit.MILLISECONDS.toMinutes(clockedShift.endDate!!.time - clockedShift.startDate!!.time)/60.0)*100))/100.0
+
+
+        val log = ShiftLog()
+        log.shiftStatus = ShiftStatus.utstämplat
+        log.bossFirstName = User.firstName
+        log.bossLastName =User.lastName
+        log.bossId =User.employeeId
+        log.bossSocialNumber = User.socialSecurityNumber
+        log.startDate = clockedShift.startDate
+        log.endDate = clockedShift.endDate
+        log.date = clockedShift.endDate
+        clockedShift.logs = mutableListOf()
+        clockedShift.logs.add(log)
+
+        FirebaseController.removeShiftFromClockedInShifts(clockedShift).subscribe {success->
+            if (success == true) {
                 FirebaseController.addShiftsToAccept(clockedShift).subscribe {
                     if (it == true) {
                         clockInBtn.isEnabled = true
@@ -186,9 +200,9 @@ class ClockInDialogFragment : DialogFragment() {
         val date = Date()
         val clockedShift = ClockedShift()
 
-        clockedShift.timeStempIn = date.time
         clockedShift.firstName = User.firstName
         clockedShift.lastName = User.lastName
+        clockedShift.socialNumber = User.socialSecurityNumber
         clockedShift.employeeId = User.employeeId
         clockedShift.messageIn = clockedMessage.text.toString()
         clockedShift.startDate = date
@@ -234,8 +248,8 @@ class ClockInDialogFragment : DialogFragment() {
 
 
     fun handleClockInStatusOfEmployee() {
-        dispClockedInShifts = FirebaseController.getClockedInShifts().subscribe {
-            clockedShifts = it
+        dispClockedInShifts = FirebaseController.getClockedInShifts().subscribe {clockedShifts->
+            this.clockedShifts = clockedShifts
             clockedShifts.forEach {
                 if (it.employeeId == User.employeeId) {
                     clockedShift = it

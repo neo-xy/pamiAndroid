@@ -27,29 +27,26 @@ import com.facebook.login.LoginResult
 import com.google.firebase.auth.FacebookAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.iid.FirebaseInstanceId
+import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.app_bar_main.*
 import pami.com.pami.R.id.*
 import pami.com.pami.models.ShiftsToTake
 import pami.com.pami.models.User
 import java.util.*
-import kotlinx.android.synthetic.main.activity_login.*
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.app_bar_main.*
-import pami.com.pami.models.Company
-import pami.com.pami.models.Salary
 import kotlin.Comparator
 
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
-    val firebaseAuth = FirebaseAuth.getInstance()
-    lateinit var profileImageView: ImageView
-    lateinit var callbackManager: CallbackManager
-    lateinit var loginManager: LoginManager
-    lateinit var clockedInShiftId: String
-    lateinit var clockInBtn: Button
-    lateinit var toTakeBtn: Button
-    lateinit var sp: SharedPreferences
-    lateinit var shiftsToTake: MutableList<ShiftsToTake>
+    private val firebaseAuth = FirebaseAuth.getInstance()
+    private lateinit var profileImageView: ImageView
+    private lateinit var callbackManager: CallbackManager
+    private lateinit var loginManager: LoginManager
+    private lateinit var clockedInShiftId: String
+    private lateinit var clockInBtn: Button
+    private lateinit var toTakeBtn: Button
+    private lateinit var sp: SharedPreferences
+    private lateinit var shiftsToTake: MutableList<ShiftsToTake>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,18 +54,15 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         val refreshedToken = FirebaseInstanceId.getInstance().token
         if (refreshedToken != null) {
-            Log.d("pawell", "token " + refreshedToken)
             FirebaseController.updateRegistrationToken(refreshedToken)
-        };
-
+        }
 
         supportFragmentManager.beginTransaction().add(fragment_container.id, HomeFragment.getInstance()).commit()
 
-
-       FirebaseController.getInfoMessagesForDay()
+        FirebaseController.getInfoMessagesForDay()
 
         this.sp = this.getPreferences(android.content.Context.MODE_PRIVATE)
-        this.clockedInShiftId = this.sp.getString("clockedInId", "");
+        this.clockedInShiftId = this.sp.getString("clockedInId", "")
 
         setSupportActionBar(toolbar)
         val toggle = ActionBarDrawerToggle(
@@ -86,9 +80,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         nav_view.setNavigationItemSelectedListener(this)
 
-        profileImageView = nav_view.getHeaderView(0).findViewById<ImageView>(R.id.profile_image)
+        profileImageView = nav_view.getHeaderView(0).findViewById(R.id.profile_image)
 
-        FirebaseController.getShiftsToTake().subscribe() {
+        FirebaseController.getShiftsToTake().subscribe {
 
             if (it.size > 0) {
                 this.shiftsToTake = it
@@ -99,45 +93,38 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
         FirebaseController.getInterests().subscribe()
 
-
-
-
         if (User.employmentStatus == "passed") {
-            nav_view.menu.findItem(nav_calendar).setVisible(false)
-            nav_view.menu.findItem(nav_shifts).setVisible(false)
-            nav_view.menu.findItem(nav_contacts).setVisible(false)
+            nav_view.menu.findItem(nav_calendar).isVisible = false
+            nav_view.menu.findItem(nav_shifts).isVisible = false
+            nav_view.menu.findItem(nav_contacts).isVisible = false
         }
         if (User.companies[User.latestCompanyIndex].role != "boss") {
-            nav_view.menu.findItem(nav_shift_manager).setVisible(false)
+            nav_view.menu.findItem(nav_shift_manager).isVisible = false
         }
 
-
-
-        User.salaries!!.sortWith(object:Comparator<Salary>{
-            override fun compare(p0: Salary, p1: Salary): Int = when {
+        User.salaries.sortWith(Comparator { p0, p1 ->
+            when {
                 p0.startDate > p1.startDate -> -1
                 p0.startDate == p1.startDate -> 0
                 else -> 1
-
             }
-
         })
 
 
-        nav_view.menu.findItem(nav_sick).setVisible(false)
+        nav_view.menu.findItem(nav_sick).isVisible = false
 //        User.salaries = Shared.sortSalaries(User.salaries)
 
         FirebaseController.getCompany().subscribe {
-            nav_view.menu.findItem(nav_sick).setVisible(false)
+            nav_view.menu.findItem(nav_sick).isVisible = false
 
-            it.sickAccess.forEach {
+            it.sickAccess.forEach { sickAcces ->
 
-                Log.d("pawell","par "+ User.salaries!![0].employmentType?.name)
-                if(it == User.salaries!![0].employmentType?.name&& User.salaries!![0].partValue!= 100){
-                    nav_view.menu.findItem(nav_sick).setVisible(true)
-                }else if(it=="fullTime"){
-                    if(User.salaries!![0].employmentType?.name == "partTime"&& User.salaries!![0].partValue == 100){
-                        nav_view.menu.findItem(nav_sick).setVisible(true)
+                Log.d("pawell", "par " + User.salaries[0].employmentType?.name)
+                if (sickAcces == User.salaries[0].employmentType?.name && User.salaries[0].partValue != 100) {
+                    nav_view.menu.findItem(nav_sick).isVisible = true
+                } else if (sickAcces == "fullTime") {
+                    if (User.salaries[0].employmentType?.name == "partTime" && User.salaries[0].partValue == 100) {
+                        nav_view.menu.findItem(nav_sick).isVisible = true
                     }
                 }
 
@@ -147,17 +134,14 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         FirebaseAuth.getInstance().currentUser!!.providerData.forEach {
             if (it.providerId == "facebook.com") {
-                nav_view.menu.findItem(nav_link).setVisible(false)
+                nav_view.menu.findItem(nav_link).isVisible = false
             }
         }
 
-
-        val drawerNameTV: TextView
-        drawerNameTV = nav_view.getHeaderView(0).findViewById<TextView>(R.id.drawer_name_tv)
-        drawerNameTV.text = User.firstName.capitalize() + " " + User.lastName.capitalize()
-        if (User.imgUrl.length < 1) {
-
-        } else {
+        val drawerNameTV: TextView = nav_view.getHeaderView(0).findViewById(R.id.drawer_name_tv)
+        val displayedName = User.firstName.capitalize() + " " + User.lastName.capitalize()
+        drawerNameTV.text = displayedName
+        if (!User.imgUrl.isEmpty()) {
             Glide.with(this)
                     .load(User.imgUrl)
                     .apply(RequestOptions.circleCropTransform())
@@ -169,22 +153,22 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             drawerMailTV.text = User.email
         }
 
-        FirebaseController.getClockedInShifts().subscribe() {
+        FirebaseController.getClockedInShifts().subscribe {
             var isClockedIn = false
-            it.forEach {
-                if (it.employeeId == User.employeeId) {
+            it.forEach { cshift ->
+                if (cshift.employeeId == User.employeeId) {
                     isClockedIn = true
                     return@forEach
                 }
             }
 
             if (isClockedIn) {
-                clockInBtn.backgroundTintList = ColorStateList.valueOf(resources.getColor(R.color.colorPrimaryDark))
+                clockInBtn.backgroundTintList = ColorStateList.valueOf(ActivityCompat.getColor(this, R.color.colorPrimaryDark))
             } else {
-                clockInBtn.backgroundTintList = ColorStateList.valueOf(resources.getColor(R.color.main_gray))
+                clockInBtn.backgroundTintList = ColorStateList.valueOf(ActivityCompat.getColor(this, R.color.main_gray))
             }
         }
-        FirebaseController.setUpColleagues();
+        FirebaseController.setUpColleagues()
         FirebaseController.setupSalleries()
 
     }
@@ -241,14 +225,14 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 val token = result!!.accessToken.token
                 val credential = FacebookAuthProvider.getCredential(token)
                 FirebaseAuth.getInstance().currentUser!!.linkWithCredential(credential).addOnCompleteListener {
-                    it.getResult().user.providerData.forEach {
-                        if (it.providerId == "facebook.com") {
-                            FirebaseController.saveImgUrl(it.photoUrl)
+                    it.result.user.providerData.forEach { userInfo ->
+                        if (userInfo.providerId == "facebook.com") {
+                            FirebaseController.saveImgUrl(userInfo.photoUrl)
                             Glide.with(this@MainActivity)
-                                    .load(it.photoUrl)
+                                    .load(userInfo.photoUrl)
                                     .apply(RequestOptions.circleCropTransform())
                                     .into(this@MainActivity.profileImageView)
-                            nav_view.menu.findItem(nav_link).setVisible(false)
+                            nav_view.menu.findItem(nav_link).isVisible = false
                         }
                     }
                 }
@@ -274,10 +258,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     private fun openShiftsToTakeDialog() {
         val toTakeDialogFragment = ToTakeDialogFragment()
-        var bundle = Bundle()
+        val bundle = Bundle()
 
         bundle.putParcelableArrayList("shiftsToTake", this.shiftsToTake as ArrayList<out Parcelable>)
-        toTakeDialogFragment.arguments = bundle;
+        toTakeDialogFragment.arguments = bundle
         toTakeDialogFragment.arguments
         toTakeDialogFragment.show(supportFragmentManager, "toTake")
     }

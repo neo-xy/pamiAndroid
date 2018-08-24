@@ -13,7 +13,7 @@ class AbsenceReport {
     var type:SickType = SickType.CHILD
     var firstName = ""
     var lastName = ""
-    var socialSecurityNumber = 0L
+    var socialSecurityNumber = ""
 }
 
 enum class SickType{

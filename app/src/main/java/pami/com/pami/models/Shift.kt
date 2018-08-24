@@ -24,6 +24,7 @@ class Shift {
     var netto = 0L
     var brutto = 0L
 
+    var socialNumber =""
     var startDate: Date = Date()
 
     var endDate: Date = Date()

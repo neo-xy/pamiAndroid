@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,6 +13,9 @@ import pami.com.pami.ClockedInEntre
 import pami.com.pami.R
 import pami.com.pami.RecyclerViewClickListener
 import pami.com.pami.Shared
+import java.text.DateFormat
+import java.text.SimpleDateFormat
+import java.util.*
 
 class ShiftManagerAdapter(employeesClockedInEntres: MutableList<ClockedInEntre>, val recyclerViewClickListener: RecyclerViewClickListener) : RecyclerView.Adapter<ShiftManagerAdapter.MyHolder>() {
     var emp = employeesClockedInEntres
@@ -36,8 +40,12 @@ class ShiftManagerAdapter(employeesClockedInEntres: MutableList<ClockedInEntre>,
 
         holder.name.text = emp[position].name
 
-        if (emp[position].timeStempIn!=0L){
-            holder.clockedInTime.text = Shared.timestempToClockString(emp[position].timeStempIn)
+        if (emp[position].startDate!=null){
+
+            Log.d("pawell","shiftMenager adapter iffff")
+            val sdf = SimpleDateFormat("HH:mm", Locale("sv"))
+
+            holder.clockedInTime.text =sdf.format(emp[position].startDate)
             holder.clockedInTime.setTextColor(Color.WHITE)
             holder.name.setTextColor(Color.WHITE)
             holder.marker.setBackgroundResource(R.drawable.ic_done)
@@ -45,6 +53,7 @@ class ShiftManagerAdapter(employeesClockedInEntres: MutableList<ClockedInEntre>,
             holder.parent.setBackgroundResource(R.drawable.bg_border_bottom_with_accent_bg)
 
         }else{
+            Log.d("pawell","else")
             holder.clockedInTime.text = "     "
             holder.marker.setBackgroundResource(R.drawable.ic_close)
             holder.marker.backgroundTintList = ColorStateList.valueOf(Color.GRAY)

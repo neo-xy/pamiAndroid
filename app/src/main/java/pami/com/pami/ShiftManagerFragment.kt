@@ -13,15 +13,13 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.Toast
 import pami.com.pami.adapters.ShiftManagerAdapter
-import pami.com.pami.models.ClockedShift
-import pami.com.pami.models.Employee
-import pami.com.pami.models.ShiftStatus
-import pami.com.pami.models.User
+import pami.com.pami.models.*
 import java.util.*
+import java.util.concurrent.TimeUnit
 
 class ShiftManagerFragment : Fragment(), RecyclerViewClickListener {
 
-    val employees = mutableListOf<ClockedInEntre>()
+    val clockedInEntres = mutableListOf<ClockedInEntre>()
     lateinit var recyclerView: RecyclerView
     lateinit var clockedShifts: MutableList<ClockedShift>
 
@@ -32,48 +30,49 @@ class ShiftManagerFragment : Fragment(), RecyclerViewClickListener {
         recyclerView = view.findViewById(R.id.manager_recycler_view)
 
         FirebaseController.getClockedInShifts().subscribe {
-            employees.removeAll(employees)
+            this.clockedInEntres.removeAll(this.clockedInEntres)
             clockedShifts = it
 
-            FirebaseController.employees.forEach {
+            FirebaseController.employees.forEach {employee->
                 val entre = ClockedInEntre()
-                val employee = it
+
                 var employeeIsClockedIn = false
-                clockedShifts.forEach {
-                    if (it.employeeId == employee.employeeId) {
+                clockedShifts.forEach f@{shift->
+                    if (shift.employeeId == employee.employeeId) {
                         employeeIsClockedIn = true
 
-                        entre.name = it.firstName + " " + it.lastName
-                        entre.timeStempIn = it.timeStempIn
-                        entre.employeeId = it.employeeId
+                        entre.name = shift.firstName + " " + shift.lastName
+                        entre.employeeId = shift.employeeId
+                        entre.startDate = shift.startDate
 
-                        entre.clockedInShiftId = it.clockedShiftId
+                        entre.clockedInShiftId = shift.clockedShiftId
+                        Log.d("pawell","ggg "+ entre.startDate)
 
-                        employees.add(entre)
-                        return@forEach
+                        this.clockedInEntres.add(entre)
+                        return@f
                     }
                 }
                 if (!employeeIsClockedIn) {
-                    entre.name = it.firstName + " " + it.lastName
-                    entre.timeStempIn = 0
-                    entre.employeeId = it.employeeId
+                    entre.name = employee.firstName + " " + employee.lastName
+                    entre.startDate = null
+                    entre.employeeId = employee.employeeId
                     entre.companyId = User.companies[User.latestCompanyIndex].companyId
-                    employees.add(entre)
+                    this.clockedInEntres.add(entre)
                 }
             }
 
-            Collections.sort(employees, object : Comparator<ClockedInEntre> {
+            Collections.sort(this.clockedInEntres, object : Comparator<ClockedInEntre> {
                 override fun compare(p0: ClockedInEntre, p1: ClockedInEntre): Int {
-                    if (p0.timeStempIn != 0L && p1.timeStempIn != 0L) {
+                    if (p0.startDate != null && p1.startDate!= null) {
                         if (p0.name > p1.name) {
                             return 1
                         } else {
                             return -1
                         }
                     } else {
-                        if (p0.timeStempIn != 0L) {
+                        if (p0.startDate != null) {
                             return -1
-                        } else if (p1.timeStempIn != 0L) {
+                        } else if (p1.startDate != null) {
                             return 1
                         } else {
                             if (p0.name > p1.name) {
@@ -86,7 +85,7 @@ class ShiftManagerFragment : Fragment(), RecyclerViewClickListener {
                 }
             })
 
-            val managerAdapter = ShiftManagerAdapter(employees, this)
+            val managerAdapter = ShiftManagerAdapter(this.clockedInEntres, this)
             recyclerView.layoutManager = LinearLayoutManager(context, LinearLayout.VERTICAL, false)
             recyclerView.adapter = managerAdapter
             managerAdapter.notifyDataSetChanged()
@@ -96,7 +95,6 @@ class ShiftManagerFragment : Fragment(), RecyclerViewClickListener {
     }
 
     private fun clockOut(entre: ClockedInEntre) {
-        val date = Date()
         var shift = ClockedShift()
 
         clockedShifts.forEach {
@@ -105,12 +103,40 @@ class ShiftManagerFragment : Fragment(), RecyclerViewClickListener {
             }
         }
 
-        shift.timeStempOut = date.time
+        shift.endDate = Date()
         shift.messageOut = "Utstämplad av " + User.firstName + " " + User.lastName
         shift.shiftStatus = ShiftStatus.utstämplat
+
+        shift.shiftStatus = ShiftStatus.utstämplat
+        shift.employeeId = entre.employeeId
+
+        var selectedEmployee:Employee?=null
+        FirebaseController.employees.forEach { emp->
+            if (emp.employeeId == entre.employeeId){
+                selectedEmployee = emp
+            }
+        }
+
+        shift.firstName = selectedEmployee!!.firstName
+        shift.lastName = selectedEmployee!!.lastName
+
+        shift.duration = (Math.round((TimeUnit.MILLISECONDS.toMinutes(shift.endDate!!.time - shift.startDate!!.time)/60.0)*100))/100.0
+
+        val log = ShiftLog()
+        log.shiftStatus = ShiftStatus.utstämplat
+        log.bossFirstName = User.firstName
+        log.bossLastName =User.lastName
+        log.bossId = User.employeeId
+        log.startDate = shift.startDate
+        log.endDate = shift.endDate
+        log.date = shift.endDate
+        shift.logs = mutableListOf()
+        shift.logs.add(log)
+
         FirebaseController.removeShiftFromClockedInShifts(shift).subscribe {
             if (it == true) {
-                FirebaseController.addShiftsToAccept(shift)
+                Log.d("pawell","trueeee" + shift.firstName)
+                FirebaseController.addShiftsToAccept(shift).subscribe()
             } else {
                 Toast.makeText(context, "Instämpling misslyckades", Toast.LENGTH_SHORT).show()
             }
@@ -130,11 +156,13 @@ class ShiftManagerFragment : Fragment(), RecyclerViewClickListener {
             }
         }
 
-        clockedShift.timeStempIn = date.time
         clockedShift.firstName = emp.firstName
         clockedShift.lastName = emp.lastName
         clockedShift.employeeId = emp.employeeId
+        clockedShift.socialNumber = emp.socialSecurityNumber
+
         clockedShift.messageIn = "Instämplad av " + User.firstName + " " + User.lastName
+        clockedShift.startDate = date
 
         FirebaseController.addToClockedInShifts(clockedShift).subscribe() {
             if (it == "") {
@@ -145,19 +173,19 @@ class ShiftManagerFragment : Fragment(), RecyclerViewClickListener {
 
     override fun listItemClicked(view: View, position: Int) {
 
-        val employee = employees[position]
+        val entre = this.clockedInEntres[position]
         val clockedStatusDialog = AlertDialog.Builder(context!!)
-        clockedStatusDialog.setTitle(employee.name)
-        if (employee.timeStempIn != 0L) {
+        clockedStatusDialog.setTitle(entre.name)
+        if (entre.startDate != null) {
             clockedStatusDialog.setPositiveButton("Stämpla Ut", object : DialogInterface.OnClickListener {
                 override fun onClick(p0: DialogInterface?, p1: Int) {
-                    clockOut(employee)
+                    clockOut(entre)
                 }
             })
         } else {
             clockedStatusDialog.setPositiveButton("Stämpla In", object : DialogInterface.OnClickListener {
                 override fun onClick(p0: DialogInterface?, p1: Int) {
-                    clockIn(employee)
+                    clockIn(entre)
                 }
             })
         }
@@ -174,6 +202,7 @@ class ShiftManagerFragment : Fragment(), RecyclerViewClickListener {
 class ClockedInEntre {
     var name: String = ""
     var timeStempIn: Long = 0
+    var startDate:Date? = null
     var employeeId: String = ""
     var companyId: String = ""
     var startHour: String = ""

@@ -62,7 +62,7 @@ class SickFragment : Fragment() {
         rangeContainer = view.range_container
 
         sendSickBtn.setOnClickListener {
-            onSendSickReport(it)
+            onSendSickReport()
         }
 
         sendChildSickBtn.setOnClickListener {
@@ -96,7 +96,7 @@ class SickFragment : Fragment() {
         return view
     }
 
-    fun onSendSickReport(view: View) {
+    fun onSendSickReport() {
         if (startDate != null && endDate != null) {
 
             val sickReport = AbsenceReport()

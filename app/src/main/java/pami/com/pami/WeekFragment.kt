@@ -66,7 +66,7 @@ class WeekFragment : Fragment(), View.OnScrollChangeListener {
     fun setUp(year: Int, month: Int, day1: Int, weekDay: Int) {
         this.container.orientation = LinearLayout.VERTICAL
         Log.d("pawell","week fragment 3")
-        FirebaseController.getShiftsOfaMonth(year.toString() + "" + String.format("%02d", month)).subscribe() {
+        FirebaseController.getScheduledShifts().subscribe() {
             Log.d("pawell","week fragment 4")
             //need to be clear in case of new shift being add so that double week view does not come up
             this.container.removeAllViews()
@@ -296,14 +296,14 @@ class WeekFragment : Fragment(), View.OnScrollChangeListener {
 
             if (availablRadioBtn.isChecked&&dateSaved) {
 
-                FirebaseController.removeUnavailableDate(unavailableDate,dateKey)
+                FirebaseController.removeUnavailableDate(unavailableDate)
                 blockDayBtn.setBackgroundResource(R.drawable.bg_green_grey_circle)
 
             } else if (!availablRadioBtn.isChecked && !dateSaved) {
 
                 unavailableDate.message  = msg.editableText.toString()
 
-                FirebaseController.updateUnavailableDates2(unavailableDate,dateKey)
+                FirebaseController.updateUnavailableDates(unavailableDate)
                 blockDayBtn.setBackgroundResource(R.drawable.bg_green_red_circle)
             }
             dialog.dismiss()
