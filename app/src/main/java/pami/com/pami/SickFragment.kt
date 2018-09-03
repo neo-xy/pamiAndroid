@@ -104,7 +104,7 @@ class SickFragment : Fragment() {
             sickReport.endDate = endDate as Date
             sickReport.employeeId = User.employeeId
             sickReport.dateAdded = Date()
-            sickReport.type = SickType.NORMAL
+            sickReport.type = SickType.Normal
             sickReport.firstName = User.firstName
             sickReport.lastName = User.lastName
             sickReport.socialSecurityNumber  = User.socialSecurityNumber
@@ -122,7 +122,7 @@ class SickFragment : Fragment() {
             sickReport.endDate = endDate as Date
             sickReport.employeeId = User.employeeId
             sickReport.dateAdded = Date()
-            sickReport.type = SickType.CHILD
+            sickReport.type = SickType.Child
             sickReport.firstName = User.firstName
             sickReport.lastName = User.lastName
             sickReport.socialSecurityNumber  = User.socialSecurityNumber
@@ -136,7 +136,7 @@ class SickFragment : Fragment() {
         var reportsString = mutableListOf<String>()
         reports.forEach {
             var type =""
-          if(it.type == SickType.CHILD){
+          if(it.type == SickType.Child){
               type = "(VAB)"
           }
             reportsString.add(df.format(it.startDate) + "  ->  " + df.format(it.endDate)+ " $type")

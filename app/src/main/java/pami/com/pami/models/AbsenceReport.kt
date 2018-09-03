@@ -10,12 +10,17 @@ class AbsenceReport {
     var employeeId = ""
     var dateAdded = Date()
     var reportId = ""
-    var type:SickType = SickType.CHILD
+    var type = SickType.Child
     var firstName = ""
     var lastName = ""
     var socialSecurityNumber = ""
 }
 
-enum class SickType{
-    NORMAL,CHILD
+class SickType{
+
+    companion object {
+        val Normal= 0
+        val Child =1
+    }
+
 }

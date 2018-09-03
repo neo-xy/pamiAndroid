@@ -9,7 +9,7 @@ class Company {
     var gpsLocation:PamiLocation? = null
     var wifiName:String? = null
     var salt:String? = null
-    var locationType:String? = null
+    var locationType:Int? = null
     var sickAccess = mutableListOf<String>()
 
 }
@@ -27,8 +27,15 @@ class PamiLocation{
     var address = ""
 }
 
-enum class LocationType{
-    none, gps, wifi
+class LocationType{
+    companion object {
+
+        val None=0
+        val Wifi=1
+        val Gps=2
+        val Tablet=3
+    }
+
 }
 
 class SickAccess{

@@ -105,9 +105,9 @@ class ShiftManagerFragment : Fragment(), RecyclerViewClickListener {
 
         shift.endDate = Date()
         shift.messageOut = "Utstämplad av " + User.firstName + " " + User.lastName
-        shift.shiftStatus = ShiftStatus.utstämplat
+        shift.shiftStatus = ShiftStatus.ClockedOut
 
-        shift.shiftStatus = ShiftStatus.utstämplat
+        shift.shiftStatus = ShiftStatus.ClockedOut
         shift.employeeId = entre.employeeId
 
         var selectedEmployee:Employee?=null
@@ -123,7 +123,7 @@ class ShiftManagerFragment : Fragment(), RecyclerViewClickListener {
         shift.duration = (Math.round((TimeUnit.MILLISECONDS.toMinutes(shift.endDate!!.time - shift.startDate!!.time)/60.0)*100))/100.0
 
         val log = ShiftLog()
-        log.shiftStatus = ShiftStatus.utstämplat
+        log.shiftStatus = ShiftStatus.ClockedOut
         log.bossFirstName = User.firstName
         log.bossLastName =User.lastName
         log.bossId = User.employeeId

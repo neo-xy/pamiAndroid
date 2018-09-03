@@ -12,34 +12,31 @@ import java.util.*
 @IgnoreExtraProperties
 class Shift {
     var department: Department = Department()
-
     var employeeId: String = ""
     var message: String? = null
     var duration: Double = 0.0
     var badge: String = ""
     var shiftId: String = ""
-
     var tax: Double = 0.0;
 
-    var netto = 0L
-    var brutto = 0L
-
-    var socialNumber =""
+    var netto = 0.0
+    var brutto = 0.0
+    var socialNumber = ""
     var startDate: Date = Date()
-
     var endDate: Date = Date()
     var start: Calendar = Calendar.getInstance()
     var end: Calendar = Calendar.getInstance()
 
-    var shiftStatus: ShiftStatus? = null;
+    var shiftStatus: Int? = null;
 }
 
-enum class ShiftStatus(val value: String) {
-    original("original"),
-    schemalagt("schemalagt"),
-    aktiv("aktiv"),
-    avvistat("avvistat"),
-    accepterat("accepterat"),
-    utstämplat("utstämplat")
+class ShiftStatus {
+    companion object {
+        val Scheduled = 0;
+        val Aktiv = 1
+        val Rejected = 2
+        val Accepted = 3
+        val ClockedOut = 4
+    }
 
 }

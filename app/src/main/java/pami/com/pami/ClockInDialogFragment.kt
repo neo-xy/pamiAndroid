@@ -77,16 +77,16 @@ class ClockInDialogFragment : DialogFragment() {
 
 
             when (company.locationType) {
-                LocationType.none.name -> {
+                LocationType.None -> {
 
                     locationManager.removeUpdates(locationListener)
 
                     handleClockInStatusOfEmployee()
                 }
-                LocationType.gps.name -> if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                LocationType.Gps -> if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     this.handleGpsSecurity()
                 }
-                LocationType.wifi.name -> this.handleWifiSecurity()
+                LocationType.Wifi -> this.handleWifiSecurity()
             }
         }
 
@@ -160,7 +160,7 @@ class ClockInDialogFragment : DialogFragment() {
         val date = Date()
 
         clockedShift.endDate = date
-        clockedShift.shiftStatus = ShiftStatus.utstämplat
+        clockedShift.shiftStatus = ShiftStatus.ClockedOut
 
         clockedShift.messageOut = clockedMessage.text.toString()
         clockedShift.firstName = User.firstName
@@ -169,7 +169,7 @@ class ClockInDialogFragment : DialogFragment() {
 
 
         val log = ShiftLog()
-        log.shiftStatus = ShiftStatus.utstämplat
+        log.shiftStatus = ShiftStatus.ClockedOut
         log.bossFirstName = User.firstName
         log.bossLastName =User.lastName
         log.bossId =User.employeeId

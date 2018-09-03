@@ -20,7 +20,7 @@ class ClockedShift {
     var timeStempOut:Long=0
     var startDate:Date? = null
     var endDate:Date? = null
-    var shiftStatus: ShiftStatus? = null;
+    var shiftStatus: Int? = null;
    var logs = mutableListOf<ShiftLog>()
 }
 
@@ -33,6 +33,6 @@ class ClockedShift {
     var bossLastName: String? = null
     var message: String? =null
     var date: Date? = null
-     var shiftStatus: ShiftStatus? = null;
+     var shiftStatus: Int? = null;
      var bossSocialNumber ="";
 }

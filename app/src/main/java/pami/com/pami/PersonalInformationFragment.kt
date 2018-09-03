@@ -57,7 +57,7 @@ class PersonalInformationFragment : Fragment() {
         phoneNrView.text = User.phoneNumber
 
         var sumDuration = 0.0
-        var sumSalary = 0L
+        var sumSalary = 0.0
 
         FirebaseController.accteptedShifts.forEach {
             sumDuration += it.duration

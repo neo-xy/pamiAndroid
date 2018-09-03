@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.Color
 import android.support.v4.content.ContextCompat
 import android.util.AttributeSet
+import android.util.Log
 import android.view.Gravity
 import android.widget.*
 import pami.com.pami.models.Shift
@@ -42,11 +43,11 @@ class CustomCalendar : LinearLayout {
             calendar.add(Calendar.DAY_OF_MONTH, 2 - calendar.get(Calendar.DAY_OF_WEEK))
         }
 
-        (0 until weeksInMonth - 1).forEach { _ ->
+        (0 until weeksInMonth).forEach { _ ->
             val tableRow = TableRow(context)
             tableRow.layoutParams = TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.MATCH_PARENT, 1f)
             tableRow.background = ContextCompat.getDrawable(context, R.drawable.bg_bottom_border_gray)
-            (0 until daysInWeek - 1).forEach { _ ->
+            (0 until daysInWeek).forEach { _ ->
 
                 val llCell = RelativeLayout(context)
 
@@ -71,11 +72,12 @@ class CustomCalendar : LinearLayout {
 
                 var dateSaved = false
                 FirebaseController.unavailableShifts.forEach { udate ->
+
                     val c = Calendar.getInstance()
                     c.time = udate.date
                     if (c.get(Calendar.YEAR) == year && c.get(Calendar.MONTH) == (month2) && c.get(Calendar.DATE) == day) {
                         dateSaved = true
-                        return
+                        return@forEach
                     }
                 }
 

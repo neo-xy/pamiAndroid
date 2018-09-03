@@ -101,6 +101,7 @@ object FirebaseController {
         return Observable.create<Company> {
             FirebaseFirestore.getInstance().collection("companies").document(User.companyId).addSnapshotListener {p0, _->
                     if (p0 != null) {
+                        Log.d("pawell", "eee " + LocationType.None)
                         val comp = p0.toObject(Company::class.java)
                         if (comp != null) {
                             it.onNext(comp)
@@ -222,12 +223,12 @@ object FirebaseController {
     }
 
     fun addShiftsToAccept(clockedShift: ClockedShift): Observable<Boolean> {
-        clockedShift.shiftStatus = ShiftStatus.utstämplat
+        clockedShift.shiftStatus = ShiftStatus.ClockedOut
         val shiftLog = ShiftLog()
         shiftLog.bossId = User.employeeId
         shiftLog.bossFirstName = User.firstName
         shiftLog.bossLastName = User.lastName
-        shiftLog.shiftStatus = ShiftStatus.utstämplat
+        shiftLog.shiftStatus = ShiftStatus.ClockedOut
 
         return Observable.create {
             FirebaseFirestore.getInstance().collection("companies").document(User.companyId).collection("shiftsToAccept").add(clockedShift).addOnCompleteListener {task->
@@ -245,7 +246,8 @@ object FirebaseController {
             FirebaseFirestore.getInstance().collection("users").document(User.employeeId).collection("shifts").addSnapshotListener {p0, _ ->
                     if (p0 != null) {
                         accteptedShifts = p0.toObjects(Shift::class.java)
-                        accteptedShifts.filter { shift -> shift.shiftStatus == ShiftStatus.accepterat }
+                        Log.d("pawell","fff "+ ShiftStatus.Accepted)
+                        accteptedShifts.filter { shift -> shift.shiftStatus == ShiftStatus.Accepted }
                         it.onNext(accteptedShifts)
                     }
                 }
