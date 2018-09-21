@@ -27,23 +27,38 @@ class NotificationService : FirebaseMessagingService() {
 
     val CHANNEL_NAME = "PAMI"
     val CHANNEL_ID = "pami.com.pami"
+    var message = ""
+    var messageIndex = 8
+    var title = ""
     override fun onMessageReceived(p0: RemoteMessage) {
 
+        Log.d("pawell", p0.data.get("msg") + " " + p0.data.get("messageIndex"))
+        if (p0.data.get("messageIndex") == null) {
+
+            title = p0.data.get("title") as String
+            val timeArray = p0.data.get("timeStemps")!!.split(",")
+            message = ""
+            val df = SimpleDateFormat("dd MMM", Locale("sv", "SE"))
+
+            timeArray.toString()
+
+            timeArray.forEach {
+                val stemp: Long = it.toLong()
+                Log.d("pawell", "stemp" + stemp.toString())
+                message = message + (df.format(Date(stemp))) + ", "
+            }
+            messageIndex = p0.data.get("msg")!!.toInt()
+        } else {
+            message = p0.data.get("msg") as String
+//            messageIndex = 7
+            title = p0.data.get("title") as String
+            messageIndex = p0.data.get("messageIndex")!!.toInt()
+        }
+
         createChannel()
-        var intent = Intent(this, LoginActivity::class.java);
+        val intent = Intent(this, LoginActivity::class.java);
         val pintent = PendingIntent.getActivity(this, 0,
                 intent, 0)
-        val timeArray = p0.data.get("timeStemps")!!.split(",")
-        var dates = ""
-        val df = SimpleDateFormat("dd MMM", Locale("sv", "SE"))
-
-        timeArray.toString()
-
-        timeArray.forEach {
-            val stemp: Long = it.toLong()
-            Log.d("pawell", "stemp" + stemp.toString())
-            dates = dates + (df.format(Date(stemp))) + ", "
-        }
 
 
         val newMessageNotification = NotificationCompat.Builder(this, CHANNEL_ID)
@@ -55,21 +70,19 @@ class NotificationService : FirebaseMessagingService() {
 
         val mBuilder = NotificationCompat.Builder(this, CHANNEL_ID)
                 .setSmallIcon(R.drawable.p)
-                .setContentTitle(p0.data.get("title"))
-                .setContentText(dates)
+                .setContentText(message)
+                .setContentTitle(title)
                 .setStyle(NotificationCompat.BigTextStyle()
-                        .bigText(dates))
+                        .bigText(message))
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .setSound(Settings.System.DEFAULT_NOTIFICATION_URI)
                 .setGroup("schedule")
                 .setContentIntent(pintent)
 
-
         val nm: NotificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
-        val index = p0.data.get("msg") as String
         nm.notify(3, newMessageNotification)
-        nm.notify(index.toInt(), mBuilder.build())
+        nm.notify(messageIndex, mBuilder.build())
 
 
         super.onMessageReceived(p0)
@@ -127,103 +140,4 @@ class NotificationService : FirebaseMessagingService() {
         const val CHANNEL_NAME = "Sample Notification"
     }
 
-    fun onHandleIntent(intent: Intent) {
-
-        Log.d("pawell", "handllle")
-
-        //Create Channel
-        createChannel()
-
-
-        var timestamp: Long = 0
-        if (intent != null && intent.extras != null) {
-            timestamp = intent.extras!!.getLong("timestamp")
-        }
-
-
-
-
-        if (timestamp > 0) {
-
-
-            val context = this.applicationContext
-            var notificationManager: NotificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-            val notifyIntent = Intent(this, MainActivity::class.java)
-//
-            val title = "Sample Notification"
-            val message = "You have received a sample notification. This notification will take you to the details page."
-//
-            notifyIntent.putExtra("title", title)
-            notifyIntent.putExtra("message", message)
-            notifyIntent.putExtra("notification", true)
-
-            notifyIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-
-            val calendar = Calendar.getInstance()
-            calendar.timeInMillis = timestamp
-//
-//
-            val pendingIntent = PendingIntent.getActivity(context, 0, notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT)
-            val res = this.resources
-            val uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-
-
-                mNotification = Notification.Builder(this, CHANNEL_ID)
-                        // Set the intent that will fire when the user taps the notification
-                        .setContentIntent(pendingIntent)
-                        .setSmallIcon(R.drawable.ic_alarm)
-                        .setLargeIcon(BitmapFactory.decodeResource(res, R.mipmap.ic_launcher))
-                        .setAutoCancel(true)
-                        .setContentTitle(title)
-                        .setStyle(Notification.BigTextStyle()
-                                .bigText(message))
-                        .setContentText(message).build()
-            } else {
-
-                mNotification = Notification.Builder(this)
-                        // Set the intent that will fire when the user taps the notification
-                        .setContentIntent(pendingIntent)
-                        .setSmallIcon(R.drawable.ic_arrow_back)
-                        .setLargeIcon(BitmapFactory.decodeResource(res, R.mipmap.ic_launcher))
-                        .setAutoCancel(true)
-                        .setPriority(Notification.PRIORITY_MAX)
-                        .setContentTitle(title)
-                        .setStyle(Notification.BigTextStyle()
-                                .bigText(message))
-                        .setSound(uri)
-                        .setContentText(message).build()
-
-            }
-
-
-
-            notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-            // mNotificationId is a unique int for each notification that you must define
-            notificationManager.notify(mNotificationId, mNotification)
-        }
-
-
-    }
-
-    private fun createNotificationChannel() {
-        // Create the NotificationChannel, but only on API 26+ because
-        // the NotificationChannel class is new and not in the support library
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val importance = NotificationManager.IMPORTANCE_DEFAULT
-            val channel = NotificationChannel(CHANNEL_ID, CHANNEL_NAME, importance)
-            channel.description = "dfdfdf"
-            // Register the channel with the system; you can't change the importance
-            // or other notification behaviors after this
-            val notificationManager = getSystemService(NotificationManager::class.java)
-            notificationManager!!.createNotificationChannel(channel)
-        }
-    }
-
-
-    fun fierNtification() {
-
-
-    }
 }

@@ -51,7 +51,9 @@ class ShiftsAdapter() : RecyclerView.Adapter<ShiftsAdapter.MyViewHolder>() {
                 holder.dayMessageTitle.visibility = View.VISIBLE
                 holder.dayMessage.visibility = View.VISIBLE
                 holder.msgDivider.visibility = View.VISIBLE
-                hasDayMsg = true;
+                if(dailyMessage.message.length>0){
+                    hasDayMsg = true;
+                }
                 return@forEach
             }
         }
@@ -71,6 +73,9 @@ class ShiftsAdapter() : RecyclerView.Adapter<ShiftsAdapter.MyViewHolder>() {
             val t =" (" + shifts[position].badge + ")"
             holder.badge?.text = t
         }
+
+        holder.extraInfo.visibility = View.VISIBLE
+        holder.extraTitle.visibility = View.VISIBLE
 
         if (shifts[position].message != null) {
             if (shifts[position].message!!.isEmpty()) {

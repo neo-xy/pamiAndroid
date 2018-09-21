@@ -1,13 +1,13 @@
 package pami.com.pami
 
 
-import android.content.Intent
-import android.content.SharedPreferences
+import android.content.*
 import android.content.res.ColorStateList
 import android.os.Bundle
 import android.os.Parcelable
 import android.support.design.widget.NavigationView
 import android.support.v4.app.ActivityCompat
+import android.support.v4.content.LocalBroadcastManager
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
@@ -52,10 +52,13 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val refreshedToken = FirebaseInstanceId.getInstance().token
-        if (refreshedToken != null) {
-            FirebaseController.updateRegistrationToken(refreshedToken)
-        }
+        LocalBroadcastManager.getInstance(this).registerReceiver(tokenReceiver,
+                IntentFilter("tokenReceiver"));
+
+//        val refreshedToken = FirebaseInstanceId.getInstance().token
+//        if (refreshedToken != null) {
+//            FirebaseController.updateRegistrationToken(refreshedToken)
+//        }
 
         supportFragmentManager.beginTransaction().add(fragment_container.id, HomeFragment.getInstance()).commit()
 
@@ -115,18 +118,26 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 //        User.salaries = Shared.sortSalaries(User.salaries)
 
         FirebaseController.getCompany().subscribe {
-            nav_view.menu.findItem(nav_sick).isVisible = false
+            nav_view.menu.findItem(nav_sick).isVisible = true
 
+            val currentSalary = Shared.getSalarieOfDate(Date())
+            nav_view.menu.findItem(nav_sick).isVisible = false
             it.sickAccess.forEach { sickAcces ->
 
-                Log.d("pawell", "par " + User.salaries[0].employmentType?.name)
-                if (sickAcces == User.salaries[0].employmentType?.name && User.salaries[0].partValue != 100) {
+                if(sickAcces==currentSalary.employmentType?.ordinal){
                     nav_view.menu.findItem(nav_sick).isVisible = true
-                } else if (sickAcces == "fullTime") {
-                    if (User.salaries[0].employmentType?.name == "partTime" && User.salaries[0].partValue == 100) {
-                        nav_view.menu.findItem(nav_sick).isVisible = true
-                    }
+                    return@forEach
+                }else{
+                    nav_view.menu.findItem(nav_sick).isVisible = false
                 }
+//                Log.d("pawell", "par " + User.salaries[0].employmentType?.name)
+//                if (sickAcces == User.salaries[0].employmentType?.ordinal && User.salaries[0].partValue != 100) {
+//                    nav_view.menu.findItem(nav_sick).isVisible = true
+//                } else if (sickAcces == "fullTime") {
+//                    if (User.salaries[0].employmentType?.name == "partTime" && User.salaries[0].partValue == 100) {
+//                        nav_view.menu.findItem(nav_sick).isVisible = true
+//                    }
+//                }
 
             }
         }
@@ -247,6 +258,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        Log.d("pawell","result Mainavtivity")
         super.onActivityResult(requestCode, resultCode, data)
         this.callbackManager.onActivityResult(requestCode, resultCode, data)
     }
@@ -264,6 +276,17 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         toTakeDialogFragment.arguments = bundle
         toTakeDialogFragment.arguments
         toTakeDialogFragment.show(supportFragmentManager, "toTake")
+    }
+
+    var tokenReceiver: BroadcastReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            val token = intent.getStringExtra("token")
+            if (token != null) {
+                //send token to your server or what you want to do
+                FirebaseController.updateRegistrationToken(token)
+            }
+
+        }
     }
 }
 

@@ -10,7 +10,7 @@ class Company {
     var wifiName:String? = null
     var salt:String? = null
     var locationType:Int? = null
-    var sickAccess = mutableListOf<String>()
+    var sickAccess = mutableListOf<Int>()
 
 }
 
@@ -39,7 +39,9 @@ class LocationType{
 }
 
 class SickAccess{
-    var fullTime = false
-    var hourly = false
-    var partTime = false
+    companion object {
+        val FullTime=0
+        val PartTime=1
+        val hourly=2
+    }
 }

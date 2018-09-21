@@ -4,6 +4,7 @@ import android.util.Log
 import pami.com.pami.models.CustomDateModel
 import pami.com.pami.models.Salary
 import pami.com.pami.models.Shift
+import pami.com.pami.models.User
 import java.text.DecimalFormat
 import java.util.*
 import kotlin.Comparator
@@ -91,10 +92,36 @@ object Shared {
             }
         })
         salaries.forEach {
-            Log.d("pawell",it.employmentType.toString())
+            Log.d("pawell", it.employmentType.toString())
         }
 
         return salaries
+    }
+
+    fun getSalarieOfDate(date: Date): Salary {
+        var salarieOfDate: Salary = Salary()
+        val salaries = User.salaries
+        var cal = Calendar.getInstance()
+        cal.time = date
+
+        Collections.sort(salaries, object : Comparator<Salary> {
+            override fun compare(p0: Salary?, p1: Salary?): Int {
+                if (p0!!.startDate.time > p1!!.startDate.time) {
+                    return 1
+                } else {
+                    return -1
+                }
+            }
+        })
+
+        salaries.forEach {
+            if (it.startDate.time < date.time) {
+                salarieOfDate = it;
+                return@forEach
+            }
+        }
+
+        return salarieOfDate
     }
 
 
