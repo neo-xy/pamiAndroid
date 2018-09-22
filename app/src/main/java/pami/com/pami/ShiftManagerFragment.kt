@@ -56,7 +56,7 @@ class ShiftManagerFragment : Fragment(), RecyclerViewClickListener {
                     entre.name = employee.firstName + " " + employee.lastName
                     entre.startDate = null
                     entre.employeeId = employee.employeeId
-                    entre.companyId = User.companies[User.latestCompanyIndex].companyId
+                    entre.companyId = User.companyId
                     this.clockedInEntres.add(entre)
                 }
             }

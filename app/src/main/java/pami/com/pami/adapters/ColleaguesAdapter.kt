@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import pami.com.pami.R
 import pami.com.pami.models.Colleague
+import pami.com.pami.models.RoleType
 import java.util.*
 import kotlin.Comparator
 
@@ -28,7 +29,7 @@ class ColleaguesAdapter() : RecyclerView.Adapter<ColleaguesAdapter.MyViewHolder>
        this.colleagues = this.colleagues.sortedBy { it.firstName } as MutableList<Colleague>
         Collections.sort(colleagues, object : Comparator<Colleague> {
             override fun compare(p0: Colleague, p1: Colleague): Int {
-                if (p0.role == "boss") {
+                if (p0.role == RoleType.Boss) {
                     return -1
                 }
                 return 0
@@ -58,7 +59,7 @@ class ColleaguesAdapter() : RecyclerView.Adapter<ColleaguesAdapter.MyViewHolder>
         val phone = this.colleagues[position].phoneNumber
         val mail = this.colleagues[position].email
 
-        if (role == "boss") {
+        if (role == RoleType.Boss) {
 
             holder.card.setCardBackgroundColor(ContextCompat.getColor(context, R.color.colorPrimaryDark))
             holder.name.setTextColor(Color.WHITE)

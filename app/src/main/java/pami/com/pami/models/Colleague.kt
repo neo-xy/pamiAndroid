@@ -9,5 +9,5 @@ class Colleague {
     val lastName=""
     val email=""
     val phoneNumber=""
-    val role=""
+    val role=1
 }

@@ -7,31 +7,28 @@
     <com.prolificinteractive.materialcalendarview.MaterialCalendarView
         android:id="@+id/myCal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        />
+        android:layout_height="wrap_content" />
 
     <LinearLayout
         android:id="@+id/range_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="invisible"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:visibility="invisible">
 
         <TextView
             android:id="@+id/from_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:textSize="16sp"
             android:gravity="center"
-            />
+            android:textSize="16sp" />
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_arrow_right"
-            android:tint="@color/colorPrimaryDark"
-            />
+            android:tint="@color/colorPrimaryDark" />
 
         <TextView
             android:id="@+id/to_date"
@@ -39,49 +36,76 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:textSize="18sp"
-             />
+            android:textSize="18sp" />
 
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:gravity="center"
-        >
+        android:orientation="horizontal">
 
         <Button
             android:id="@+id/send_sick"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
 
-            android:text="sjukanmäll"
             android:backgroundTint="@color/bg_clock_in_btn"
+            android:text="sjukanmäll"
             android:textColor="@android:color/white" />
 
         <View
             android:layout_width="30dp"
-            android:layout_height="20dp"/>
+            android:layout_height="20dp" />
+
         <Button
             android:id="@+id/send_sickChild"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="VAB-anmäll"
             android:backgroundTint="@color/bg_clock_in_btn"
+            android:text="VAB-anmäll"
             android:textColor="@android:color/white" />
 
     </LinearLayout>
 
-    <Button
-
-        android:id="@+id/see_sick_reports"
+    <TextView
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_width="wrap_content"
-        android:layout_gravity="center"
-        android:backgroundTint="@color/bg_clock_in_btn"
-        android:text="dina anmälningar"
-        android:textColor="@android:color/white"
-        />
+        android:gravity="center"
+        android:text="Din anmälan"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="12sp" />
+
+    <LinearLayout
+        android:id="@+id/absence_registrated_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimaryDark"
+        android:orientation="horizontal"
+        android:paddingEnd="12dp"
+        android:paddingStart="12dp">
+
+        <TextView
+            android:id="@+id/registrated_absence_tv"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+
+            android:textColor="@android:color/white" />
+
+        <ImageButton
+            android:id="@+id/remove_absence_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:backgroundTint="@android:color/white"
+            android:src="@drawable/ic_close"
+            android:tint="@color/colorPrimaryDark"
+
+            />
+
+    </LinearLayout>
 
 </LinearLayout>

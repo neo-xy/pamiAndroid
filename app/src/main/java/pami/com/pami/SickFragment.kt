@@ -8,10 +8,7 @@ import android.support.v7.app.AlertDialog
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.LinearLayout
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView
 import kotlinx.android.synthetic.main.fragment_sick.view.*
 import pami.com.pami.models.AbsenceReport
@@ -27,6 +24,9 @@ class SickFragment : Fragment() {
     lateinit var toDate: TextView
     lateinit var sendSickBtn: Button
     lateinit var sendChildSickBtn: Button
+    lateinit var registratedAbsenceContainer: LinearLayout
+    lateinit var removeAbsenceBtn: ImageButton
+    lateinit var registratedAbsenceTv: TextView
 
     lateinit var rangeContainer: LinearLayout
     var startDate: Date? = null
@@ -39,7 +39,7 @@ class SickFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_sick, container, false)
-
+        this.registratedAbsenceTv = view.findViewById(R.id.registrated_absence_tv)
         FirebaseController.getAbsenceReports().subscribe {
             reports.removeAll(reports)
             it.forEach {
@@ -47,16 +47,25 @@ class SickFragment : Fragment() {
                     reports.add(it)
                 }
             }
+            this.setUpRegistratedAbsence()
         }
 
         fromDate = view.findViewById(R.id.from_date)
         toDate = view.findViewById(R.id.to_date)
+        this.registratedAbsenceContainer = view.findViewById(R.id.absence_registrated_container)
+        this.registratedAbsenceContainer.visibility = View.GONE
+        this.removeAbsenceBtn = view.findViewById(R.id.remove_absence_btn)
+        this.removeAbsenceBtn.setOnClickListener {
+            FirebaseController.removeAbsenceReport(this.reports[0].reportId)
+        }
         sendSickBtn = view.send_sick
         sendSickBtn.isEnabled = false
 
 
         sendChildSickBtn = view.send_sickChild
         sendChildSickBtn.isEnabled = false
+
+
 
 
         rangeContainer = view.range_container
@@ -68,9 +77,6 @@ class SickFragment : Fragment() {
         sendChildSickBtn.setOnClickListener {
             onSendChildSickReport(it)
         }
-        view.see_sick_reports.setOnClickListener {
-            showReports(it)
-        }
 
 
         val cal: MaterialCalendarView = view.myCal
@@ -78,7 +84,7 @@ class SickFragment : Fragment() {
         cal.setOnRangeSelectedListener { widget, dates ->
             rangeContainer.visibility = View.VISIBLE
 
-            if (reports.size < 3) {
+            if (reports.size < 1) {
                 sendSickBtn.isEnabled = true
                 sendChildSickBtn.isEnabled = true
 
@@ -88,12 +94,26 @@ class SickFragment : Fragment() {
                     startDate = dates[0].date
                     endDate = dates[dates.size - 1].date
                 }
-            }else{
-                Toast.makeText(context,"Maximal antal anmälningar nåddes",Toast.LENGTH_LONG).show()
+            } else {
+                Toast.makeText(context, "Maximal antal anmälningar nåddes", Toast.LENGTH_LONG).show()
             }
 
         }
         return view
+    }
+
+    fun setUpRegistratedAbsence() {
+        if (reports.size > 0) {
+            this.registratedAbsenceContainer.visibility = View.VISIBLE
+            var type = ""
+            if (this.reports[0].type == SickType.Child) {
+                type = "(VAB)"
+            }
+            this.registratedAbsenceTv.text = df.format(this.reports[0].startDate) + "  ->  " + df.format(this.reports[0].endDate) + " $type"
+        } else {
+            this.registratedAbsenceContainer.visibility = View.GONE
+        }
+
     }
 
     fun onSendSickReport() {
@@ -107,7 +127,7 @@ class SickFragment : Fragment() {
             sickReport.type = SickType.Normal
             sickReport.firstName = User.firstName
             sickReport.lastName = User.lastName
-            sickReport.socialSecurityNumber  = User.socialSecurityNumber
+            sickReport.socialSecurityNumber = User.socialSecurityNumber
             FirebaseController.addAbsenceReport(sickReport)
             sendSickBtn.isEnabled = false
             sendChildSickBtn.isEnabled = false
@@ -125,31 +145,12 @@ class SickFragment : Fragment() {
             sickReport.type = SickType.Child
             sickReport.firstName = User.firstName
             sickReport.lastName = User.lastName
-            sickReport.socialSecurityNumber  = User.socialSecurityNumber
+            sickReport.socialSecurityNumber = User.socialSecurityNumber
             FirebaseController.addAbsenceReport(sickReport)
             sendSickBtn.isEnabled = false
             sendChildSickBtn.isEnabled = false
         }
     }
 
-    fun showReports(view: View) {
-        var reportsString = mutableListOf<String>()
-        reports.forEach {
-            var type =""
-          if(it.type == SickType.Child){
-              type = "(VAB)"
-          }
-            reportsString.add(df.format(it.startDate) + "  ->  " + df.format(it.endDate)+ " $type")
-        }
 
-        var builder = AlertDialog.Builder(context!!)
-                .setTitle("Tryck på tiden att ta bort")
-                .setItems(reportsString.toTypedArray(), DialogInterface.OnClickListener { dialogInterface, i ->
-                   FirebaseController.removeAbsenceReport(reports[i].reportId)
-                })
-                .create()
-        builder.show()
-
-
-    }
 }

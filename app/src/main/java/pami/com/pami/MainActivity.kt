@@ -26,10 +26,10 @@ import com.facebook.login.LoginManager
 import com.facebook.login.LoginResult
 import com.google.firebase.auth.FacebookAuthProvider
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.iid.FirebaseInstanceId
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
 import pami.com.pami.R.id.*
+import pami.com.pami.models.RoleType
 import pami.com.pami.models.ShiftsToTake
 import pami.com.pami.models.User
 import java.util.*
@@ -101,7 +101,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             nav_view.menu.findItem(nav_shifts).isVisible = false
             nav_view.menu.findItem(nav_contacts).isVisible = false
         }
-        if (User.companies[User.latestCompanyIndex].role != "boss") {
+        if (User.role != RoleType.Boss) {
             nav_view.menu.findItem(nav_shift_manager).isVisible = false
         }
 
@@ -231,14 +231,19 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     private fun linkWithFacebook() {
+        Log.d("pawell", "link with facebook")
         this.loginManager.registerCallback(callbackManager, object : FacebookCallback<LoginResult> {
+
             override fun onSuccess(result: LoginResult?) {
+                Log.d("pawell", "link with facebook222")
                 val token = result!!.accessToken.token
                 val credential = FacebookAuthProvider.getCredential(token)
                 FirebaseAuth.getInstance().currentUser!!.linkWithCredential(credential).addOnCompleteListener {
+                    Log.d("pawell", "link with facebook333")
                     it.result.user.providerData.forEach { userInfo ->
                         if (userInfo.providerId == "facebook.com") {
                             FirebaseController.saveImgUrl(userInfo.photoUrl)
+                           Log.d("pawell","id"+ userInfo.uid)
                             Glide.with(this@MainActivity)
                                     .load(userInfo.photoUrl)
                                     .apply(RequestOptions.circleCropTransform())
@@ -250,15 +255,17 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             }
 
             override fun onCancel() {
+
+                Log.d("pawell", "link with facebook4444")
             }
 
             override fun onError(error: FacebookException?) {
+                Log.d("pawell", "link with facebook5555" + error)
             }
         })
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        Log.d("pawell","result Mainavtivity")
         super.onActivityResult(requestCode, resultCode, data)
         this.callbackManager.onActivityResult(requestCode, resultCode, data)
     }

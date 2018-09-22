@@ -9,6 +9,7 @@
 
     <color name="main_gray">#c6c6c6</color>
     <color name="gray_light">#e7e7e7</color>
+    <color name="gray_transperant">#73c7c7c7</color>
 
     <color name="blackish">#262626</color>
 

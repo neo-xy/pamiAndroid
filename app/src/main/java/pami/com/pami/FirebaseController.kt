@@ -380,55 +380,62 @@ object FirebaseController {
         }
     }
 
-    fun getPdf(salarySpecification: SalarySpecification,activity:Activity) {
-        val storage = FirebaseStorage.getInstance()
-        val ref = storage.reference
-        val pathRef = ref.child(salarySpecification.path!!)
-        if (ContextCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(activity,arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),1234)
-        }else if(ContextCompat.checkSelfPermission(activity, Manifest.permission.READ_EXTERNAL_STORAGE)
-        != PackageManager.PERMISSION_GRANTED){
+    fun getPdf(salarySpecification: SalarySpecification,activity:Activity):Observable<Boolean> {
 
-            ActivityCompat.requestPermissions(activity,arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),234)
-        }else{
-            val rootPath = File(Environment.getExternalStorageDirectory(), Environment.DIRECTORY_DOWNLOADS)
-            if (!rootPath.exists()) {
-                rootPath.mkdirs()
-            }
-            val localFile = File(rootPath, salarySpecification.id + ".pdf")
+        return create{
+val observ = it;
+            val storage = FirebaseStorage.getInstance()
+            val ref = storage.reference
+            val pathRef = ref.child(salarySpecification.path!!)
+            if (ContextCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(activity,arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),1234)
+            }else if(ContextCompat.checkSelfPermission(activity, Manifest.permission.READ_EXTERNAL_STORAGE)
+                    != PackageManager.PERMISSION_GRANTED){
 
-            pathRef.getFile(localFile).addOnCompleteListener {
-                if(it.isSuccessful){
+                ActivityCompat.requestPermissions(activity,arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),234)
+            }else{
+                val rootPath = File(Environment.getExternalStorageDirectory(), Environment.DIRECTORY_DOWNLOADS)
+                if (!rootPath.exists()) {
+                    rootPath.mkdirs()
+                }
+                val localFile = File(rootPath, salarySpecification.id + ".pdf")
 
-                    val intent = Intent()
-                    intent.setDataAndType(Uri.fromFile(localFile), "application/pdf")
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+                pathRef.getFile(localFile).addOnCompleteListener {
+                    observ.onNext(true)
+                    if(it.isSuccessful){
 
-                    val pintent = PendingIntent.getActivity(activity, 0,
-                            intent, 0)
+                        val intent = Intent()
+                        intent.setDataAndType(Uri.fromFile(localFile), "application/pdf")
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
 
-                    val notificationGroup = NotificationCompat.Builder(activity, "pdf")
-                            .setSmallIcon(R.drawable.p)
-                            .setGroup("myPdf")
-                            .setGroupSummary(true)
-                            .setContentIntent(pintent)
-                            .build()
+                        val pintent = PendingIntent.getActivity(activity, 0,
+                                intent, 0)
 
-                    val newMessageNotification = NotificationCompat.Builder(activity, "pdf")
-                            .setSmallIcon(R.drawable.p)
-                            .setGroup("myPdf")
-                            .setContentTitle(salarySpecification.id.toString()+".pdf")
-                            .setContentIntent(pintent)
-                            .build()
+                        val notificationGroup = NotificationCompat.Builder(activity, "pdf")
+                                .setSmallIcon(R.drawable.p)
+                                .setGroup("myPdf")
+                                .setGroupSummary(true)
+                                .setContentIntent(pintent)
+                                .build()
 
-                    val nm: NotificationManager = activity.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-                    nm.notify(4,notificationGroup)
-                    nm.notify(Integer.parseInt(salarySpecification.id), newMessageNotification)
+                        val newMessageNotification = NotificationCompat.Builder(activity, "pdf")
+                                .setSmallIcon(R.drawable.p)
+                                .setGroup("myPdf")
+                                .setContentTitle(salarySpecification.id.toString()+".pdf")
+                                .setContentIntent(pintent)
+                                .build()
 
+                        val nm: NotificationManager = activity.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+                        nm.notify(4,notificationGroup)
+                        nm.notify(Integer.parseInt(salarySpecification.id), newMessageNotification)
+
+                    }
                 }
             }
+
         }
+
     }
 
 }
