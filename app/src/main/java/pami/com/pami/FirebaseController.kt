@@ -10,6 +10,7 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.os.Environment
+import android.provider.Settings
 import android.support.v4.app.ActivityCompat
 import android.support.v4.app.NotificationCompat
 import android.support.v4.content.ContextCompat
@@ -25,10 +26,6 @@ import java.io.File
 import java.util.*
 import android.support.v4.content.ContextCompat.startActivity
 import android.support.v4.content.FileProvider
-
-
-
-
 
 
 object FirebaseController {
@@ -368,33 +365,33 @@ object FirebaseController {
         return create {
             FirebaseFirestore.getInstance().collection("users").document(User.employeeId).collection("salarySpec").addSnapshotListener { querySnapshot, firebaseFirestoreException ->
                 if (querySnapshot != null) {
-                        val salarySpecifications = mutableListOf<SalarySpecification>()
-                        querySnapshot.forEach { snapShot ->
-                            val salarySpecification = snapShot.toObject(SalarySpecification::class.java)
-                            salarySpecification.id = snapShot.id
-                            salarySpecifications.add(salarySpecification)
-                        }
-                        it.onNext(salarySpecifications)
+                    val salarySpecifications = mutableListOf<SalarySpecification>()
+                    querySnapshot.forEach { snapShot ->
+                        val salarySpecification = snapShot.toObject(SalarySpecification::class.java)
+                        salarySpecification.id = snapShot.id
+                        salarySpecifications.add(salarySpecification)
+                    }
+                    it.onNext(salarySpecifications)
                 }
             }
         }
     }
 
-    fun getPdf(salarySpecification: SalarySpecification,activity:Activity):Observable<Boolean> {
+    fun getPdf(salarySpecification: SalarySpecification, activity: Activity): Observable<Boolean> {
 
-        return create{
-val observ = it;
+        return create {
+            val observ = it;
             val storage = FirebaseStorage.getInstance()
             val ref = storage.reference
             val pathRef = ref.child(salarySpecification.path!!)
             if (ContextCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE)
                     != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(activity,arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),1234)
-            }else if(ContextCompat.checkSelfPermission(activity, Manifest.permission.READ_EXTERNAL_STORAGE)
-                    != PackageManager.PERMISSION_GRANTED){
+                ActivityCompat.requestPermissions(activity, arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), 1234)
+            } else if (ContextCompat.checkSelfPermission(activity, Manifest.permission.READ_EXTERNAL_STORAGE)
+                    != PackageManager.PERMISSION_GRANTED) {
 
-                ActivityCompat.requestPermissions(activity,arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),234)
-            }else{
+                ActivityCompat.requestPermissions(activity, arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), 234)
+            } else {
                 val rootPath = File(Environment.getExternalStorageDirectory(), Environment.DIRECTORY_DOWNLOADS)
                 if (!rootPath.exists()) {
                     rootPath.mkdirs()
@@ -403,7 +400,7 @@ val observ = it;
 
                 pathRef.getFile(localFile).addOnCompleteListener {
                     observ.onNext(true)
-                    if(it.isSuccessful){
+                    if (it.isSuccessful) {
 
                         val intent = Intent()
                         intent.setDataAndType(Uri.fromFile(localFile), "application/pdf")
@@ -422,12 +419,13 @@ val observ = it;
                         val newMessageNotification = NotificationCompat.Builder(activity, "pdf")
                                 .setSmallIcon(R.drawable.p)
                                 .setGroup("myPdf")
-                                .setContentTitle(salarySpecification.id.toString()+".pdf")
+                                .setSound(Settings.System.DEFAULT_NOTIFICATION_URI)
+                                .setContentTitle(salarySpecification.id.toString() + ".pdf")
                                 .setContentIntent(pintent)
                                 .build()
 
                         val nm: NotificationManager = activity.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-                        nm.notify(4,notificationGroup)
+                        nm.notify(4, notificationGroup)
                         nm.notify(Integer.parseInt(salarySpecification.id), newMessageNotification)
 
                     }

@@ -77,8 +77,8 @@
 
     <ProgressBar
         android:id="@+id/indeterminateBar"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:scaleX="3"
         android:scaleY="3"
         android:visibility="gone"

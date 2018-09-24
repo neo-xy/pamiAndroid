@@ -4,6 +4,10 @@
     <color name="colorPrimaryVeryDark">#461A00</color>
     <color name="colorPrimaryDark">#9b1935</color>
 
+    <!--<color name="colorPrimary">#FF6F28</color>-->
+    <!--<color name="colorPrimaryVeryDark">#461a00</color>-->
+    <!--<color name="colorPrimaryDark">#ba511e</color>-->
+
     <color name="colorAccent">#4cc999</color>
     <color name="alternativeAccent">#7c9fdc</color>
 
