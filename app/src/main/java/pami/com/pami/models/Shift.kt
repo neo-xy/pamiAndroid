@@ -33,9 +33,9 @@ class Shift {
 class ShiftStatus {
     companion object {
         val Scheduled = 0;
-        val Aktiv = 1
-        val Rejected = 2
-        val Accepted = 3
+        val Active = 1
+        val Accepted = 2
+        val Rejected = 3
         val ClockedOut = 4
     }
 

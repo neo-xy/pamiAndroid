@@ -45,4 +45,10 @@
     <string name="total_worked_hours">Total antal timmar:</string>
     <string name="notification_channel_description">weeee</string>
     <string name="brutto">(Brutto)</string>
+    <string name="dayColumn">Dag</string>
+    <string name="startColumn">Start</string>
+    <string name="endColumn">Slut</string>
+    <string name="durationColumn">Längd</string>
+    <string name="netto">Netto</string>
+    <string name="currency">Sek</string>
 </resources>

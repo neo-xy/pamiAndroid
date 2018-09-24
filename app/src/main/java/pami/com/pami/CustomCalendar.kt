@@ -1,7 +1,9 @@
 package pami.com.pami
 
 import android.content.Context
+import android.graphics.Canvas
 import android.graphics.Color
+import android.graphics.Paint
 import android.support.v4.content.ContextCompat
 import android.util.AttributeSet
 import android.util.Log
@@ -62,7 +64,7 @@ class CustomCalendar : LinearLayout {
                 val cell = TextView(context)
 
                 cell.gravity = Gravity.CENTER
-                cell.setTextColor(ContextCompat.getColor(context, R.color.colorPrimaryDark))
+                cell.setTextColor(ContextCompat.getColor(context, android.R.color.white))
                 cell.textSize = 18f
 
                 val day = calendar.get(Calendar.DAY_OF_MONTH)
@@ -85,17 +87,24 @@ class CustomCalendar : LinearLayout {
                     prick.setBackgroundResource(R.drawable.bg_red_circle)
                 }
 
-
                 if (this.currentMonth != calendar.get(Calendar.MONTH)) {
                     cell.setBackgroundColor(ContextCompat.getColor(context, R.color.main_gray))
                     cell.setTextColor(ContextCompat.getColor(context, R.color.gray_light))
                 }
+
+
                 shifts.forEach { shift ->
                     if (day == shift.start.get(Calendar.DATE) && month2 == shift.start.get(Calendar.MONTH)) {
-                        cell.setBackgroundColor(ContextCompat.getColor(context, R.color.colorAccent))
-                        cell.setTextColor(Color.WHITE)
+                        cell.background = context.getDrawable(R.drawable.bg_shift_that_day)
+                        cell.setTextColor(ContextCompat.getColor(context, R.color.colorPrimaryDark))
+
+                        if(this.currentMonth  != shift.start.get(Calendar.MONTH)){
+                            cell.background = context.getDrawable(R.drawable.bg_shift_that_day_of_month)
+                        }
                     }
                 }
+
+
 
                 cell.layoutParams = RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT)
                 cell.text = day.toString()

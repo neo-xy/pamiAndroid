@@ -22,6 +22,7 @@ class ShiftsAdapter() : RecyclerView.Adapter<ShiftsAdapter.MyViewHolder>() {
     var shifts: MutableList<Shift> = mutableListOf()
     var df: DecimalFormat = DecimalFormat("00")
     var dailyMessages = mutableListOf<DayInfoMessage>()
+    var simpleHourMinuteFormat = SimpleDateFormat("HH:mm",Locale("swe"))
 
     constructor(shifts: MutableList<Shift>) : this() {
         this.dailyMessages = FirebaseController.dayInfoMesages;
@@ -30,8 +31,8 @@ class ShiftsAdapter() : RecyclerView.Adapter<ShiftsAdapter.MyViewHolder>() {
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
 
-        holder.startTime?.text = df.format(shifts[position].start.get(Calendar.HOUR)) + ":" + df.format(shifts[position].start.get(Calendar.MINUTE))
-        holder.endTime?.text = "-" + df.format(shifts[position].end.get(Calendar.HOUR)) + ":" + df.format(shifts[position].end.get(Calendar.MINUTE))
+        holder.startTime?.text = this.simpleHourMinuteFormat.format(shifts[position].start.time)
+        holder.endTime?.text = "-" + this.simpleHourMinuteFormat.format(shifts[position].end.time)
         holder.dayNr?.text = df.format(shifts[position].start.get(Calendar.DATE))
 
         val cal = Calendar.getInstance()
@@ -39,19 +40,18 @@ class ShiftsAdapter() : RecyclerView.Adapter<ShiftsAdapter.MyViewHolder>() {
         val date: Date = cal.time
         val df = SimpleDateFormat("MMMM", Locale("swe"))
 
-        val df2 = SimpleDateFormat("yyyy MMM dd",Locale("sv"))
+        val df2 = SimpleDateFormat("yyyy MMM dd", Locale("sv"))
 
         holder.month?.text = df.format(date).capitalize()
         var hasDayMsg = false
 
         dailyMessages.forEach { dailyMessage ->
             if (df2.format(dailyMessage.messageDate) == df2.format(date)) {
-                Log.d("pawell","has daymsg" +df2.format(dailyMessage.messageDate))
                 holder.dayMessage.text = dailyMessage.message;
                 holder.dayMessageTitle.visibility = View.VISIBLE
                 holder.dayMessage.visibility = View.VISIBLE
                 holder.msgDivider.visibility = View.VISIBLE
-                if(dailyMessage.message.length>0){
+                if (dailyMessage.message.length > 0) {
                     hasDayMsg = true;
                 }
                 return@forEach
@@ -59,7 +59,7 @@ class ShiftsAdapter() : RecyclerView.Adapter<ShiftsAdapter.MyViewHolder>() {
         }
 
         if (!hasDayMsg) {
-            Log.d("pawell","does not have day msg"+df2.format(date))
+            Log.d("pawell", "does not have day msg" + df2.format(date))
             holder.dayMessage.visibility = View.GONE
             holder.dayMessageTitle.visibility = View.GONE
             holder.msgDivider.visibility = View.GONE
@@ -70,7 +70,7 @@ class ShiftsAdapter() : RecyclerView.Adapter<ShiftsAdapter.MyViewHolder>() {
         holder.department?.text = shifts[position].department.id
 
         if (shifts[position].badge.length > 0) {
-            val t =" (" + shifts[position].badge + ")"
+            val t = " (" + shifts[position].badge + ")"
             holder.badge?.text = t
         }
 

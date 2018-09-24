@@ -1,8 +1,10 @@
 package pami.com.pami
 
+import android.graphics.Color
 import android.graphics.Typeface
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v4.content.ContextCompat
 import android.support.v4.view.ViewPager
 import android.util.Log
 import android.view.Gravity
@@ -10,6 +12,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import pami.com.pami.adapters.CalendarAdapter
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -34,6 +37,8 @@ class MonthFragment : Fragment() {
         weekdays = view.findViewById(R.id.calendar_week_days)
         pager = view.findViewById(R.id.my_pager)
         header = view.findViewById(R.id.month_display)
+
+        weekdays.background = ContextCompat.getDrawable(context!!, R.drawable.bg_bottom_border_gray)
 
         setUpWeekdaysRow()
         setUpGrid()
@@ -72,6 +77,7 @@ class MonthFragment : Fragment() {
         (0..weekdays.size - 1).forEach {
             val weekDay = TextView(context)
             weekDay.text = weekdays[it]
+            weekDay.setTextColor(Color.WHITE)
             weekDay.typeface = Typeface.DEFAULT_BOLD
             weekDay.layoutParams = TableRow.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.MATCH_PARENT, 1f)
             weekDay.gravity = Gravity.CENTER
