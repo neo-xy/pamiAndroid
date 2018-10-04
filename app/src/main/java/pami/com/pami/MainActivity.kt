@@ -1,6 +1,5 @@
 package pami.com.pami
 
-
 import android.content.*
 import android.content.res.ColorStateList
 import android.os.Bundle
@@ -10,7 +9,6 @@ import android.support.v4.app.ActivityCompat
 import android.support.v4.content.LocalBroadcastManager
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
-import android.util.Log
 import android.view.Gravity
 import android.view.MenuItem
 import android.view.View
@@ -26,6 +24,7 @@ import com.facebook.login.LoginManager
 import com.facebook.login.LoginResult
 import com.google.firebase.auth.FacebookAuthProvider
 import com.google.firebase.auth.FirebaseAuth
+import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
 import pami.com.pami.R.id.*
@@ -47,18 +46,14 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private lateinit var toTakeBtn: Button
     private lateinit var sp: SharedPreferences
     private lateinit var shiftsToTake: MutableList<ShiftsToTake>
+    private  var disposable = CompositeDisposable()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         LocalBroadcastManager.getInstance(this).registerReceiver(tokenReceiver,
-                IntentFilter("tokenReceiver"));
-
-//        val refreshedToken = FirebaseInstanceId.getInstance().token
-//        if (refreshedToken != null) {
-//            FirebaseController.updateRegistrationToken(refreshedToken)
-//        }
+                IntentFilter("tokenReceiver"))
 
         supportFragmentManager.beginTransaction().add(fragment_container.id, HomeFragment.getInstance()).commit()
 
@@ -81,11 +76,13 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         callbackManager = CallbackManager.Factory.create()
         this.linkWithFacebook()
 
+        val drawerNameTV: TextView = nav_view.getHeaderView(0).findViewById(R.id.drawer_name_tv)
+
         nav_view.setNavigationItemSelectedListener(this)
 
         profileImageView = nav_view.getHeaderView(0).findViewById(R.id.profile_image)
 
-        FirebaseController.getShiftsToTake().subscribe {
+        val dis1 = FirebaseController.getShiftsToTake().subscribe {
 
             if (it.size > 0) {
                 this.shiftsToTake = it
@@ -94,6 +91,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 this.toTakeBtn.visibility = View.GONE
             }
         }
+
         FirebaseController.getInterests().subscribe()
 
         if (User.employmentStatus == "passed") {
@@ -113,35 +111,26 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             }
         })
 
-
         nav_view.menu.findItem(nav_sick).isVisible = false
-//        User.salaries = Shared.sortSalaries(User.salaries)
 
-        FirebaseController.getCompany().subscribe {
+        val dis2 = FirebaseController.getCompany().subscribe {
             nav_view.menu.findItem(nav_sick).isVisible = true
+
+            val displayedName = User.firstName.capitalize() + " " + User.lastName.capitalize() + " " + it.companyName
+            drawerNameTV.text = displayedName
 
             val currentSalary = Shared.getSalarieOfDate(Date())
             nav_view.menu.findItem(nav_sick).isVisible = false
             it.sickAccess.forEach { sickAcces ->
 
-                if(sickAcces==currentSalary.employmentType?.ordinal){
+                if (sickAcces == currentSalary.employmentType?.ordinal) {
                     nav_view.menu.findItem(nav_sick).isVisible = true
                     return@forEach
-                }else{
+                } else {
                     nav_view.menu.findItem(nav_sick).isVisible = false
                 }
-//                Log.d("pawell", "par " + User.salaries[0].employmentType?.name)
-//                if (sickAcces == User.salaries[0].employmentType?.ordinal && User.salaries[0].partValue != 100) {
-//                    nav_view.menu.findItem(nav_sick).isVisible = true
-//                } else if (sickAcces == "fullTime") {
-//                    if (User.salaries[0].employmentType?.name == "partTime" && User.salaries[0].partValue == 100) {
-//                        nav_view.menu.findItem(nav_sick).isVisible = true
-//                    }
-//                }
-
             }
         }
-
 
         FirebaseAuth.getInstance().currentUser!!.providerData.forEach {
             if (it.providerId == "facebook.com") {
@@ -149,9 +138,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             }
         }
 
-        val drawerNameTV: TextView = nav_view.getHeaderView(0).findViewById(R.id.drawer_name_tv)
-        val displayedName = User.firstName.capitalize() + " " + User.lastName.capitalize()
-        drawerNameTV.text = displayedName
         if (!User.imgUrl.isEmpty()) {
             Glide.with(this)
                     .load(User.imgUrl)
@@ -164,7 +150,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             drawerMailTV.text = User.email
         }
 
-        FirebaseController.getClockedInShifts().subscribe {
+        val dis3 = FirebaseController.getClockedInShifts().subscribe {
             var isClockedIn = false
             it.forEach { cshift ->
                 if (cshift.employeeId == User.employeeId) {
@@ -181,7 +167,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
         FirebaseController.setUpColleagues()
         FirebaseController.setupSalleries()
-
+        this.disposable.addAll(dis1, dis2, dis3)
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
@@ -231,19 +217,15 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     private fun linkWithFacebook() {
-        Log.d("pawell", "link with facebook")
         this.loginManager.registerCallback(callbackManager, object : FacebookCallback<LoginResult> {
 
             override fun onSuccess(result: LoginResult?) {
-                Log.d("pawell", "link with facebook222")
                 val token = result!!.accessToken.token
                 val credential = FacebookAuthProvider.getCredential(token)
                 FirebaseAuth.getInstance().currentUser!!.linkWithCredential(credential).addOnCompleteListener {
-                    Log.d("pawell", "link with facebook333")
                     it.result.user.providerData.forEach { userInfo ->
                         if (userInfo.providerId == "facebook.com") {
                             FirebaseController.saveImgUrl(userInfo.photoUrl)
-                           Log.d("pawell","id"+ userInfo.uid)
                             Glide.with(this@MainActivity)
                                     .load(userInfo.photoUrl)
                                     .apply(RequestOptions.circleCropTransform())
@@ -255,12 +237,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             }
 
             override fun onCancel() {
-
-                Log.d("pawell", "link with facebook4444")
             }
-
             override fun onError(error: FacebookException?) {
-                Log.d("pawell", "link with facebook5555" + error)
             }
         })
     }
@@ -285,15 +263,19 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         toTakeDialogFragment.show(supportFragmentManager, "toTake")
     }
 
-    var tokenReceiver: BroadcastReceiver = object : BroadcastReceiver() {
+    private var tokenReceiver: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             val token = intent.getStringExtra("token")
             if (token != null) {
                 //send token to your server or what you want to do
                 FirebaseController.updateRegistrationToken(token)
             }
-
         }
+    }
+
+    override fun onDestroy() {
+        this.disposable.dispose()
+        super.onDestroy()
     }
 }
 

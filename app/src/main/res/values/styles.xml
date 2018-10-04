@@ -28,9 +28,9 @@
     </style>
 
     <style name="WhiteEditText" parent="Widget.AppCompat.EditText">
-        <item name="android:textColor">@android:color/white</item>
-        <item name="android:textCursorDrawable">@android:color/white</item>
-        <item name="android:textColorHint">@color/main_gray</item>
+        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="android:textCursorDrawable">@color/colorPrimary</item>
+        <item name="android:textColorHint">@color/gray_light</item>
         <item name="android:backgroundTint">@android:color/white</item>
     </style>
     <style name="LoginActivityTheme"  parent="Theme.AppCompat.Light.NoActionBar">
@@ -48,6 +48,11 @@
 
     <style name="myPopupMenuTextAppearanceSmall" parent="@style/TextAppearance.AppCompat.Light.Widget.PopupMenu.Small">
         <item name="android:textColor">#fff</item>
+    </style>
+    <style name="pamiBtn" parent="Base.Widget.AppCompat.Button">
+        <item name="android:padding">8dp</item>
+        <item name="android:minHeight">10dp</item>
+
     </style>
 
     <style name="myPopupMenuTextAppearanceLarge" parent="@style/TextAppearance.AppCompat.Light.Widget.PopupMenu.Large">

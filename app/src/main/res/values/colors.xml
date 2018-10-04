@@ -3,6 +3,7 @@
     <color name="colorPrimary">#bc1d3f</color>
     <color name="colorPrimaryVeryDark">#461A00</color>
     <color name="colorPrimaryDark">#9b1935</color>
+    <color name="colorPrimarylight">#f6b9c6</color>
 
     <!--<color name="colorPrimary">#FF6F28</color>-->
     <!--<color name="colorPrimaryVeryDark">#461a00</color>-->
@@ -13,7 +14,7 @@
 
     <color name="main_gray">#c6c6c6</color>
     <color name="gray_light">#e7e7e7</color>
-    <color name="gray_transperant">#73c7c7c7</color>
+    <color name="gray_transperant">#80ffffff</color>
 
     <color name="blackish">#262626</color>
 

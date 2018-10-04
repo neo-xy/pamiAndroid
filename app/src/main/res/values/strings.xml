@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Pami</string>
+    <string name="app_name">Dallero</string>
 
     <string name="facebook_app_id">131116687542366</string>
     <string name="fb_login_protocol_scheme">fb131116687542366</string>
@@ -34,8 +34,8 @@
     <string name="drawer_menu_submenu_title">Komunikation</string>
     <string name="log_out">Logga ut</string>
     <string name="drawer_menu_link_facebook">Länka med facebook</string>
-    <string name="logo_name">Pami</string>
-    <string name="login_forget_password">Glömt lösenord?</string>
+    <string name="logo_name">Dallero</string>
+    <string name="login_forget_password"><u>Glömt lösenord?</u></string>
     <string name="available_dialog">Tillgänglig</string>
     <string name="not_available_dialog">Inte tillgänglig</string>
     <string name="save">Spara</string>
@@ -51,4 +51,5 @@
     <string name="durationColumn">Längd</string>
     <string name="netto">Netto</string>
     <string name="currency">Sek</string>
+    <string name="inlogg">Inloggning</string>
 </resources>

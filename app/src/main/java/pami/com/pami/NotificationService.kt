@@ -62,14 +62,14 @@ class NotificationService : FirebaseMessagingService() {
 
 
         val newMessageNotification = NotificationCompat.Builder(this, CHANNEL_ID)
-                .setSmallIcon(R.drawable.p)
+                .setSmallIcon(R.mipmap.ic_dallero)
                 .setGroup("schedule")
                 .setGroupSummary(true)
                 .setContentIntent(pintent)
                 .build()
 
         val mBuilder = NotificationCompat.Builder(this, CHANNEL_ID)
-                .setSmallIcon(R.drawable.p)
+                .setSmallIcon(R.mipmap.ic_dallero)
                 .setContentText(message)
                 .setContentTitle(title)
                 .setStyle(NotificationCompat.BigTextStyle()

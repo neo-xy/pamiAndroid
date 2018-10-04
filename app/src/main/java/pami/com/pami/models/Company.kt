@@ -10,6 +10,7 @@ class Company {
     var wifiName:String? = null
     var salt:String? = null
     var locationType:Int? = null
+    var companyName:String? =null
     var sickAccess = mutableListOf<Int>()
 
 }

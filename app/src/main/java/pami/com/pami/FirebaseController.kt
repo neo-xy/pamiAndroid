@@ -11,6 +11,7 @@ import android.net.Uri
 import android.os.Build
 import android.os.Environment
 import android.provider.Settings
+import android.support.design.widget.Snackbar
 import android.support.v4.app.ActivityCompat
 import android.support.v4.app.NotificationCompat
 import android.support.v4.content.ContextCompat
@@ -26,6 +27,7 @@ import java.io.File
 import java.util.*
 import android.support.v4.content.ContextCompat.startActivity
 import android.support.v4.content.FileProvider
+import android.widget.Toast
 
 
 object FirebaseController {
@@ -379,8 +381,7 @@ object FirebaseController {
 
     fun getPdf(salarySpecification: SalarySpecification, activity: Activity): Observable<Boolean> {
 
-        return create {
-            val observ = it;
+        return create { observ ->
             val storage = FirebaseStorage.getInstance()
             val ref = storage.reference
             val pathRef = ref.child(salarySpecification.path!!)
@@ -402,22 +403,24 @@ object FirebaseController {
                     observ.onNext(true)
                     if (it.isSuccessful) {
 
+                        Toast.makeText(activity,"Specifikation nerladdad",Toast.LENGTH_SHORT).show()
+
                         val intent = Intent()
                         intent.setDataAndType(Uri.fromFile(localFile), "application/pdf")
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY)
 
                         val pintent = PendingIntent.getActivity(activity, 0,
                                 intent, 0)
 
                         val notificationGroup = NotificationCompat.Builder(activity, "pdf")
-                                .setSmallIcon(R.drawable.p)
+                                .setSmallIcon(R.mipmap.ic_dallero_clock_white)
                                 .setGroup("myPdf")
                                 .setGroupSummary(true)
                                 .setContentIntent(pintent)
                                 .build()
 
                         val newMessageNotification = NotificationCompat.Builder(activity, "pdf")
-                                .setSmallIcon(R.drawable.p)
+                                .setSmallIcon(R.mipmap.ic_dallero_clock_white)
                                 .setGroup("myPdf")
                                 .setSound(Settings.System.DEFAULT_NOTIFICATION_URI)
                                 .setContentTitle(salarySpecification.id.toString() + ".pdf")
