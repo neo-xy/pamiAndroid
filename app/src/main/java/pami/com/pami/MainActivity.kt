@@ -9,6 +9,7 @@ import android.support.v4.app.ActivityCompat
 import android.support.v4.content.LocalBroadcastManager
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
 import android.view.Gravity
 import android.view.MenuItem
 import android.view.View
@@ -24,6 +25,7 @@ import com.facebook.login.LoginManager
 import com.facebook.login.LoginResult
 import com.google.firebase.auth.FacebookAuthProvider
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.iid.FirebaseInstanceId
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
@@ -53,7 +55,15 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         setContentView(R.layout.activity_main)
 
         LocalBroadcastManager.getInstance(this).registerReceiver(tokenReceiver,
+
                 IntentFilter("tokenReceiver"))
+
+        FirebaseInstanceId.getInstance().getInstanceId().addOnCompleteListener {
+            Log.d("pawell","tokeniii ${it.result!!.token}")
+            FirebaseController.updateRegistrationToken(it.result!!.token)
+        }
+
+        Log.d("pawell","fffdfdfsdfsdfsdf")
 
         supportFragmentManager.beginTransaction().add(fragment_container.id, HomeFragment.getInstance()).commit()
 
@@ -77,6 +87,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         this.linkWithFacebook()
 
         val drawerNameTV: TextView = nav_view.getHeaderView(0).findViewById(R.id.drawer_name_tv)
+        val companyNameTV:TextView = nav_view.getHeaderView(0).findViewById(R.id.company_name_tv)
 
         nav_view.setNavigationItemSelectedListener(this)
 
@@ -116,20 +127,13 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         val dis2 = FirebaseController.getCompany().subscribe {
             nav_view.menu.findItem(nav_sick).isVisible = true
 
-            val displayedName = User.firstName.capitalize() + " " + User.lastName.capitalize() + " " + it.companyName
+            val displayedName = User.firstName.capitalize() + " " + User.lastName.capitalize()
             drawerNameTV.text = displayedName
+            companyNameTV.text = it.companyName
 
             val currentSalary = Shared.getSalarieOfDate(Date())
-            nav_view.menu.findItem(nav_sick).isVisible = false
-            it.sickAccess.forEach { sickAcces ->
 
-                if (sickAcces == currentSalary.employmentType?.ordinal) {
-                    nav_view.menu.findItem(nav_sick).isVisible = true
-                    return@forEach
-                } else {
-                    nav_view.menu.findItem(nav_sick).isVisible = false
-                }
-            }
+            nav_view.menu.findItem(nav_sick).isVisible = it.sickAccess.contains(currentSalary.employmentType?.ordinal)
         }
 
         FirebaseAuth.getInstance().currentUser!!.providerData.forEach {
@@ -223,7 +227,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 val token = result!!.accessToken.token
                 val credential = FacebookAuthProvider.getCredential(token)
                 FirebaseAuth.getInstance().currentUser!!.linkWithCredential(credential).addOnCompleteListener {
-                    it.result.user.providerData.forEach { userInfo ->
+                    it.result!!.user.providerData.forEach { userInfo ->
                         if (userInfo.providerId == "facebook.com") {
                             FirebaseController.saveImgUrl(userInfo.photoUrl)
                             Glide.with(this@MainActivity)
@@ -266,6 +270,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private var tokenReceiver: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             val token = intent.getStringExtra("token")
+            Log.d("pawell","tokennn $token")
             if (token != null) {
                 //send token to your server or what you want to do
                 FirebaseController.updateRegistrationToken(token)

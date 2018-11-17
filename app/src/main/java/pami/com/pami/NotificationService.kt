@@ -21,6 +21,7 @@ import java.util.*
 import android.app.NotificationManager
 import android.app.NotificationChannel
 import android.app.PendingIntent
+import com.google.firebase.auth.FirebaseAuth
 
 
 class NotificationService : FirebaseMessagingService() {
@@ -30,6 +31,13 @@ class NotificationService : FirebaseMessagingService() {
     var message = ""
     var messageIndex = 8
     var title = ""
+
+    override fun onNewToken(token: String?) {
+
+        if(token != null){
+            FirebaseController.updateRegistrationToken(token)
+        }
+    }
     override fun onMessageReceived(p0: RemoteMessage) {
 
         Log.d("pawell", p0.data.get("msg") + " " + p0.data.get("messageIndex"))

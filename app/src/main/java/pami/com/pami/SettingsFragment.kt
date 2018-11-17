@@ -40,7 +40,7 @@ class SettingsFragment : Fragment() {
 
         val credentials = FacebookAuthProvider.getCredential(token)
         FirebaseAuth.getInstance().currentUser!!.linkWithCredential(credentials).addOnCompleteListener {
-            it.getResult().user.providerData.forEach {
+            it.getResult()!!.user.providerData.forEach {
                 if (it.providerId == "facebook.com") {
                     FirebaseController.saveImgUrl(it.photoUrl)
                 }

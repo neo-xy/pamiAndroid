@@ -18,11 +18,10 @@
         android:width="32dp"
         android:height="32dp"
         android:gravity="center">
-        <shape android:shape="oval" >
-            <stroke
-                android:width="2dp"
-                android:color="#51fb13" />
-            <solid android:color="#ffff"></solid>
+        <shape android:shape="oval">
+
+            <solid android:color="#ffff" >
+            </solid>
         </shape>
     </item>
 </layer-list>

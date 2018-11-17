@@ -46,8 +46,6 @@ object FirebaseController {
 
     fun getUser(): Observable<Boolean> {
 
-
-        Log.d("pawell", "getUSEr 1")
         val firestore = FirebaseFirestore.getInstance()
         val settings = FirebaseFirestoreSettings.Builder()
                 .setTimestampsInSnapshotsEnabled(true)
@@ -56,7 +54,6 @@ object FirebaseController {
 
         return Observable.create<Boolean> {
             FirebaseFirestore.getInstance().collection("users").document(FirebaseAuth.getInstance().currentUser!!.uid).addSnapshotListener { p0, _ ->
-                Log.d("pawell", "getUSEr 2")
                 if (p0!!.exists()) {
                     p0.toObject(User::class.java)
                     it.onNext(true)
@@ -69,7 +66,7 @@ object FirebaseController {
     fun getSalaries(): Observable<MutableList<Salary>> {
         return create { sub ->
             FirebaseFirestore.getInstance().collection("users").document(User.employeeId).collection("salaries").get().addOnCompleteListener { p0 ->
-                val results = p0.result.toObjects(Salary::class.java)
+                val results = p0.result!!.toObjects(Salary::class.java)
                 sub.onNext(results)
             }
         }
@@ -102,6 +99,7 @@ object FirebaseController {
 
                 val schedueledShifts = mutableListOf<Shift>()
                 p0?.forEach { snapShot ->
+                    Log.d("pawell",snapShot.id)
                     val shift = snapShot.toObject(Shift::class.java)
                     shift.shiftId = snapShot.id
                     var cal = Calendar.getInstance()
@@ -150,7 +148,7 @@ object FirebaseController {
     fun updateUnavailableDates(us: UnavailableDate) {
         FirebaseFirestore.getInstance().collection("companies").document(User.companyId).collection("datesUnavailable").add(us)
                 .addOnCompleteListener {
-                    FirebaseFirestore.getInstance().collection("users").document(User.employeeId).collection("datesUnavailable").document(it.result.id).set(us)
+                    FirebaseFirestore.getInstance().collection("users").document(User.employeeId).collection("datesUnavailable").document(it.result!!.id).set(us)
                 }
     }
 
@@ -190,7 +188,7 @@ object FirebaseController {
         //TODO change employeeID to UserId
         FirebaseFirestore.getInstance().collection("users").document(User.employeeId).collection("salaries").get().addOnCompleteListener {
             if (it.isSuccessful) {
-                this.salaries = it.result.toObjects(Salary::class.java)
+                this.salaries = it.result!!.toObjects(Salary::class.java)
             }
         }
     }
@@ -204,7 +202,7 @@ object FirebaseController {
             FirebaseFirestore.getInstance().collection("companies").document(User.companyId).collection("activeShifts")
                     .add(clockedShift).addOnCompleteListener { task ->
                         if (task.isSuccessful) {
-                            it.onNext(task.result.id)
+                            it.onNext(task.result!!.id)
                         } else {
                             it.onNext("")
                         }
@@ -220,7 +218,6 @@ object FirebaseController {
                     p0.forEach { snapShot ->
                         val cs = snapShot.toObject(ClockedShift::class.java)
                         cs.clockedShiftId = snapShot.id
-                        Log.d("pawell", "cdate: " + cs.startDate)
                         clockedShifts.add(cs)
                     }
                     emiter.onNext(clockedShifts)
@@ -266,7 +263,6 @@ object FirebaseController {
             FirebaseFirestore.getInstance().collection("users").document(User.employeeId).collection("shifts").addSnapshotListener { p0, _ ->
                 if (p0 != null) {
                     accteptedShifts = p0.toObjects(Shift::class.java)
-                    Log.d("pawell", "fff " + ShiftStatus.Accepted)
                     accteptedShifts.filter { shift -> shift.shiftStatus == ShiftStatus.Accepted }
                     it.onNext(accteptedShifts)
                 }
@@ -275,9 +271,11 @@ object FirebaseController {
     }
 
     fun updateRegistrationToken(token: String) {
-        FirebaseFirestore.getInstance().collection("users").document(User.employeeId).update("refreshToken", token)
-        FirebaseFirestore.getInstance().collection("companies").document(User.companyId).collection("employees").document(User.employeeId)
-                .update("refreshToken", token)
+        if(User.employeeId.length>0){
+            FirebaseFirestore.getInstance().collection("users").document(User.employeeId).update("refreshToken", token)
+            FirebaseFirestore.getInstance().collection("companies").document(User.companyId).collection("employees").document(User.employeeId)
+                    .update("refreshToken", token)
+        }
     }
 
     fun getShiftsToTake(): Observable<MutableList<ShiftsToTake>> {
@@ -346,7 +344,7 @@ object FirebaseController {
 
     fun addAbsenceReport(absenceReport: AbsenceReport) {
         FirebaseFirestore.getInstance().collection("companies").document(User.companyId).collection("absenceReports").add(absenceReport).addOnCompleteListener {
-            FirebaseFirestore.getInstance().collection("users").document(User.employeeId).collection("absenceReports").document(it.result.id).set(absenceReport)
+            FirebaseFirestore.getInstance().collection("users").document(User.employeeId).collection("absenceReports").document(it.result!!.id).set(absenceReport)
         }
     }
 

@@ -57,8 +57,6 @@ class HomeFragment : Fragment() {
         calendar.time = currantDate
 
         FirebaseController.getUserShifts().subscribe() {
-
-            Log.d("pawell","sssss "+ it.size)
             if (it.size > 0) {
 
                 var upcomingShifts = mutableListOf<Shift>()

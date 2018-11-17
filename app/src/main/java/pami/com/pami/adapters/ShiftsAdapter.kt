@@ -59,7 +59,6 @@ class ShiftsAdapter() : RecyclerView.Adapter<ShiftsAdapter.MyViewHolder>() {
         }
 
         if (!hasDayMsg) {
-            Log.d("pawell", "does not have day msg" + df2.format(date))
             holder.dayMessage.visibility = View.GONE
             holder.dayMessageTitle.visibility = View.GONE
             holder.msgDivider.visibility = View.GONE

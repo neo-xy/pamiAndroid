@@ -14,7 +14,8 @@
         </shape>
     </item>
     <item
-
+        android:width="32dp"
+        android:height="32dp"
         android:gravity="center">
         <shape android:shape="oval" >
             <solid android:color="#ffff"/>

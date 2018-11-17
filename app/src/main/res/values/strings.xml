@@ -52,4 +52,5 @@
     <string name="netto">Netto</string>
     <string name="currency">Sek</string>
     <string name="inlogg">Inloggning</string>
+    <string name="splash_screen_text">Ha en bra dag!</string>
 </resources>
