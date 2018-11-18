@@ -1,27 +1,21 @@
 package pami.com.pami
 
 import android.annotation.SuppressLint
-import android.app.*
-import android.content.BroadcastReceiver
+import android.app.Notification
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.graphics.BitmapFactory
 import android.graphics.Color
-import android.media.RingtoneManager
 import android.os.Build
 import android.provider.Settings
 import android.support.v4.app.NotificationCompat
 import android.util.Log
-import com.google.firebase.iid.FirebaseInstanceIdService
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
-import java.lang.Exception
 import java.text.SimpleDateFormat
 import java.util.*
-import android.app.NotificationManager
-import android.app.NotificationChannel
-import android.app.PendingIntent
-import com.google.firebase.auth.FirebaseAuth
 
 
 class NotificationService : FirebaseMessagingService() {
@@ -29,7 +23,7 @@ class NotificationService : FirebaseMessagingService() {
     val CHANNEL_NAME = "PAMI"
     val CHANNEL_ID = "pami.com.pami"
     var message = ""
-    var messageIndex = 8
+    var messageIndex = 100
     var title = ""
 
     override fun onNewToken(token: String?) {
@@ -40,25 +34,20 @@ class NotificationService : FirebaseMessagingService() {
     }
     override fun onMessageReceived(p0: RemoteMessage) {
 
-        Log.d("pawell", p0.data.get("msg") + " " + p0.data.get("messageIndex"))
         if (p0.data.get("messageIndex") == null) {
-
             title = p0.data.get("title") as String
             val timeArray = p0.data.get("timeStemps")!!.split(",")
             message = ""
             val df = SimpleDateFormat("dd MMM", Locale("sv", "SE"))
-
             timeArray.toString()
 
             timeArray.forEach {
                 val stemp: Long = it.toLong()
-                Log.d("pawell", "stemp" + stemp.toString())
                 message = message + (df.format(Date(stemp))) + ", "
             }
-            messageIndex = p0.data.get("msg")!!.toInt()
+            messageIndex = p0.data.get("messageIndex")!!.toInt()
         } else {
             message = p0.data.get("msg") as String
-//            messageIndex = 7
             title = p0.data.get("title") as String
             messageIndex = p0.data.get("messageIndex")!!.toInt()
         }
@@ -68,10 +57,9 @@ class NotificationService : FirebaseMessagingService() {
         val pintent = PendingIntent.getActivity(this, 0,
                 intent, 0)
 
-
         val newMessageNotification = NotificationCompat.Builder(this, CHANNEL_ID)
                 .setSmallIcon(R.mipmap.ic_dallero)
-                .setGroup("schedule")
+                .setGroup(messageIndex.toString())
                 .setGroupSummary(true)
                 .setContentIntent(pintent)
                 .build()
@@ -84,32 +72,27 @@ class NotificationService : FirebaseMessagingService() {
                         .bigText(message))
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .setSound(Settings.System.DEFAULT_NOTIFICATION_URI)
-                .setGroup("schedule")
+                .setGroup(messageIndex.toString())
                 .setContentIntent(pintent)
 
         val nm: NotificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
-        nm.notify(3, newMessageNotification)
-        nm.notify(messageIndex, mBuilder.build())
+        val indexId = Random().nextInt(50000)
 
-
-        super.onMessageReceived(p0)
-
+        nm.notify(messageIndex, newMessageNotification)
+        nm.notify(indexId, mBuilder.build())
     }
 
     override fun onMessageSent(p0: String?) {
-
         super.onMessageSent(p0)
     }
 
     override fun onDeletedMessages() {
-
         super.onDeletedMessages()
     }
 
     override fun onSendError(p0: String?, p1: Exception?) {
         super.onSendError(p0, p1)
-
     }
 
     private lateinit var mNotification: Notification
@@ -117,7 +100,6 @@ class NotificationService : FirebaseMessagingService() {
 
     @SuppressLint("NewApi")
     private fun createChannel() {
-
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 
@@ -147,5 +129,6 @@ class NotificationService : FirebaseMessagingService() {
         const val CHANNEL_ID = "pami.com.pami"
         const val CHANNEL_NAME = "Sample Notification"
     }
+
 
 }

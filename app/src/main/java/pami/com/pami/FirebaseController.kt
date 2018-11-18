@@ -171,9 +171,9 @@ object FirebaseController {
         FirebaseFirestore.getInstance().collection("users").document(User.employeeId).collection("datesUnavailable").document(us.id).delete()
     }
 
-    fun saveImgUrl(photoUrl: Uri?) {
+    fun saveImgUrl(photoUrl: String) {
         FirebaseFirestore.getInstance().collection("users").document(User.employeeId).update("imgUrl", photoUrl.toString())
-        FirebaseFirestore.getInstance().collection("companies").document(User.companyId).collection("employees").document(User.employeeId).update("imgUrl", photoUrl.toString())
+        FirebaseFirestore.getInstance().collection("companies").document(User.companyId).collection("employees").document(User.employeeId).update("imgUrl", photoUrl)
     }
 
     fun setUpColleagues() {

@@ -139,6 +139,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         FirebaseAuth.getInstance().currentUser!!.providerData.forEach {
             if (it.providerId == "facebook.com") {
                 nav_view.menu.findItem(nav_link).isVisible = false
+
+                val link = "https://graph.facebook.com/${it.uid}/picture"
+                Log.d("pawell","link $link")
+                FirebaseController.saveImgUrl(link)
+                User.imgUrl = "https://graph.facebook.com/${it.uid}/picture"
             }
         }
 
@@ -221,6 +226,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     private fun linkWithFacebook() {
+
+        Log.d("pawell","linkwith facebook")
         this.loginManager.registerCallback(callbackManager, object : FacebookCallback<LoginResult> {
 
             override fun onSuccess(result: LoginResult?) {
@@ -229,7 +236,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 FirebaseAuth.getInstance().currentUser!!.linkWithCredential(credential).addOnCompleteListener {
                     it.result!!.user.providerData.forEach { userInfo ->
                         if (userInfo.providerId == "facebook.com") {
-                            FirebaseController.saveImgUrl(userInfo.photoUrl)
+
+                            val link = "https://graph.facebook.com/${userInfo.uid}/picture"
+                            Log.d("pawell","link $link")
+                            FirebaseController.saveImgUrl(link)
                             Glide.with(this@MainActivity)
                                     .load(userInfo.photoUrl)
                                     .apply(RequestOptions.circleCropTransform())

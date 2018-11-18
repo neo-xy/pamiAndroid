@@ -4,6 +4,7 @@ package pami.com.pami
 import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -42,7 +43,9 @@ class SettingsFragment : Fragment() {
         FirebaseAuth.getInstance().currentUser!!.linkWithCredential(credentials).addOnCompleteListener {
             it.getResult()!!.user.providerData.forEach {
                 if (it.providerId == "facebook.com") {
-                    FirebaseController.saveImgUrl(it.photoUrl)
+                    val link = "https://graph.facebook.com/${it.uid}/picture"
+                    Log.d("pawell","link $link")
+                    FirebaseController.saveImgUrl(link)
                 }
             }
 
